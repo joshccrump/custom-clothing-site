@@ -1,15 +1,138 @@
-
-<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
-<title>Shop</title><link rel="stylesheet" href="assets/style.css"></head><body>
-<div class="container">
-<div class="nav"><div class="brand">Custom Threads</div>
-<div style="display:flex;gap:16px"><a href="index.html">Home</a><a href="shop.html">Shop</a><a href="portal.html">Client Portals</a></div></div>
-<h1>Shop</h1>
-<div class="grid cols-3">
-  <a class="card" href="product.html"><div class="imgph"></div><div class="pad"><div class="badge">Customizable</div><h3>Hoodie</h3><div class="small">$80</div></div></a>
-  <a class="card" href="product.html"><div class="imgph"></div><div class="pad"><div class="badge">Customizable</div><h3>Crewneck</h3><div class="small">$70</div></div></a>
-  <a class="card" href="product.html"><div class="imgph"></div><div class="pad"><div class="badge">Customizable</div><h3>T-Shirt</h3><div class="small">$40</div></div></a>
-</div>
-</div>
-<script src="assets/main.js"></script>
-</body></html>
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <title>Shop • Custom Clothing</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <link rel="stylesheet" href="assets/themes/base.css">
+  <script defer src="assets/theme-loader.js" data-theme="crump"></script>
+  <link rel="stylesheet" href="assets/gallery.css">
+</head>
+<body>
+  <header class="header">
+    <div class="container" style="display:flex;align-items:center;justify-content:space-between;gap:16px;">
+      <a class="brand" href="./" style="font-weight:600; text-decoration:none; color:var(--text);">Custom Clothing</a>
+      <nav data-site-nav>
+        <a href="clients/">Client Portals</a>
+        <a href="gallery/">Gallery</a>
+        <a href="shop.html" aria-current="page">Shop</a>
+        <a href="about.html">About</a>
+        <a href="contact.html">Contact</a>
+      </nav>
+    </div>
+    <h1 style="margin:8px 20px 0">Shop</h1>
+    <p class="subtle" style="margin:6px 20px 0">Browse a curated selection. For the full catalog, see the <a href="gallery/">Gallery</a>.</p>
+  </header>
+  <main class="container" style="padding-top:12px;">
+    <section class="filters" aria-label="Filters">
+      <input id="search" type="search" placeholder="Search products…" aria-label="Search products" />
+      <select id="category" aria-label="Category"></select>
+      <select id="size" aria-label="Size"></select>
+      <select id="sort" aria-label="Sort">
+        <option value="featured">Featured</option>
+        <option value="price-asc">Price: Low to High</option>
+        <option value="price-desc">Price: High to Low</option>
+        <option value="newest">Newest</option>
+      </select>
+    </section>
+    <section aria-live="polite" id="grid" class="grid"></section>
+    <div id="pager" class="pagination" aria-label="Pagination"></div>
+  </main>
+  <footer>
+    <div class="container" style="color:var(--muted); padding:20px;">© <span id="y"></span> Custom Clothing</div>
+  </footer>
+  <script src="assets/nav-autobase.js" defer></script>
+  <script src="assets/nav-links.js" defer></script>
+  <script type="module">
+    const $ = (s,r=document)=>r.querySelector(s);
+    const fmt = (n,c='USD') => { try { return new Intl.NumberFormat(undefined,{style:'currency',currency:c}).format(n); } catch { return '$'+Number(n).toFixed(2); } };
+    const unique = a => [...new Set(a.filter(Boolean))];
+    document.getElementById('y').textContent = new Date().getFullYear();
+    async function loadProducts(){
+      const res = await fetch('data/products.json', { cache: 'no-store' });
+      if(!res.ok) throw new Error('Failed to load products.json');
+      return await res.json();
+    }
+    function filter(products, state){
+      const q = (state.q||'').toLowerCase().trim();
+      const cat = (state.category||'').toLowerCase();
+      const size = (state.size||'').toLowerCase();
+      let out = products.filter(p=>{
+        if (p.status && p.status.toLowerCase()==='hidden') return false;
+        const textOk = q ? ([p.title, p.description, p.category, ...(p.tags||[]), ...(p.sizes||[]), ...(p.colors||[])].join(' ').toLowerCase().includes(q)) : true;
+        const catOk = cat ? ((p.category||'').toLowerCase()===cat) : true;
+        const sizeOk = size ? ((p.sizes||[]).map(s=>String(s).toLowerCase()).includes(size)) : true;
+        return textOk && catOk && sizeOk;
+      });
+      if (state.sort==='price-asc') out.sort((a,b)=>(a.price||0)-(b.price||0));
+      else if (state.sort==='price-desc') out.sort((a,b)=>(b.price||0)-(a.price||0));
+      else if (state.sort==='newest') out.sort((a,b)=> new Date(b.createdAt||0) - new Date(a.createdAt||0));
+      return out;
+    }
+    function paginate(list, page, per=12){
+      const pages = Math.max(1, Math.ceil(list.length/per));
+      const p = Math.min(Math.max(1,page), pages);
+      return { page:p, pages, items: list.slice((p-1)*per, (p-1)*per+per) };
+    }
+    function renderGrid(container, items, currency){
+      container.innerHTML = '';
+      if (!items.length){ container.innerHTML = `<div class="empty">No items match your filters.</div>`; return; }
+      for (const p of items){
+        const el = document.createElement('article');
+        el.className = 'card';
+        el.innerHTML = `
+          <div class="card__media">
+            <img class="card__img" alt="${p.title||'Product'}" src="${p.thumbnail || 'assets/default-product.svg'}">
+            ${Number(p.stock)===0 ? '<span class="badge out">Out of stock</span>' : ''}
+            ${p.tags && p.tags.includes('best-seller') ? '<span class="badge">Best Seller</span>' : ''}
+          </div>
+          <div class="card__body">
+            <h3 class="title">${p.title||'Untitled'}</h3>
+            <div class="price">${typeof p.price==='number' ? fmt(p.price, p.currency||currency) : ''}</div>
+            <div class="card__actions">
+              ${p.url ? `<a class="btn btn--buy" target="_blank" rel="noopener" href="${p.url}">Buy</a>` : ''}
+              <a class="btn btn--ghost" href="gallery/">View details</a>
+            </div>
+          </div>`;
+        container.appendChild(el);
+      }
+    }
+    function renderPager(container, page, pages, jump){
+      container.innerHTML = '';
+      const prev = document.createElement('button');
+      prev.textContent = 'Prev'; prev.disabled = (page<=1);
+      prev.addEventListener('click', ()=>jump(page-1));
+      const next = document.createElement('button');
+      next.textContent = 'Next'; next.disabled = (page>=pages);
+      next.addEventListener('click', ()=>jump(page+1));
+      const info = document.createElement('span');
+      info.className = 'muted'; info.style.padding='8px 6px'; info.textContent = `Page ${page} of ${pages}`;
+      container.append(prev, info, next);
+    }
+    const state = { q:'', category:'', size:'', sort:'featured', page:1, per: 12 };
+    const grid = document.getElementById('grid');
+    const pager = document.getElementById('pager');
+    const searchEl = document.getElementById('search');
+    const catEl = document.getElementById('category');
+    const sizeEl = document.getElementById('size');
+    const sortEl = document.getElementById('sort');
+    const products = await loadProducts();
+    let currency = (products.find(p=>p.currency) || {}).currency || 'USD';
+    const cats = unique(products.map(p=>p.category));
+    catEl.innerHTML = `<option value="">All categories</option>` + cats.map(c=>`<option>${c}</option>`).join('');
+    const sizes = unique(products.flatMap(p=>p.sizes||[]));
+    sizeEl.innerHTML = `<option value="">Any size</option>` + sizes.map(s=>`<option>${s}</option>`).join('');
+    function render(){
+      const filtered = filter(products, state);
+      const { page, pages, items } = paginate(filtered, state.page, state.per);
+      renderGrid(grid, items, currency);
+      renderPager(pager, page, pages, (jump)=>{ state.page = Math.max(1, Math.min(pages, jump)); render(); });
+    }
+    searchEl.addEventListener('input', ()=>{ state.q = searchEl.value.trim(); state.page=1; render(); });
+    catEl.addEventListener('change', ()=>{ state.category = catEl.value.trim(); state.page=1; render(); });
+    sizeEl.addEventListener('change', ()=>{ state.size = sizeEl.value.trim(); state.page=1; render(); });
+    sortEl.addEventListener('change', ()=>{ state.sort = sortEl.value.trim(); state.page=1; render(); });
+    render();
+  </script>
+</body>
+</html>
