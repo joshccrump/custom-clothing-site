@@ -1,91 +1,77 @@
-
-<!doctype html><html lang="en"><head>
-<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
-<title>Created By Crump</title>
-<link rel="stylesheet" href="assets/style.css">
-</head><body>
-<div class="container">
-  <div class="nav">
-    <div class="brand">Created by Crump</div>
-    <div style="display:flex;gap:16px">
-      <a href="index.html">Home</a>
-      <a href="shop.html">Shop</a>
-      <a href="portal.html">Client Portals</a>
-      <a href="about.html">About</a>
-      <a href="contact.html">Contact</a>
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <title>Custom Clothing</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <link rel="stylesheet" href="assets/themes/base.css">
+  <script defer src="assets/theme-loader.js" data-theme="crump"></script>
+  <style>
+    body { min-height: 100svh; display: flex; flex-direction: column; }
+    header { padding: 14px 20px; }
+    .brand { font-weight: 600; text-decoration: none; color: var(--text); }
+    nav a { text-decoration: none; color: var(--text); margin-right: 14px; padding: 8px 10px; border-radius: var(--radius-sm); }
+    nav a:hover { background: color-mix(in srgb, var(--accent) 10%, transparent); }
+    main { flex: 1; }
+    .hero { padding: 56px 20px; }
+    .hero .container { display: grid; gap: 18px; }
+    .hero h1 { margin: 0; font-size: clamp(28px, 5vw, 42px); line-height: 1.15; }
+    .hero p { margin: 0; color: var(--muted); max-width: 64ch; }
+    .cta { display: flex; gap: 10px; margin-top: 16px; }
+    .btn { display:inline-block; text-decoration:none; border:1px solid var(--border); background: color-mix(in srgb, var(--accent) 12%, transparent); color: var(--text); padding: 10px 14px; border-radius: var(--radius-sm); }
+    .btn--primary { border-color: color-mix(in srgb, var(--accent) 55%, var(--border)); background: var(--accent); color: #fff; }
+    .grid { padding: 24px 20px 48px; }
+    .cards { display:grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 16px; }
+    .card { background: var(--card); border: 1px solid var(--border); border-radius: var(--radius); padding: 16px; box-shadow: var(--shadow-1); }
+    .card h3 { margin: 0 0 6px; }
+    footer { padding: 20px; color: var(--muted); }
+  </style>
+</head>
+<body>
+  <header>
+    <div class="container" style="display:flex; align-items:center; justify-content:space-between; gap:16px;">
+      <a class="brand" href="./">Custom Clothing</a>
+      <nav data-site-nav>
+        <a href="clients/">Client Portals</a>
+        <a href="gallery/">Gallery</a>
+      </nav>
     </div>
-  </div>
-
-  <section class="hero">
-    <div>
-      <h1>Custom Threads, Made For You</h1>
-      <p>Personalized hoodies, tees, and one-off designs — crafted to tell your story.</p>
-      <div class="cta">
-        <a class="btn" href="shop.html">Shop Now</a>
-        <a class="btn secondary" href="contact.html">Start a Project</a>
+  </header>
+  <main>
+    <section class="hero">
+      <div class="container">
+        <h1>Made-to-order apparel for teams, clubs, and events</h1>
+        <p>Browse the full catalog or jump into your client portal for proofs, timelines, and resources.</p>
+        <div class="cta">
+          <a class="btn btn--primary" href="gallery/">Browse Gallery</a>
+          <a class="btn" href="clients/">Client Portals</a>
+        </div>
       </div>
-    </div>
-    <div class="card imgph"><strong>Hero Image</strong></div>
-  </section>
-
-  <section class="section">
-    <h2>Featured Products</h2>
-    <div class="grid cols-3">
-      <a class="card" href="product.html">
-        <div class="imgph"></div>
-        <div class="pad">
-          <div class="badge">Customizable</div>
-          <h3>Customizable Crewneck</h3>
-          <div class="small">$70</div>
+    </section>
+    <section class="grid">
+      <div class="container">
+        <div class="cards">
+          <div class="card">
+            <h3>Fast turnarounds</h3>
+            <p class="muted">Clear timelines and updates in your portal.</p>
+          </div>
+          <div class="card">
+            <h3>Quality prints</h3>
+            <p class="muted">Premium blanks and durable inks for everyday wear.</p>
+          </div>
+          <div class="card">
+            <h3>Simple checkout</h3>
+            <p class="muted">Direct links per item or a hosted shop flow.</p>
+          </div>
         </div>
-      </a>
-      <a class="card" href="product.html">
-        <div class="imgph"></div>
-        <div class="pad">
-          <div class="badge">Customizable</div>
-          <h3>Customizable T‑Shirt</h3>
-          <div class="small">$40</div>
-        </div>
-      </a>
-      <a class="card" href="product.html">
-        <div class="imgph"></div>
-        <div class="pad">
-          <div class="badge">New Drop</div>
-          <h3>Customizable Hoodie</h3>
-          <div class="small">$80</div>
-        </div>
-      </a>
-    </div>
-  </section>
-
-  <section class="section">
-    <h2>How It Works</h2>
-    <div class="how">
-      <div class="step"><strong>1.</strong> Pick your item</div>
-      <div class="step"><strong>2.</strong> Add your personalization</div>
-      <div class="step"><strong>3.</strong> We make it & ship</div>
-    </div>
-  </section>
-
-  <section class="section">
-    <h2>Your Portfolio</h2>
-    <div class="portfolio">
-      <div class="imgph"></div>
-      <div class="imgph"></div>
-      <div class="imgph"></div>
-      <div class="imgph"></div>
-    </div>
-  </section>
-
-  <section class="section card">
-    <div class="pad">
-      <h3>Be the first to know about new drops</h3>
-      <p class="small">Join our list for new releases and exclusive projects.</p>
-      <div class="cta"><a class="btn" href="#">Subscribe</a></div>
-    </div>
-  </section>
-
-  <div class="footer">© YOUR BRAND • Built with the Starter Bundle</div>
-</div>
-<script src="assets/main.js"></script>
-</body></html>
+      </div>
+    </section>
+  </main>
+  <footer>
+    <div class="container">© <span id="y"></span> Custom Clothing</div>
+  </footer>
+  <script src="assets/nav-autobase.js" defer></script>
+  <script src="assets/nav-links.js" defer></script>
+  <script>document.getElementById('y').textContent = new Date().getFullYear();</script>
+</body>
+</html>

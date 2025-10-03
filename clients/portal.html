@@ -1,0 +1,78 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <title>Client Portal</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <link href="../assets/portals.css" rel="stylesheet" />
+</head>
+<body class="page page--portal">
+  <header class="header">
+    <a class="back" href="./">&larr; All Client Portals</a>
+    <h1 id="clientName">Client Portal</h1>
+    <p id="clientNotes" class="subtle"></p>
+  </header>
+  <main class="container">
+    <section id="gate" class="gate" hidden>
+      <h2>Enter Passcode</h2>
+      <p class="subtle">This portal is passcode-protected.</p>
+      <form id="gateForm">
+        <input id="passcode" type="password" inputmode="text" autocomplete="current-password" placeholder="Passcode" required />
+        <button type="submit">Unlock</button>
+        <p id="gateError" class="error" role="alert" hidden>Incorrect passcode. Try again.</p>
+      </form>
+    </section>
+    <section id="content" class="portal" hidden>
+      <div class="portal__hero">
+        <img id="clientLogo" class="portal__logo" alt="" />
+        <div class="portal__meta">
+          <h2 id="clientTitle"></h2>
+          <p id="clientEmail"></p>
+          <div id="clientTags" class="tag-row"></div>
+        </div>
+      </div>
+      <div id="links" class="links"></div>
+    </section>
+  </main>
+  <script type="module">
+    import { loadClients, sha256hex, getQuery, isUnlocked, setUnlocked } from "../assets/portals.js";
+    const slug = getQuery('c');
+    const gate = document.getElementById('gate'), content=document.getElementById('content'), gateForm=document.getElementById('gateForm'), passEl=document.getElementById('passcode'), gateError=document.getElementById('gateError');
+    const h1=document.getElementById('clientName'), notes=document.getElementById('clientNotes'), logo=document.getElementById('clientLogo'), title=document.getElementById('clientTitle'), email=document.getElementById('clientEmail'), tags=document.getElementById('clientTags'), links=document.getElementById('links');
+    (async()=>{
+      const clients = await loadClients('../data/clients.json');
+      const client = clients.find(c=>c.slug===slug);
+      if(!client){ h1.textContent='Client Not Found'; return; }
+      h1.textContent = `${client.name} — Client Portal`;
+      notes.textContent = client.notes || '';
+      const hasGate = !!(client.passcodeHash && client.passcodeHash.trim().length);
+      const unlocked = isUnlocked(client.slug);
+      if (!hasGate || unlocked) {
+        showContent(client);
+      } else {
+        gate.hidden = false;
+        gateForm.addEventListener('submit', async (e)=>{
+          e.preventDefault(); gateError.hidden=true;
+          const hash = (await sha256hex(passEl.value.trim())).toLowerCase();
+          if (hash === String(client.passcodeHash).toLowerCase()) {
+            setUnlocked(client.slug); showContent(client); gate.hidden=true;
+          } else { gateError.hidden=false; passEl.focus(); passEl.select(); }
+        });
+      }
+    })();
+    function showContent(client){
+      logo.src = client.logo || '../assets/default-logo.svg';
+      logo.alt = `${client.name} logo`;
+      title.textContent = client.name;
+      email.innerHTML = client.contactEmail ? `<a href="mailto:${client.contactEmail}">${client.contactEmail}</a>` : '';
+      tags.innerHTML='';
+      (client.tags||[]).forEach(t=>{ const span=document.createElement('span'); span.className='tag'; span.textContent=t; tags.appendChild(span); });
+      links.innerHTML='';
+      if ((client.links||[]).length){
+        for(const l of client.links){ const a=document.createElement('a'); a.className='link'; a.href=l.href; a.target='_blank'; a.rel='noopener'; a.textContent=l.label||l.href; links.appendChild(a); }
+      } else { links.innerHTML = '<p class="empty">No resources yet. Check back soon.</p>'; }
+      content.hidden=false;
+    }
+  </script>
+</body>
+</html>
