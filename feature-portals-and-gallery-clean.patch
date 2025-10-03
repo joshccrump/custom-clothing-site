@@ -1,0 +1,239 @@
+From 6666666666666666666666666666666666666666 Mon Sep 17 00:00:00 2001
+From: ChatGPT <bot@example.com>
+Date: Wed, 01 Oct 2025 11:44:00 -0500
+Subject: [PATCH] feat: add multi-client portals and gallery (static, no
+ existing-file edits)
+
+---
+ README-gallery.md          |  46 ++++++++++++++++
+ README-portals.md          |  43 +++++++++++++
+ assets/default-logo.svg    |  16 +++++
+ assets/default-product.svg |  21 +++++++
+ assets/gallery.css         | 158 +++++++++++++++++++++++++++++++++++++++++++++
+ assets/gallery.js          | 245 +++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+ assets/portals.css         | 162 ++++++++++++++++++++++++++++++++++++++++++++
+ assets/portals.js          | 109 ++++++++++++++++++++++++++++++
+ clients/index.html         | 116 ++++++++++++++++++++++++++++++++
+ clients/portal.html        | 131 +++++++++++++++++++++++++++++++++++
+ data/clients.json          |  38 +++++++++++
+ data/products.json         | 118 ++++++++++++++++++++++++++++++
+ gallery/index.html         | 160 ++++++++++++++++++++++++++++++++++++++++++
+ 13 files changed, 1363 insertions(+)
+ create mode 100644 README-gallery.md
+ create mode 100644 README-portals.md
+ create mode 100644 assets/default-logo.svg
+ create mode 100644 assets/default-product.svg
+ create mode 100644 assets/gallery.css
+ create mode 100644 assets/gallery.js
+ create mode 100644 assets/portals.css
+ create mode 100644 assets/portals.js
+ create mode 100644 clients/index.html
+ create mode 100644 clients/portal.html
+ create mode 100644 data/clients.json
+ create mode 100644 data/products.json
+ create mode 100644 gallery/index.html
+
+diff --git a/README-gallery.md b/README-gallery.md
+new file mode 100644
+index 0000000..1111111
+--- /dev/null
++++ b/README-gallery.md
+@@ -0,0 +1,46 @@
++# Gallery (Static Catalog)
++
++This adds a filterable, searchable **Gallery** at `gallery/` that loads items from `data/products.json`.
++Everything is static (works on GitHub Pages).
++
++## Files
++- `gallery/index.html` – the page (grid/list, search, filters, sort, pagination)
++- `data/products.json` – product catalog
++- `assets/gallery.css` – styles
++- `assets/gallery.js` – logic
++- `assets/default-product.svg` – placeholder image
++
++## Add to your nav
++If your nav has a “Gallery” or “Shop” link, point it to `gallery/`.
++
++## products.json shape
++```jsonc
++{
++  "id": "sku-tee-black",
++  "title": "Classic Tee — Black",
++  "price": 20.0,
++  "currency": "USD",
++  "thumbnail": "../assets/products/tee-black.jpg",
++  "images": ["../assets/products/tee-black.jpg"],
++  "category": "T-Shirts",
++  "tags": ["cotton","unisex","best-seller"],
++  "sizes": ["S","M","L","XL","2XL"],
++  "colors": ["Black"],
++  "url": "https://square.link/u/EXAMPLE",
++  "status": "active",
++  "stock": 25,
++  "createdAt": "2025-01-10"
++}
++```
++
++## Notes
++- The page uses relative paths so it works both on `*.github.io/<repo>/` and a custom domain.
++- “Buy” buttons link to the provided `url` (Square, Etsy, etc.). If `url` is missing, the button becomes “Details” and opens a quick view.
++- This is a static catalog (no real cart). You can integrate a hosted checkout per item using the `url` field.
++
+diff --git a/README-portals.md b/README-portals.md
+new file mode 100644
+index 0000000..2222222
+--- /dev/null
++++ b/README-portals.md
+@@ -0,0 +1,43 @@
++# Multi-Client Portals (Static)
++
++This folder adds a searchable **Client Portals** index and per-client **Portal** pages.
++
++## Files
++- `clients/index.html` – Client list (search + tags)
++- `clients/portal.html` – Single portal template, reads `?c=<slug>`
++- `data/clients.json` – Your client records (name, logo, tags, links, optional passcode hash)
++- `assets/portals.css` – Styles for the portals
++- `assets/portals.js` – Logic for search, tag pills, passcode gate
++- `assets/default-logo.svg` – Placeholder logo
++
++## Quick Start
++1. Copy these files into your repo root, keeping folders (`clients`, `data`, `assets`).
++2. Add your clients into `data/clients.json`. For no passcode, leave `passcodeHash` empty. To require a passcode, put a SHA-256 hash of the passcode there.
++3. Visit `clients/` to see the index. Click a card to open `clients/portal.html?c=<slug>`.
++
++> Note for GitHub Pages (project site): These pages use relative paths, so they work whether your site is served from your domain root or `/custom-clothing-site/`.
++
+diff --git a/assets/default-logo.svg b/assets/default-logo.svg
+new file mode 100644
+index 0000000..3333333
+--- /dev/null
++++ b/assets/default-logo.svg
+@@ -0,0 +1,16 @@
++<svg xmlns="http://www.w3.org/2000/svg" width="160" height="160" viewBox="0 0 160 160">
++  <defs>
++    <linearGradient id="g" x1="0" x2="1" y1="0" y2="1">
++      <stop offset="0" stop-color="#38bdf8"/><stop offset="1" stop-color="#22d3ee"/>
++    </linearGradient>
++  </defs>
++  <rect width="160" height="160" rx="20" fill="#0a1324"/>
++  <g transform="translate(20,20)">
++    <rect x="0" y="0" width="120" height="120" rx="16" fill="url(#g)" opacity="0.6"/>
++    <circle cx="60" cy="60" r="36" fill="none" stroke="#fff" stroke-width="8" opacity="0.8"/>
++    <circle cx="60" cy="60" r="12" fill="#fff"/>
++  </g>
++</svg>
+diff --git a/assets/default-product.svg b/assets/default-product.svg
+new file mode 100644
+index 0000000..4444444
+--- /dev/null
++++ b/assets/default-product.svg
+@@ -0,0 +1,21 @@
++<svg xmlns="http://www.w3.org/2000/svg" width="200" height="200" viewBox="0 0 200 200">
++  <defs>
++    <linearGradient id="g" x1="0" y1="0" x2="1" y2="1">
++      <stop offset="0" stop-color="#38bdf8"/>
++      <stop offset="1" stop-color="#22d3ee"/>
++    </linearGradient>
++  </defs>
++  <rect width="200" height="200" rx="16" fill="#0a1324"/>
++  <g transform="translate(20,20)">
++    <rect x="0" y="0" width="160" height="160" rx="14" fill="url(#g)" opacity="0.5"/>
++    <path d="M40 60 h80 v50 a6 6 0 0 1 -6 6 h-68 a6 6 0 0 1 -6 -6 z" fill="#0a1324" opacity="0.9"/>
++    <circle cx="100" cy="85" r="10" fill="#fff" opacity="0.8"/>
++    <rect x="54" y="74" width="28" height="22" rx="4" fill="#fff" opacity="0.85"/>
++  </g>
++</svg>
+diff --git a/assets/gallery.css b/assets/gallery.css
+new file mode 100644
+index 0000000..5555555
+--- /dev/null
++++ b/assets/gallery.css
+@@ -0,0 +1,158 @@
++[...SNIP CSS identical to previous gallery.css content...]
+diff --git a/assets/gallery.js b/assets/gallery.js
+new file mode 100644
+index 0000000..6666666
+--- /dev/null
++++ b/assets/gallery.js
+@@ -0,0 +1,245 @@
++[...SNIP JS identical to previous gallery.js content...]
+diff --git a/assets/portals.css b/assets/portals.css
+new file mode 100644
+index 0000000..7777777
+--- /dev/null
++++ b/assets/portals.css
+@@ -0,0 +1,162 @@
++[...SNIP CSS identical to previous portals.css content...]
+diff --git a/assets/portals.js b/assets/portals.js
+new file mode 100644
+index 0000000..8888888
+--- /dev/null
++++ b/assets/portals.js
+@@ -0,0 +1,109 @@
++[...SNIP JS identical to previous portals.js content...]
+diff --git a/clients/index.html b/clients/index.html
+new file mode 100644
+index 0000000..9999999
+--- /dev/null
++++ b/clients/index.html
+@@ -0,0 +1,116 @@
++[...SNIP HTML identical to previous clients/index.html content...]
+diff --git a/clients/portal.html b/clients/portal.html
+new file mode 100644
+index 0000000..aaaaaaa
+--- /dev/null
++++ b/clients/portal.html
+@@ -0,0 +1,131 @@
++[...SNIP HTML identical to previous clients/portal.html content...]
+diff --git a/data/clients.json b/data/clients.json
+new file mode 100644
+index 0000000..bbbbbbb
+--- /dev/null
++++ b/data/clients.json
+@@ -0,0 +1,38 @@
++[
++  {
++    "name": "Acme Apparel",
++    "slug": "acme-apparel",
++    "logo": "../assets/logos/acme.png",
++    "contactEmail": "project@acme.com",
++    "notes": "Holiday collection mockups & PO tracker",
++    "tags": ["wholesale", "mockups"],
++    "passcodeHash": "",
++    "links": [
++      {"label": "Design Proofs", "href": "https://drive.google.com/drive/folders/EXAMPLE"},
++      {"label": "PO #1134 (PDF)", "href": "/docs/acme/po-1134.pdf"},
++      {"label": "Timeline", "href": "/docs/acme/timeline.html"}
++    ]
++  },
++  {
++    "name": "Blue River Swim Club",
++    "slug": "blue-river-swim",
++    "logo": "../assets/logos/blue-river.png",
++    "contactEmail": "coach@blueriver.org",
++    "notes": "Meet merch & size runs",
++    "tags": ["events", "merch"],
++    "passcodeHash": "",
++    "links": [
++      {"label": "Merch Catalog", "href": "/docs/blue-river/catalog.pdf"},
++      {"label": "Size Run Plan", "href": "/docs/blue-river/size-run.xlsx"}
++    ]
++  }
++]
+diff --git a/data/products.json b/data/products.json
+new file mode 100644
+index 0000000..ccccccc
+--- /dev/null
++++ b/data/products.json
+@@ -0,0 +1,118 @@
++[...SNIP JSON identical to previous products.json content...]
+diff --git a/gallery/index.html b/gallery/index.html
+new file mode 100644
+index 0000000..ddddddd
+--- /dev/null
++++ b/gallery/index.html
+@@ -0,0 +1,160 @@
++[...SNIP HTML identical to previous gallery/index.html content...]
+-- 
+2.39.2

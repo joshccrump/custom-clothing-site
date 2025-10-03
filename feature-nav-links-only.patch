@@ -1,0 +1,68 @@
+From bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb Mon Sep 17 00:00:00 2001
+From: ChatGPT <bot@example.com>
+Date: Wed, 01 Oct 2025 12:55:00 -0500
+Subject: [PATCH] chore: add nav-links.js (auto-inject Client Portals & Gallery)
+
+diff --git a/assets/nav-links.js b/assets/nav-links.js
+new file mode 100644
+--- /dev/null
++++ b/assets/nav-links.js
+@@ -0,0 +56 @@
++// assets/nav-links.js
++// Ensures the site shows "Client Portals" and "Gallery" links even if not present in HTML.
++// Works alongside assets/nav-autobase.js which fixes base paths for GitHub Pages vs custom domains.
++(function(){
++  function createLink(href, text){
++    var a = document.createElement('a');
++    a.href = href;
++    a.textContent = text;
++    a.setAttribute('data-autoinjected', '1');
++    a.style.marginRight = '12px';
++    return a;
++  }
++  function hasLink(nav, predicate){
++    var as = nav.querySelectorAll('a');
++    for (var i=0; i<as.length; i++){
++      var a = as[i];
++      var href = (a.getAttribute('href')||'').toLowerCase();
++      var txt  = (a.textContent||'').toLowerCase();
++      if (predicate(href, txt)) return true;
++    }
++    return false;
++  }
++  function ensureLinks(nav){
++    // Add "Client Portals"
++    if (!hasLink(nav, function(h,t){ return t.includes('client portals') || h.includes('clients/'); })){
++      nav.appendChild(createLink('clients/', 'Client Portals'));
++    }
++    // Add "Gallery"
++    if (!hasLink(nav, function(h,t){ return t.includes('gallery') || t.includes('shop') || h.includes('gallery/'); })){
++      nav.appendChild(createLink('gallery/', 'Gallery'));
++    }
++  }
++  function pickNav(){
++    return document.querySelector('[data-site-nav]')
++        || document.querySelector('header nav')
++        || document.querySelector('nav');
++  }
++  function init(){
++    var nav = pickNav();
++    if (!nav){
++      // Create a minimal nav in header if missing
++      var header = document.querySelector('header') || document.body;
++      nav = document.createElement('nav');
++      nav.setAttribute('data-site-nav','');
++      nav.style.display = 'block';
++      nav.style.padding = '8px 12px';
++      header.insertBefore(nav, header.firstChild);
++    }
++    ensureLinks(nav);
++  }
++  if (document.readyState === 'loading'){
++    document.addEventListener('DOMContentLoaded', init);
++  } else {
++    init();
++  }
++})();
+-- 
+2.39.2

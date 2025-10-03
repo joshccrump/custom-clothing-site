@@ -1,1 +1,53 @@
 <!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <title>Gallery</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <link href="../assets/gallery.css" rel="stylesheet" />
+</head>
+<body>
+  <header class="header">
+    <h1>Gallery</h1>
+    <p class="subtle">Browse all available items. Use search and filters to find what you need.</p>
+  </header>
+  <main class="container">
+    <section class="filters" aria-label="Filters">
+      <input id="search" type="search" placeholder="Search products…" aria-label="Search products" />
+      <select id="category" aria-label="Category"></select>
+      <select id="size" aria-label="Size"></select>
+      <select id="sort" aria-label="Sort">
+        <option value="featured">Featured</option>
+        <option value="price-asc">Price: Low to High</option>
+        <option value="price-desc">Price: High to Low</option>
+        <option value="newest">Newest</option>
+      </select>
+    </section>
+    <div class="tag-row" id="tagsRow"></div>
+    <section aria-live="polite" id="grid" class="grid"></section>
+    <div id="pager" class="pagination" aria-label="Pagination"></div>
+  </main>
+  <div class="modal" id="quickview" role="dialog" aria-modal="true" aria-labelledby="qvTitle">
+    <div class="modal__panel">
+      <div class="modal__head">
+        <h2 id="qvTitle" class="modal__title">Details</h2>
+        <button id="closeModal" title="Close" class="close" aria-label="Close">&times;</button>
+      </div>
+      <div class="modal__body">
+        <img class="modal__img" alt="Product image" />
+        <div>
+          <div class="modal__price"></div>
+          <p class="modal__desc muted"></p>
+          <div class="modal__sizes sizes"></div>
+          <div class="modal__actions">
+            <a class="btn btn--buy modal__buy" target="_blank" rel="noopener">Buy</a>
+            <button class="btn btn--ghost" id="closeModal2">Close</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <script type="module" src="../assets/gallery.js"></script>
+  <script>document.addEventListener('DOMContentLoaded',()=>{ document.getElementById('closeModal2').addEventListener('click',()=>{ document.getElementById('quickview').classList.remove('show'); }); });</script>
+</body>
+</html>

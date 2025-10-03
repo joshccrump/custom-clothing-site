@@ -1,0 +1,153 @@
+From abababababababababababababababababababab Mon Sep 17 00:00:00 2001
+From: ChatGPT <bot@example.com>
+Date: Wed, 01 Oct 2025 14:10:00 -0500
+Subject: [PATCH] feat(theme): add base tokens, loader, and 'crump' preset (new files only)
+
+diff --git a/assets/themes/base.css b/assets/themes/base.css
+new file mode 100644
+--- /dev/null
++++ b/assets/themes/base.css
+@@ -0,0 +38 @@
++/* assets/themes/base.css */
++:root {
++  --bg: #0b0f14;
++  --card: #111827;
++  --muted: #94a3b8;
++  --text: #e5e7eb;
++  --accent: #38bdf8;
++  --ring: #22d3ee;
++  --border: #1f2937;
++  --good: #34d399;
++  --bad: #f87171;
++  --font-sans: system-ui, -apple-system, Segoe UI, Roboto, Inter, Arial, sans-serif;
++  --font-serif: Georgia, Cambria, 'Times New Roman', Times, serif;
++  --font-size: 16px;
++  --line-height: 1.5;
++  --radius-sm: 8px;
++  --radius: 12px;
++  --radius-lg: 16px;
++  --shadow-1: 0 8px 24px rgba(0,0,0,.25);
++  --shadow-2: 0 12px 32px rgba(0,0,0,.35);
++}
++*, *::before, *::after { box-sizing: border-box; }
++html, body { margin:0; padding:0; }
++html { font-size: var(--font-size); }
++body {
++  font-family: var(--font-sans);
++  line-height: var(--line-height);
++  background: var(--bg);
++  color: var(--text);
++}
++.container { margin-inline: auto; padding-inline: 20px; max-width: 1200px; }
++.card-surface { background: var(--card); border: 1px solid var(--border); border-radius: var(--radius); box-shadow: var(--shadow-1); }
++.btn {
++  display:inline-block; text-decoration:none; border:1px solid var(--border);
++  background: color-mix(in srgb, var(--accent) 12%, transparent);
++  color: var(--text); padding: 10px 14px; border-radius: var(--radius-sm);
++}
++.btn:hover { border-color: color-mix(in srgb, var(--accent) 50%, var(--border)); }
+diff --git a/assets/theme-loader.js b/assets/theme-loader.js
+new file mode 100644
+--- /dev/null
++++ b/assets/theme-loader.js
+@@ -0,0 +21 @@
++// assets/theme-loader.js
++(function(){
++  function getPreferred(){
++    var params = new URLSearchParams(location.search);
++    var t = params.get('theme');
++    if (t){ try { localStorage.setItem('site_theme', t); } catch(e){} return t; }
++    try { return localStorage.getItem('site_theme') || null; } catch(e){}
++    var el = document.currentScript || document.querySelector('script[src*="theme-loader.js"]');
++    return el && el.dataset.theme ? el.dataset.theme : null;
++  }
++  function loadPreset(name){
++    if (!name) return;
++    var href = 'assets/themes/presets/' + name + '.css';
++    var link = document.createElement('link');
++    link.rel = 'stylesheet';
++    link.href = href;
++    document.head.appendChild(link);
++  }
++  var theme = getPreferred();
++  loadPreset(theme);
++})();
+diff --git a/assets/themes/presets/crump.css b/assets/themes/presets/crump.css
+new file mode 100644
+--- /dev/null
++++ b/assets/themes/presets/crump.css
+@@ -0,0 +72 @@
++/* assets/themes/presets/crump.css */
++@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;600&display=swap');
++:root {
++  --bg: #ffffff;
++  --card: #f7f7f8;
++  --text: #0b1220;
++  --muted: #667085;
++  --accent: #2563eb;
++  --ring: #94a3b8;
++  --border: #e5e7eb;
++  --good: #059669;
++  --bad: #dc2626;
++  --font-sans: 'Inter', system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif;
++  --font-size: 16px;
++  --line-height: 1.6;
++  --radius-sm: 10px;
++  --radius: 12px;
++  --radius-lg: 16px;
++  --shadow-1: 0 6px 18px rgba(16,24,40,.08);
++  --shadow-2: 0 10px 28px rgba(16,24,40,.12);
++}
++body {
++  background:
++    radial-gradient(900px 420px at 0% -25%, #eef2ff 0%, transparent 60%),
++    linear-gradient(#fff, #fff);
++  color: var(--text);
++  font-family: var(--font-sans);
++}
++.btn {
++  border-color: color-mix(in srgb, var(--accent) 35%, var(--border));
++  background: color-mix(in srgb, var(--accent) 14%, transparent);
++}
++.btn--buy {
++  border-color: color-mix(in srgb, var(--accent) 55%, var(--border));
++  background: var(--accent);
++  color: #ffffff;
++}
++.card, .card-surface {
++  background: var(--card);
++  border-color: var(--border);
++  box-shadow: var(--shadow-1);
++}
++input[type="search"], input[type="text"], input[type="password"], select, input[type="number"] {
++  background: #ffffff;
++  border-color: var(--border);
++}
++input:focus, select:focus {
++  outline: none;
++  border-color: var(--ring);
++  box-shadow: 0 0 0 3px color-mix(in srgb, var(--accent) 22%, transparent);
++}
++.badge {
++  background: #eef2ff;
++  border-color: #e0e7ff;
++  color: #1e3a8a;
++}
++.badge.out {
++  background: #fff1f2;
++  border-color: #ffe4e6;
++  color: #9f1239;
++}
++.tag, .pill {
++  background: #f0f3f9;
++  border-color: #e5e9f0;
++  color: #334155;
++}
++.pill--active {
++  border-color: var(--accent);
++  box-shadow: 0 0 0 2px color-mix(in srgb, var(--accent) 30%, transparent);
++}
++h1, h2, h3 { line-height: 1.2; letter-spacing: -0.01em; }
++h1 { font-weight: 600; }
+-- 
+2.39.2

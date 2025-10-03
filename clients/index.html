@@ -1,1 +1,57 @@
 <!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <title>Client Portals</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <link href="../assets/portals.css" rel="stylesheet" />
+  <link rel="preload" href="../data/clients.json" as="fetch" crossorigin="anonymous" />
+</head>
+<body class="page page--list">
+  <header class="header">
+    <h1>Client Portals</h1>
+    <p class="subtle">Select your portal below. Use the search to quickly find a client.</p>
+  </header>
+  <main class="container">
+    <div class="toolbar">
+      <input id="search" type="search" placeholder="Search clients, tags…" aria-label="Search clients" />
+      <div id="tagRow" class="tag-row" aria-live="polite"></div>
+    </div>
+    <section id="cards" class="cards" aria-live="polite"></section>
+  </main>
+  <template id="cardTemplate">
+    <article class="card">
+      <a class="card__link" href="#">
+        <div class="card__media">
+          <img class="card__logo" alt="" />
+        </div>
+        <div class="card__body">
+          <h2 class="card__title"></h2>
+          <p class="card__notes"></p>
+          <div class="card__tags"></div>
+        </div>
+      </a>
+    </article>
+  </template>
+  <script type="module">
+    import { loadClients, makeTagPills, filterClients } from "../assets/portals.js";
+    const searchEl=document.getElementById('search'), cardsEl=document.getElementById('cards'), tagRow=document.getElementById('tagRow'), cardTpl=document.getElementById('cardTemplate');
+    let clients=[]; let activeTag='';
+    function render(list){
+      cardsEl.innerHTML='';
+      if(!list.length){ cardsEl.innerHTML='<p class="empty">No matching clients.</p>'; return; }
+      for(const c of list){
+        const node=cardTpl.content.cloneNode(true);
+        const link=node.querySelector('.card__link'); const img=node.querySelector('.card__logo'); const h2=node.querySelector('.card__title'); const notes=node.querySelector('.card__notes'); const tags=node.querySelector('.card__tags');
+        link.href=`./portal.html?c=${encodeURIComponent(c.slug)}`;
+        img.src=c.logo || '../assets/default-logo.svg'; img.alt = `${c.name} logo`;
+        h2.textContent=c.name; notes.textContent=c.notes||'';
+        (c.tags||[]).forEach(t=>{ const span=document.createElement('span'); span.className='tag'; span.textContent=t; span.addEventListener('click',()=>{ activeTag=(activeTag===t?'':t); render(filterClients(clients, searchEl.value, activeTag)); makeTagPills(tagRow, clients, activeTag, onTagClick); }); tags.appendChild(span); });
+        cardsEl.appendChild(node);
+      }
+    }
+    function onTagClick(tag){ activeTag=(activeTag===tag?'':tag); render(filterClients(clients, searchEl.value, activeTag)); makeTagPills(tagRow, clients, activeTag, onTagClick); }
+    (async()=>{ clients=await loadClients('../data/clients.json'); makeTagPills(tagRow, clients, activeTag, onTagClick); render(clients); searchEl.addEventListener('input', ()=>{ render(filterClients(clients, searchEl.value, activeTag)); }); })();
+  </script>
+</body>
+</html>

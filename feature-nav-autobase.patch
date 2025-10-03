@@ -1,0 +1,69 @@
+From 8888888888888888888888888888888888888888 Mon Sep 17 00:00:00 2001
+From: ChatGPT <bot@example.com>
+Date: Wed, 01 Oct 2025 12:13:00 -0500
+Subject: [PATCH] chore: add nav auto-base helper (no edits to existing files)
+
+diff --git a/assets/nav-autobase.js b/assets/nav-autobase.js
+new file mode 100644
+--- /dev/null
++++ b/assets/nav-autobase.js
+@@ -0,0 +57 @@
++// assets/nav-autobase.js
++// Rewrites nav links so they work on both project pages (username.github.io/<repo>/)
++// and custom domains (yourdomain.com/). Non-destructive: only adjusts relevant anchors.
++(function(){
++  function computeBase(){
++    try {
++      var host = location.hostname.toLowerCase();
++      var parts = location.pathname.split('/').filter(Boolean);
++      // On GitHub project pages, the first segment is the repo name.
++      if (host.endsWith('github.io')) {
++        var repo = parts.length ? parts[0] : '';
++        return repo ? ('/' + repo + '/') : '/';
++      }
++    } catch(e){}
++    return '/';
++  }
++
++  function shouldRewriteToClients(a){
++    var txt = (a.textContent || '').trim().toLowerCase();
++    var href = (a.getAttribute('href') || '').trim().toLowerCase();
++    return txt.includes('client portals') ||
++           href.endsWith('portal.html') ||
++           href === 'clients/' || href === '/clients/';
++  }
++
++  function shouldRewriteToGallery(a){
++    var txt = (a.textContent || '').trim().toLowerCase();
++    var href = (a.getAttribute('href') || '').trim().toLowerCase();
++    return txt.includes('gallery') || txt.includes('shop') ||
++           href === 'gallery/' || href === '/gallery/' ||
++           href.endsWith('shop.html');
++  }
++
++  function rewrite(){
++    var base = computeBase();
++    var anchors = document.querySelectorAll('a');
++    anchors.forEach(function(a){
++      if (a.dataset.autobaseDone === '1') return;
++      if (shouldRewriteToClients(a)) {
++        a.setAttribute('href', base + 'clients/');
++        a.dataset.autobaseDone = '1';
++        return;
++      }
++      if (shouldRewriteToGallery(a)) {
++        a.setAttribute('href', base + 'gallery/');
++        a.dataset.autobaseDone = '1';
++        return;
++      }
++    });
++  }
++
++  if (document.readyState === 'loading') {
++    document.addEventListener('DOMContentLoaded', rewrite);
++  } else {
++    rewrite();
++  }
++})();
+-- 
+2.39.2

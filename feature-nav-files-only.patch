@@ -1,0 +1,130 @@
+From aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa Mon Sep 17 00:00:00 2001
+From: ChatGPT <bot@example.com>
+Date: Wed, 01 Oct 2025 12:45:00 -0500
+Subject: [PATCH] chore: add nav helper scripts (no edits to existing HTML)
+
+diff --git a/assets/nav-autobase.js b/assets/nav-autobase.js
+new file mode 100644
+--- /dev/null
++++ b/assets/nav-autobase.js
+@@ -0,0 +57 @@
++// assets/nav-autobase.js
++// Rewrites nav links so they work on both project pages (username.github.io/<repo>/)
++// and custom domains (yourdomain.com/). Non-destructive: only adjusts relevant anchors.
++(function(){
++  function computeBase(){
++    try {
++      var host = location.hostname.toLowerCase();
++      var parts = location.pathname.split('/').filter(Boolean);
++      // On GitHub project pages, the first segment is the repo name.
++      if (host.endsWith('github.io')) {
++        var repo = parts.length ? parts[0] : '';
++        return repo ? ('/' + repo + '/') : '/';
++      }
++    } catch(e){}
++    return '/';
++  }
++
++  function shouldRewriteToClients(a){
++    var txt = (a.textContent || '').trim().toLowerCase();
++    var href = (a.getAttribute('href') || '').trim().toLowerCase();
++    return txt.includes('client portals') ||
++           href.endsWith('portal.html') ||
++           href === 'clients/' || href === '/clients/';
++  }
++
++  function shouldRewriteToGallery(a){
++    var txt = (a.textContent || '').trim().toLowerCase();
++    var href = (a.getAttribute('href') || '').trim().toLowerCase();
++    return txt.includes('gallery') || txt.includes('shop') ||
++           href === 'gallery/' || href === '/gallery/' ||
++           href.endsWith('shop.html');
++  }
++
++  function rewrite(){
++    var base = computeBase();
++    var anchors = document.querySelectorAll('a');
++    anchors.forEach(function(a){
++      if (a.dataset.autobaseDone === '1') return;
++      if (shouldRewriteToClients(a)) {
++        a.setAttribute('href', base + 'clients/');
++        a.dataset.autobaseDone = '1';
++        return;
++      }
++      if (shouldRewriteToGallery(a)) {
++        a.setAttribute('href', base + 'gallery/');
++        a.dataset.autobaseDone = '1';
++        return;
++      }
++    });
++  }
++
++  if (document.readyState === 'loading') {
++    document.addEventListener('DOMContentLoaded', rewrite);
++  } else {
++    rewrite();
++  }
++})();
+diff --git a/assets/nav-links.js b/assets/nav-links.js
+new file mode 100644
+--- /dev/null
++++ b/assets/nav-links.js
+@@ -0,0 +56 @@
++// assets/nav-links.js
++// Ensures the site shows "Client Portals" and "Gallery" links even if not present in HTML.
++// Works alongside assets/nav-autobase.js which fixes base paths for GitHub Pages vs custom domains.
++(function(){
++  function createLink(href, text){
++    var a = document.createElement('a');
++    a.href = href;
++    a.textContent = text;
++    a.setAttribute('data-autoinjected', '1');
++    a.style.marginRight = '12px';
++    return a;
++  }
++  function hasLink(nav, predicate){
++    var as = nav.querySelectorAll('a');
++    for (var i=0; i<as.length; i++){
++      var a = as[i];
++      var href = (a.getAttribute('href')||'').toLowerCase();
++      var txt  = (a.textContent||'').toLowerCase();
++      if (predicate(href, txt)) return true;
++    }
++    return false;
++  }
++  function ensureLinks(nav){
++    // Add "Client Portals"
++    if (!hasLink(nav, function(h,t){ return t.includes('client portals') || h.includes('clients/'); })){
++      nav.appendChild(createLink('clients/', 'Client Portals'));
++    }
++    // Add "Gallery"
++    if (!hasLink(nav, function(h,t){ return t.includes('gallery') || t.includes('shop') || h.includes('gallery/'); })){
++      nav.appendChild(createLink('gallery/', 'Gallery'));
++    }
++  }
++  function pickNav(){
++    return document.querySelector('[data-site-nav]')
++        || document.querySelector('header nav')
++        || document.querySelector('nav');
++  }
++  function init(){
++    var nav = pickNav();
++    if (!nav){
++      // Create a minimal nav in header if missing
++      var header = document.querySelector('header') || document.body;
++      nav = document.createElement('nav');
++      nav.setAttribute('data-site-nav','');
++      nav.style.display = 'block';
++      nav.style.padding = '8px 12px';
++      header.insertBefore(nav, header.firstChild);
++    }
++    ensureLinks(nav);
++  }
++  if (document.readyState === 'loading'){
++    document.addEventListener('DOMContentLoaded', init);
++  } else {
++    init();
++  }
++})();
+-- 
+2.39.2

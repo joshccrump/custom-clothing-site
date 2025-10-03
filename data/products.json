@@ -1,1 +1,115 @@
 [
+  {
+    "id": "sku-tee-black",
+    "title": "Classic Tee \u2014 Black",
+    "price": 20.0,
+    "currency": "USD",
+    "thumbnail": "../assets/default-product.svg",
+    "images": [
+      "../assets/default-product.svg"
+    ],
+    "category": "T-Shirts",
+    "tags": [
+      "cotton",
+      "unisex",
+      "best-seller"
+    ],
+    "sizes": [
+      "S",
+      "M",
+      "L",
+      "XL",
+      "2XL"
+    ],
+    "colors": [
+      "Black"
+    ],
+    "url": "https://square.link/u/EXAMPLE-BLACK",
+    "status": "active",
+    "stock": 25,
+    "createdAt": "2025-01-10"
+  },
+  {
+    "id": "sku-tee-white",
+    "title": "Classic Tee \u2014 White",
+    "price": 20.0,
+    "currency": "USD",
+    "thumbnail": "../assets/default-product.svg",
+    "images": [
+      "../assets/default-product.svg"
+    ],
+    "category": "T-Shirts",
+    "tags": [
+      "cotton",
+      "unisex"
+    ],
+    "sizes": [
+      "S",
+      "M",
+      "L",
+      "XL",
+      "2XL"
+    ],
+    "colors": [
+      "White"
+    ],
+    "url": "https://square.link/u/EXAMPLE-WHITE",
+    "status": "active",
+    "stock": 0,
+    "createdAt": "2025-02-05"
+  },
+  {
+    "id": "sku-hoodie-charcoal",
+    "title": "Premium Hoodie \u2014 Charcoal",
+    "price": 45.0,
+    "currency": "USD",
+    "thumbnail": "../assets/default-product.svg",
+    "images": [
+      "../assets/default-product.svg"
+    ],
+    "category": "Hoodies",
+    "tags": [
+      "fleece",
+      "unisex"
+    ],
+    "sizes": [
+      "S",
+      "M",
+      "L",
+      "XL",
+      "2XL",
+      "3XL"
+    ],
+    "colors": [
+      "Charcoal"
+    ],
+    "url": "https://square.link/u/EXAMPLE-HOODIE",
+    "status": "active",
+    "stock": 8,
+    "createdAt": "2025-03-15"
+  },
+  {
+    "id": "sku-cap-navy",
+    "title": "Classic Cap \u2014 Navy",
+    "price": 18.0,
+    "currency": "USD",
+    "thumbnail": "../assets/default-product.svg",
+    "images": [
+      "../assets/default-product.svg"
+    ],
+    "category": "Hats",
+    "tags": [
+      "embroidered"
+    ],
+    "sizes": [
+      "One Size"
+    ],
+    "colors": [
+      "Navy"
+    ],
+    "url": "https://square.link/u/EXAMPLE-CAP",
+    "status": "active",
+    "stock": 50,
+    "createdAt": "2025-04-02"
+  }
+]

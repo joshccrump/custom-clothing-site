@@ -1,1 +1,8 @@
-// /assets/portals.js
+export async function loadClients(url){ const res = await fetch(url, { cache:'no-store' }); if(!res.ok) throw new Error('Failed to load '+url+' ('+res.status+')'); return await res.json(); }
+export function getQuery(key){ const u=new URL(window.location.href); return u.searchParams.get(key)||''; }
+export async function sha256hex(text){ const data=new TextEncoder().encode(text); const hash=await crypto.subtle.digest('SHA-256', data); return [...new Uint8Array(hash)].map(b=>b.toString(16).padStart(2,'0')).join(''); }
+const UNLOCK_KEY='client_portal_unlocked';
+export function isUnlocked(slug){ try{ const map=JSON.parse(localStorage.getItem(UNLOCK_KEY)||'{}'); return !!map[slug]; }catch{ return false; } }
+export function setUnlocked(slug){ try{ const map=JSON.parse(localStorage.getItem(UNLOCK_KEY)||'{}'); map[slug]=true; localStorage.setItem(UNLOCK_KEY, JSON.stringify(map)); }catch{} }
+export function filterClients(clients,query='',tag=''){ const q=(query||'').toLowerCase().trim(); const t=(tag||'').toLowerCase().trim(); return clients.filter(c=>{ const hay=[c.name||'',c.slug||'',c.notes||'',...(c.tags||[])].join(' ').toLowerCase(); const tagOk=t?((c.tags||[]).map(x=>String(x).toLowerCase()).includes(t)):true; const textOk=q?hay.includes(q):true; return tagOk&&textOk; }); }
+export function makeTagPills(container,clients,activeTag,onClick){ const tags=new Set(); for(const c of clients){ if(Array.isArray(c.tags)) for(const t of c.tags) tags.add(t); } container.innerHTML=''; if(!tags.size) return; [...tags].sort((a,b)=>a.localeCompare(b)).forEach(t=>{ const b=document.createElement('button'); b.type='button'; b.className='pill'+(activeTag===t?' pill--active':''); b.textContent=t; b.addEventListener('click',()=>onClick(t)); container.appendChild(b); }); }

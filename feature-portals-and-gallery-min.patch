@@ -1,0 +1,1066 @@
+From 7777777777777777777777777777777777777777 Mon Sep 17 00:00:00 2001
+From: ChatGPT <bot@example.com>
+Date: Wed, 01 Oct 2025 11:58:00 -0500
+Subject: [PATCH] feat: add multi-client portals and gallery (static, new files only)
+
+diff --git a/README-portals.md b/README-portals.md
+new file mode 100644
+--- /dev/null
++++ b/README-portals.md
+@@ -0,0 +18 @@
++# Multi-Client Portals (Static)
++
++This folder adds a searchable **Client Portals** index and per-client **Portal** pages.
++
++## Files
++- `clients/index.html` – Client list (search + tags)
++- `clients/portal.html` – Single portal template, reads `?c=<slug>`
++- `data/clients.json` – Your client records (name, logo, tags, links, optional passcode hash)
++- `assets/portals.css` – Styles for the portals
++- `assets/portals.js` – Logic for search, tag pills, passcode gate
++- `assets/default-logo.svg` – Placeholder logo
++
++## Quick Start
++1. Copy these files into your repo root, keeping folders (`clients`, `data`, `assets`).
++2. Add your clients into `data/clients.json`. For no passcode, leave `passcodeHash` empty. To require a passcode, put a SHA-256 hash of the passcode there.
++3. Visit `clients/` to see the index. Click a card to open `clients/portal.html?c=<slug>`.
++
++> **Note for GitHub Pages (project site)**: These pages use **relative paths**, so they work whether your site is served from your domain root or `/custom-clothing-site/`.
+diff --git a/README-gallery.md b/README-gallery.md
+new file mode 100644
+--- /dev/null
++++ b/README-gallery.md
+@@ -0,0 +39 @@
++# Gallery (Static Catalog)
++
++This adds a filterable, searchable **Gallery** at `gallery/` that loads items from `data/products.json`.
++Everything is static (works on GitHub Pages).
++
++## Files
++- `gallery/index.html` – the page (grid/list, search, filters, sort, pagination)
++- `data/products.json` – product catalog
++- `assets/gallery.css` – styles
++- `assets/gallery.js` – logic
++- `assets/default-product.svg` – placeholder image
++
++## Add to your nav
++If your nav has a “Gallery” or “Shop” link, point it to `gallery/`.
++
++## products.json shape
++```jsonc
++{
++  "id": "sku-tee-black",
++  "title": "Classic Tee — Black",
++  "price": 20.0,
++  "currency": "USD",
++  "thumbnail": "../assets/products/tee-black.jpg",
++  "images": ["../assets/products/tee-black.jpg"],
++  "category": "T-Shirts",
++  "tags": ["cotton","unisex","best-seller"],
++  "sizes": ["S","M","L","XL","2XL"],
++  "colors": ["Black"],
++  "url": "https://square.link/u/EXAMPLE",
++  "status": "active",
++  "stock": 25,
++  "createdAt": "2025-01-10"
++}
++```
++
++## Notes
++- The page uses **relative paths** so it works both on `*.github.io/<repo>/` and a custom domain.
++- “Buy” buttons link to the provided `url` (Square, Etsy, etc.). If `url` is missing, the button becomes “Details” and opens a quick view.
++- This is a static catalog (no real cart). You can integrate a hosted checkout per item using the `url` field.
+diff --git a/assets/default-logo.svg b/assets/default-logo.svg
+new file mode 100644
+--- /dev/null
++++ b/assets/default-logo.svg
+@@ -0,0 +13 @@
++<svg xmlns="http://www.w3.org/2000/svg" width="160" height="160" viewBox="0 0 160 160">
++  <defs>
++    <linearGradient id="g" x1="0" x2="1" y1="0" y2="1">
++      <stop offset="0" stop-color="#38bdf8"/><stop offset="1" stop-color="#22d3ee"/>
++    </linearGradient>
++  </defs>
++  <rect width="160" height="160" rx="20" fill="#0a1324"/>
++  <g transform="translate(20,20)">
++    <rect x="0" y="0" width="120" height="120" rx="16" fill="url(#g)" opacity="0.6"/>
++    <circle cx="60" cy="60" r="36" fill="none" stroke="#fff" stroke-width="8" opacity="0.8"/>
++    <circle cx="60" cy="60" r="12" fill="#fff"/>
++  </g>
++</svg>
+diff --git a/assets/default-product.svg b/assets/default-product.svg
+new file mode 100644
+--- /dev/null
++++ b/assets/default-product.svg
+@@ -0,0 +15 @@
++<svg xmlns="http://www.w3.org/2000/svg" width="200" height="200" viewBox="0 0 200 200">
++  <defs>
++    <linearGradient id="g" x1="0" y1="0" x2="1" y2="1">
++      <stop offset="0" stop-color="#38bdf8"/>
++      <stop offset="1" stop-color="#22d3ee"/>
++    </linearGradient>
++  </defs>
++  <rect width="200" height="200" rx="16" fill="#0a1324"/>
++  <g transform="translate(20,20)">
++    <rect x="0" y="0" width="160" height="160" rx="14" fill="url(#g)" opacity="0.5"/>
++    <path d="M40 60 h80 v50 a6 6 0 0 1 -6 6 h-68 a6 6 0 0 1 -6 -6 z" fill="#0a1324" opacity="0.9"/>
++    <circle cx="100" cy="85" r="10" fill="#fff" opacity="0.8"/>
++    <rect x="54" y="74" width="28" height="22" rx="4" fill="#fff" opacity="0.85"/>
++  </g>
++</svg>
+diff --git a/assets/portals.css b/assets/portals.css
+new file mode 100644
+--- /dev/null
++++ b/assets/portals.css
+@@ -0,0 +84 @@
++/* /assets/portals.css */
++:root{
++  --bg:#0b0f14;
++  --card:#111827;
++  --muted:#94a3b8;
++  --text:#e5e7eb;
++  --accent:#38bdf8;
++  --ring: #22d3ee;
++  --border:#1f2937;
++}
++
++*{box-sizing:border-box}
++html,body{margin:0;padding:0}
++body{
++  font-family: system-ui, -apple-system, Segoe UI, Roboto, Inter, Arial, sans-serif;
++  color:var(--text);
++  background: radial-gradient(1200px 600px at 20% -10%, #0f172a 0%, var(--bg) 60%);
++  min-height:100svh;
++}
++
++.header{
++  max-width:1080px;margin-inline:auto;padding:28px 20px 8px;
++}
++.header h1{margin:0 0 6px 0;font-size:clamp(24px, 3vw, 36px)}
++.subtle{color:var(--muted);margin:0}
++
++.container{max-width:1080px;margin:0 auto;padding:18px 20px 48px}
++
++.toolbar{display:flex;flex-wrap:wrap;gap:12px;align-items:center;margin:16px 0 20px}
++.toolbar input[type="search"]{
++  flex:1;min-width:260px;padding:12px 14px;border-radius:12px;border:1px solid var(--border);
++  background:#0b1220;color:var(--text);outline:none;
++}
++.toolbar input[type="search"]:focus{border-color:var(--ring);box-shadow:0 0 0 3px #22d3ee22}
++
++.tag-row{display:flex;flex-wrap:wrap;gap:8px}
++.pill{
++  padding:8px 12px;border-radius:999px;border:1px solid var(--border);background:#0a1324;color:var(--text);
++  cursor:pointer
++}
++.pill--active{border-color:var(--accent);box-shadow:0 0 0 2px #38bdf822}
++
++.cards{display:grid;grid-template-columns:repeat(auto-fill,minmax(260px,1fr));gap:16px}
++.card{
++  background:linear-gradient(180deg,#0d1628,#0a1220);
++  border:1px solid var(--border);border-radius:16px;overflow:hidden;box-shadow:0 10px 30px #0006;
++  transition:transform .15s ease, box-shadow .15s ease, border-color .2s
++}
++.card:hover{transform:translateY(-2px);box-shadow:0 14px 38px #0008;border-color:#273549}
++.card__link{display:block;color:inherit;text-decoration:none}
++.card__media{display:flex;align-items:center;justify-content:center;height:140px;background:#0a1324;border-bottom:1px solid var(--border)}
++.card__logo{max-height:84px;max-width:70%;filter:drop-shadow(0 8px 16px #0007)}
++.card__body{padding:14px}
++.card__title{margin:0 0 6px;font-size:18px}
++.card__notes{margin:0 0 8px;color:var(--muted);min-height:1.5em}
++.card__tags{display:flex;gap:6px;flex-wrap:wrap}
++.tag{font-size:12px;padding:4px 8px;background:#0f1a2d;border:1px solid #1a2940;border-radius:999px;color:#cbd5e1}
++
++.empty{color:var(--muted);padding:20px;border:1px dashed #334155;border-radius:12px;background:#0a1324}
++
++.back{color:var(--accent);text-decoration:none}
++.back:hover{text-decoration:underline}
++
++.page--portal .portal__hero{
++  display:flex;gap:16px;align-items:center;margin:8px 0 20px
++}
++.portal__logo{width:72px;height:72px;object-fit:contain;border-radius:12px;background:#0a1324;border:1px solid var(--border);padding:10px}
++.portal__meta h2{margin:0 0 6px}
++.portal__meta p{margin:0;color:var(--muted)}
++.links{display:grid;grid-template-columns:repeat(auto-fill,minmax(220px,1fr));gap:12px;margin-top:20px}
++.link{
++  display:block;padding:12px 14px;border-radius:12px;background:linear-gradient(180deg,#0d182c,#0b1425);
++  border:1px solid var(--border);text-decoration:none;color:#var(--text);
++}
++.link:hover{border-color:#2a3b5a;box-shadow:0 6px 18px #0007}
++
++.gate{
++  border:1px solid var(--border);border-radius:16px;background:#0b1324;padding:20px;max-width:520px
++}
++.gate h2{margin-top:0}
++.gate form{display:flex;gap:10px;align-items:center}
++.gate input{flex:1;padding:10px 12px;border-radius:10px;border:1px solid var(--border);background:#07101f;color:#var(--text)}
++.gate button{padding:10px 14px;border-radius:10px;border:1px solid #0ea5e9;background:#0ea5e9;color:#001019;cursor:pointer}
++.error{color:#fda4af;margin:10px 0 0}
+diff --git a/assets/portals.js b/assets/portals.js
+new file mode 100644
+--- /dev/null
++++ b/assets/portals.js
+@@ -0,0 +75 @@
++// /assets/portals.js
++export async function loadClients(url) {
++  const res = await fetch(url, { cache: "no-store" });
++  if (!res.ok) throw new Error(`Failed to load clients.json (${res.status})`);
++  return await res.json();
++}
++
++export function getQuery(key) {
++  const u = new URL(window.location.href);
++  return u.searchParams.get(key) || "";
++}
++
++export async function sha256hex(text) {
++  const enc = new TextEncoder();
++  const data = enc.encode(text);
++  const hash = await crypto.subtle.digest("SHA-256", data);
++  return [...new Uint8Array(hash)].map(b => b.toString(16).padStart(2, "0")).join("");
++}
++
++const UNLOCK_KEY = "client_portal_unlocked";
++
++export function isUnlocked(slug) {
++  try {
++    const raw = localStorage.getItem(UNLOCK_KEY) || "{}";
++    const map = JSON.parse(raw);
++    return !!map[slug];
++  } catch {
++    return false;
++  }
++}
++
++export function setUnlocked(slug) {
++  try {
++    const raw = localStorage.getItem(UNLOCK_KEY) || "{}";
++    const map = JSON.parse(raw);
++    map[slug] = true;
++    localStorage.setItem(UNLOCK_KEY, JSON.stringify(map));
++  } catch {
++    // ignore
++  }
++}
++
++export function filterClients(clients, query = "", tag = "") {
++  const q = (query || "").toLowerCase().trim();
++  const t = (tag || "").toLowerCase().trim();
++  return clients.filter(c => {
++    const hay = [
++      c.name || "",
++      c.slug || "",
++      c.notes || "",
++      ...(c.tags || [])
++    ].join(" ").toLowerCase();
++    const tagOk = t ? (Array.isArray(c.tags) && c.tags.map(x => x.toLowerCase()).includes(t)) : true;
++    const textOk = q ? hay.includes(q) : true;
++    return tagOk && textOk;
++  });
++}
++
++export function makeTagPills(container, clients, activeTag, onClick) {
++  const tags = new Set();
++  for (const c of clients) {
++    if (Array.isArray(c.tags)) for (const t of c.tags) tags.add(t);
++  }
++  container.innerHTML = "";
++  if (!tags.size) return;
++
++  for (const t of [...tags].sort((a, b) => a.localeCompare(b))) {
++    const b = document.createElement("button");
++    b.type = "button";
++    b.className = "pill" + (activeTag === t ? " pill--active" : "");
++    b.textContent = t;
++    b.addEventListener("click", () => onClick(t));
++    container.appendChild(b);
++  }
++}
+diff --git a/clients/index.html b/clients/index.html
+new file mode 100644
+--- /dev/null
++++ b/clients/index.html
+@@ -0,0 +108 @@
++<!doctype html>
++<html lang="en">
++<head>
++  <meta charset="utf-8" />
++  <title>Client Portals</title>
++  <meta name="viewport" content="width=device-width, initial-scale=1" />
++  <link href="../assets/portals.css" rel="stylesheet" />
++  <link rel="preload" href="../data/clients.json" as="fetch" crossorigin="anonymous" />
++</head>
++<body class="page page--list">
++  <header class="header">
++    <h1>Client Portals</h1>
++    <p class="subtle">Select your portal below. Use the search to quickly find a client.</p>
++  </header>
++
++  <main class="container">
++    <div class="toolbar">
++      <input id="search" type="search" placeholder="Search clients, tags…" aria-label="Search clients" />
++      <div id="tagRow" class="tag-row" aria-live="polite"></div>
++    </div>
++
++    <section id="cards" class="cards" aria-live="polite">
++      <!-- Cards injected by JS -->
++    </section>
++  </main>
++
++  <template id="cardTemplate">
++    <article class="card">
++      <a class="card__link" href="#">
++        <div class="card__media">
++          <img class="card__logo" alt="" />
++        </div>
++        <div class="card__body">
++          <h2 class="card__title"></h2>
++          <p class="card__notes"></p>
++          <div class="card__tags"></div>
++        </div>
++      </a>
++    </article>
++  </template>
++
++  <script type="module">
++    import { loadClients, makeTagPills, filterClients } from "../assets/portals.js";
++
++    const searchEl = document.getElementById("search");
++    const cardsEl  = document.getElementById("cards");
++    const tagRow   = document.getElementById("tagRow");
++    const cardTpl  = document.getElementById("cardTemplate");
++
++    let clients = [];
++    let activeTag = "";
++
++    function render(list) {
++      cardsEl.innerHTML = "";
++      if (!list.length) {
++        cardsEl.innerHTML = `<p class="empty">No matching clients.</p>`;
++        return;
++      }
++      for (const c of list) {
++        const node = cardTpl.content.cloneNode(true);
++        const link = node.querySelector(".card__link");
++        const img  = node.querySelector(".card__logo");
++        const h2   = node.querySelector(".card__title");
++        const notes= node.querySelector(".card__notes");
++        const tags = node.querySelector(".card__tags");
++
++        link.href = `./portal.html?c=${encodeURIComponent(c.slug)}`;
++        img.src   = c.logo || "../assets/default-logo.svg";
++        img.alt   = `${c.name} logo`;
++        h2.textContent = c.name;
++        notes.textContent = c.notes || "";
++
++        if (Array.isArray(c.tags)) {
++          for (const t of c.tags) {
++            const span = document.createElement("span");
++            span.className = "tag";
++            span.textContent = t;
++            span.addEventListener("click", () => {
++              activeTag = (activeTag === t ? "" : t);
++              render(filterClients(clients, searchEl.value, activeTag));
++              makeTagPills(tagRow, clients, activeTag, onTagClick);
++            });
++            tags.appendChild(span);
++          }
++        }
++
++        cardsEl.appendChild(node);
++      }
++    }
++
++    function onTagClick(tag) {
++      activeTag = (activeTag === tag ? "" : tag);
++      render(filterClients(clients, searchEl.value, activeTag));
++      makeTagPills(tagRow, clients, activeTag, onTagClick);
++    }
++
++    (async () => {
++      clients = await loadClients("../data/clients.json");
++      makeTagPills(tagRow, clients, activeTag, onTagClick);
++      render(clients);
++
++      searchEl.addEventListener("input", () => {
++        render(filterClients(clients, searchEl.value, activeTag));
++      });
++    })();
++  </script>
++</body>
++</html>
+diff --git a/clients/portal.html b/clients/portal.html
+new file mode 100644
+--- /dev/null
++++ b/clients/portal.html
+@@ -0,0 +137 @@
++<!doctype html>
++<html lang="en">
++<head>
++  <meta charset="utf-8" />
++  <title>Client Portal</title>
++  <meta name="viewport" content="width=device-width, initial-scale=1" />
++  <link href="../assets/portals.css" rel="stylesheet" />
++</head>
++<body class="page page--portal">
++  <header class="header">
++    <a class="back" href="./">&larr; All Client Portals</a>
++    <h1 id="clientName">Client Portal</h1>
++    <p id="clientNotes" class="subtle"></p>
++  </header>
++
++  <main class="container">
++    <section id="gate" class="gate" hidden>
++      <h2>Enter Passcode</h2>
++      <p class="subtle">This portal is passcode-protected.</p>
++      <form id="gateForm">
++        <input id="passcode" type="password" inputmode="text" autocomplete="current-password" placeholder="Passcode" required />
++        <button type="submit">Unlock</button>
++        <p id="gateError" class="error" role="alert" hidden>Incorrect passcode. Try again.</p>
++      </form>
++    </section>
++
++    <section id="content" class="portal" hidden>
++      <div class="portal__hero">
++        <img id="clientLogo" class="portal__logo" alt="" />
++        <div class="portal__meta">
++          <h2 id="clientTitle"></h2>
++          <p id="clientEmail"></p>
++          <div id="clientTags" class="tag-row"></div>
++        </div>
++      </div>
++
++      <div id="links" class="links"></div>
++    </section>
++  </main>
++
++  <script type="module">
++    import { loadClients, sha256hex, getQuery, isUnlocked, setUnlocked } from "../assets/portals.js";
++
++    const slug = getQuery("c");
++    const gate = document.getElementById("gate");
++    const content = document.getElementById("content");
++    const gateForm = document.getElementById("gateForm");
++    const passEl = document.getElementById("passcode");
++    const gateError = document.getElementById("gateError");
++
++    const h1 = document.getElementById("clientName");
++    const notes = document.getElementById("clientNotes");
++    const logo = document.getElementById("clientLogo");
++    const title = document.getElementById("clientTitle");
++    const email = document.getElementById("clientEmail");
++    const tags = document.getElementById("clientTags");
++    const links = document.getElementById("links");
++
++    (async () => {
++      const clients = await loadClients("../data/clients.json");
++      const client = clients.find(c => c.slug === slug);
++
++      if (!client) {
++        h1.textContent = "Client Not Found";
++        return;
++      }
++
++      h1.textContent = `${client.name} — Client Portal`;
++      notes.textContent = client.notes || "";
++
++      const hasGate = !!(client.passcodeHash && client.passcodeHash.trim().length);
++      const unlocked = isUnlocked(client.slug);
++
++      if (!hasGate || unlocked) {
++        showContent(client);
++      } else {
++        gate.hidden = false;
++        gateForm.addEventListener("submit", async (e) => {
++          e.preventDefault();
++          gateError.hidden = true;
++          const guess = passEl.value.trim();
++          const hash = await sha256hex(guess);
++          if (hash.toLowerCase() === client.passcodeHash.toLowerCase()) {
++            setUnlocked(client.slug);
++            showContent(client);
++            gate.hidden = true;
++          } else {
++            gateError.hidden = false;
++            passEl.focus();
++            passEl.select();
++          }
++        });
++      }
++    })();
++
++    function showContent(client) {
++      const logoSrc = client.logo || "../assets/default-logo.svg";
++      logo.src = logoSrc;
++      logo.alt = `${client.name} logo`;
++      title.textContent = client.name;
++
++      if (client.contactEmail) {
++        email.innerHTML = `<a href="mailto:${client.contactEmail}">${client.contactEmail}</a>`;
++      } else {
++        email.textContent = "";
++      }
++
++      tags.innerHTML = "";
++      if (Array.isArray(client.tags)) {
++        for (const t of client.tags) {
++          const span = document.createElement("span");
++          span.className = "tag";
++          span.textContent = t;
++          tags.appendChild(span);
++        }
++      }
++
++      links.innerHTML = "";
++      if (Array.isArray(client.links) && client.links.length) {
++        for (const link of client.links) {
++          const a = document.createElement("a");
++          a.className = "link";
++          a.href = link.href;
++          a.target = "_blank";
++          a.rel = "noopener";
++          a.textContent = link.label || link.href;
++          links.appendChild(a);
++        }
++      } else {
++        links.innerHTML = `<p class="empty">No resources yet. Check back soon.</p>`;
++      }
++
++      content.hidden = false;
++    }
++  </script>
++</body>
++</html>
+diff --git a/data/clients.json b/data/clients.json
+new file mode 100644
+--- /dev/null
++++ b/data/clients.json
+@@ -0,0 +29 @@
++[
++  {
++    "name": "Acme Apparel",
++    "slug": "acme-apparel",
++    "logo": "../assets/logos/acme.png",
++    "contactEmail": "project@acme.com",
++    "notes": "Holiday collection mockups & PO tracker",
++    "tags": ["wholesale", "mockups"],
++    "passcodeHash": "",
++    "links": [
++      {"label": "Design Proofs", "href": "https://drive.google.com/drive/folders/EXAMPLE"},
++      {"label": "PO #1134 (PDF)", "href": "/docs/acme/po-1134.pdf"},
++      {"label": "Timeline", "href": "/docs/acme/timeline.html"}
++    ]
++  },
++  {
++    "name": "Blue River Swim Club",
++    "slug": "blue-river-swim",
++    "logo": "../assets/logos/blue-river.png",
++    "contactEmail": "coach@blueriver.org",
++    "notes": "Meet merch & size runs",
++    "tags": ["events", "merch"],
++    "passcodeHash": "",
++    "links": [
++      {"label": "Merch Catalog", "href": "/docs/blue-river/catalog.pdf"},
++      {"label": "Size Run Plan", "href": "/docs/blue-river/size-run.xlsx"}
++    ]
++  }
++]
+diff --git a/assets/gallery.css b/assets/gallery.css
+new file mode 100644
+--- /dev/null
++++ b/assets/gallery.css
+@@ -0,0 +86 @@
++:root{
++  --bg:#0b0f14;
++  --card:#111827;
++  --muted:#94a3b8;
++  --text:#e5e7eb;
++  --accent:#38bdf8;
++  --ring: #22d3ee;
++  --border:#1f2937;
++  --good:#34d399;
++  --bad:#f87171;
++}
++
++*{box-sizing:border-box}
++html,body{margin:0;padding:0}
++body{
++  font-family: system-ui, -apple-system, Segoe UI, Roboto, Inter, Arial, sans-serif;
++  color:var(--text);
++  background: radial-gradient(1200px 600px at 20% -10%, #0f172a 0%, var(--bg) 60%);
++  min-height:100svh;
++}
++.header{max-width:1200px;margin:0 auto;padding:28px 20px 8px}
++.header h1{margin:0 0 6px;font-size:clamp(24px,3vw,36px)}
++.header .subtle{color:var(--muted);margin:0}
++.container{max-width:1200px;margin:0 auto;padding:16px 20px 48px}
++
++.filters{
++  display:grid;
++  grid-template-columns: 1fr 220px 180px 180px;
++  gap:10px;align-items:center;margin-bottom:16px;
++}
++.filters input[type="search"], .filters select, .filters input[type="number"]{
++  width:100%;padding:10px 12px;border-radius:10px;border:1px solid var(--border);
++  background:#0b1220;color:var(--text);outline:none;
++}
++.filters input[type="search"]:focus, .filters select:focus, .filters input[type="number"]:focus{
++  border-color:var(--ring);box-shadow:0 0 0 3px #22d3ee22
++}
++.tag-row{display:flex;flex-wrap:wrap;gap:8px;margin:8px 0 18px}
++.pill{padding:8px 12px;border-radius:999px;border:1px solid var(--border);background:#0a1324;color:var(--text);cursor:pointer}
++.pill--active{border-color:var(--accent);box-shadow:0 0 0 2px #38bdf822}
++
++.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(220px,1fr));gap:14px}
++.card{
++  background:linear-gradient(180deg,#0d1628,#0a1220);
++  border:1px solid var(--border);border-radius:16px;overflow:hidden;box-shadow:0 10px 30px #0006;
++  transition:transform .15s ease, box-shadow .15s ease, border-color .2s
++}
++.card:hover{transform:translateY(-2px);box-shadow:0 14px 38px #0008;border-color:#273549}
++.card__media{position:relative;height:200px;background:#0a1324;border-bottom:1px solid var(--border);display:flex;align-items:center;justify-content:center}
++.card__img{max-height:100%;max-width:100%;object-fit:cover}
++.badge{position:absolute;top:10px;left:10px;font-size:12px;padding:4px 8px;border-radius:999px;background:#0f1a2d;border:1px solid #1a2940;color:#cbd5e1}
++.out{position:absolute;top:10px;right:10px;background:#3b0a0a;border:1px solid #5b1a1a;color:#fecaca}
++.card__body{padding:12px}
++.title{margin:0 0 4px;font-size:16px}
++.price{margin:0 0 8px;color:#d1fae5}
++.muted{color:var(--muted)}
++.sizes, .tags{display:flex;flex-wrap:wrap;gap:6px}
++.tag, .size{font-size:12px;padding:3px 8px;background:#0f1a2d;border:1px solid #1a2940;border-radius:999px;color:#cbd5e1}
++.card__actions{margin-top:12px;display:flex;gap:8px}
++.btn{
++  padding:9px 12px;border-radius:10px;border:1px solid var(--border);background:#0a1324;color:#var(--text);text-decoration:none;display:inline-block
++}
++.btn--buy{border-color:#059669;background:#059669;color:#00160f}
++.btn--ghost:hover{border-color:#2a3b5a;box-shadow:0 6px 18px #0007}
++.btn--buy:hover{filter:brightness(1.05)}
++
++.pagination{display:flex;gap:6px;justify-content:center;margin-top:18px}
++.pagination button{padding:8px 12px;border-radius:10px;border:1px solid var(--border);background:#0a1324;color:#var(--text);cursor:pointer}
++.pagination button[disabled]{opacity:.5;cursor:not-allowed}
++
++.empty{color:var(--muted);padding:24px;border:1px dashed #334155;border-radius:12px;background:#0a1324;text-align:center}
++
++/* Quick view modal */
++.modal{position:fixed;inset:0;background:#0008;display:none;align-items:center;justify-content:center;padding:20px}
++.modal.show{display:flex}
++.modal__panel{max-width:940px;width:100%;background:#0b1324;border:1px solid var(--border);border-radius:16px;overflow:hidden;box-shadow:0 20px 60px #000c}
++.modal__head{display:flex;justify-content:space-between;align-items:center;padding:12px 14px;border-bottom:1px solid var(--border)}
++.modal__body{display:grid;grid-template-columns: 1.2fr 1fr;gap:12px;padding:12px}
++.modal__body img{width:100%;height:auto;border-radius:12px;background:#0a1324;border:1px solid var(--border)}
++.close{background:none;border:none;color:var(--text);font-size:20px;cursor:pointer}
++.modal__actions{display:flex;gap:8px;margin-top:12px}
++
++@media (max-width: 860px){
++  .filters{grid-template-columns:1fr 1fr;grid-auto-rows:auto}
++  .modal__body{grid-template-columns:1fr}
++}
+diff --git a/assets/gallery.js b/assets/gallery.js
+new file mode 100644
+--- /dev/null
++++ b/assets/gallery.js
+@@ -0,0 +260 @@
++// /assets/gallery.js
++
++async function loadJSON(url){
++  const res = await fetch(url, { cache: 'no-store' });
++  if(!res.ok) throw new Error('Failed to load ' + url + ' (' + res.status + ')');
++  return await res.json();
++}
++
++function fmtPrice(n, c='USD'){
++  try { return new Intl.NumberFormat(undefined, { style:'currency', currency:c }).format(n); }
++  catch { return '$' + Number(n).toFixed(2); }
++}
++
++function unique(arr){ return [...new Set(arr.filter(Boolean))]; }
++
++function qs(sel, root=document){ return root.querySelector(sel); }
++function qsa(sel, root=document){ return [...root.querySelectorAll(sel)]; }
++
++function getQueryParam(k){
++  const u = new URL(location.href);
++  return u.searchParams.get(k) || '';
++}
++
++function buildTagPills(container, tags, active, onClick){
++  container.innerHTML = '';
++  unique(tags).sort((a,b)=>a.localeCompare(b)).forEach(t=>{
++    const b = document.createElement('button');
++    b.type = 'button';
++    b.className = 'pill' + (active.includes(t) ? ' pill--active' : '');
++    b.textContent = t;
++    b.addEventListener('click', ()=>onClick(t));
++    container.appendChild(b);
++  });
++}
++
++function paginate(list, page, perPage){
++  const total = list.length;
++  const pages = Math.max(1, Math.ceil(total / perPage));
++  const p = Math.min(Math.max(1, page), pages);
++  const start = (p-1)*perPage;
++  const end = start + perPage;
++  return { page:p, pages, total, items:list.slice(start, end) };
++}
++
++function normalSearchHay(product){
++  const hay = [
++    product.title, product.description, product.category,
++    ...(product.tags||[]), ...(product.sizes||[]), ...(product.colors||[])
++  ].join(' ').toLowerCase();
++  return hay;
++}
++
++function filterProducts(products, state){
++  const q = (state.q||'').toLowerCase().trim();
++  const min = Number(state.minPrice ?? 0);
++  const max = Number(state.maxPrice ?? Infinity);
++  the_cat = (state.category||'').toLowerCase();
++  const tagset = new Set(state.tags||[]);
++  const size = (state.size||'').toLowerCase();
++
++  let out = products.filter(p => {
++    if (p.status && p.status.toLowerCase() === 'hidden') return false;
++    const priceOk = (typeof p.price === 'number' ? (p.price >= min && p.price <= max) : true);
++    const catOk = the_cat ? ((p.category||'').toLowerCase() === the_cat) : true;
++    const sizeOk = size ? ((p.sizes||[]).map(s=>String(s).toLowerCase()).includes(size)) : true;
++    const tagsOk = tagset.size ? [...tagset].every(t => (p.tags||[]).includes(t)) : true;
++    const textOk = q ? normalSearchHay(p).includes(q) : true;
++    return priceOk && catOk && sizeOk && tagsOk && textOk;
++  });
++
++  const sort = state.sort || 'featured';
++  if (sort === 'price-asc') out.sort((a,b)=> (a.price||0)-(b.price||0));
++  else if (sort === 'price-desc') out.sort((a,b)=> (b.price||0)-(a.price||0));
++  else if (sort === 'newest') out.sort((a,b)=> new Date(b.createdAt||0) - new Date(a.createdAt||0));
++  // featured: leave as-is
++
++  return out;
++}
++
++function renderPagination(container, page, pages, onJump){
++  container.innerHTML = '';
++  const prev = document.createElement('button');
++  prev.textContent = 'Prev';
++  prev.disabled = (page<=1);
++  prev.addEventListener('click', ()=>onJump(Math.max(1,page-1)));
++  container.appendChild(prev);
++
++  const info = document.createElement('span');
++  info.className = 'muted';
++  info.style.padding = '8px 6px';
++  info.textContent = `Page ${page} of ${pages}`;
++  container.appendChild(info);
++
++  const next = document.createElement('button');
++  next.textContent = 'Next';
++  next.disabled = (page>=pages);
++  next.addEventListener('click', ()=>onJump(Math.min(pages,page+1)));
++  container.appendChild(next);
++}
++
++function renderGrid(container, products, currency, onQuickView){
++  container.innerHTML = '';
++  if (!products.length){
++    container.innerHTML = `<div class="empty">No items match your filters.</div>`;
++    return;
++  }
++
++  for(const p of products){
++    const card = document.createElement('article');
++    card.className = 'card';
++
++    const media = document.createElement('div');
++    media.className = 'card__media';
++    const img = document.createElement('img');
++    img.className = 'card__img';
++    img.alt = p.title || 'Product image';
++    img.src = p.thumbnail || '../assets/default-product.svg';
++    media.appendChild(img);
++
++    if (p.tags && p.tags.includes('best-seller')){
++      const b = document.createElement('span'); b.className = 'badge'; b.textContent='Best Seller'; media.appendChild(b);
++    }
++    if (Number(p.stock) === 0){
++      const o = document.createElement('span'); o.className = 'badge out'; o.textContent='Out of stock'; media.appendChild(o);
++    }
++
++    const body = document.createElement('div');
++    body.className = 'card__body';
++    const t = document.createElement('h3'); t.className='title'; t.textContent = p.title || 'Untitled';
++    const pr = document.createElement('div'); pr.className='price'; pr.textContent = typeof p.price==='number' ? fmtPrice(p.price, p.currency||currency) : '';
++    const sizes = document.createElement('div'); sizes.className='sizes';
++    (p.sizes||[]).forEach(s=>{ const x = document.createElement('span'); x.className='size'; x.textContent=s; sizes.appendChild(x); });
++    const tags = document.createElement('div'); tags.className='tags';
++    (p.tags||[]).forEach(s=>{ const x = document.createElement('span'); x.className='tag'; x.textContent=s; tags.appendChild(x); });
++
++    const actions = document.createElement('div'); actions.className='card__actions';
++    if (p.url){
++      const buy = document.createElement('a'); buy.className='btn btn--buy'; buy.href=p.url; buy.target='_blank'; buy.rel='noopener'; buy.textContent='Buy';
++      actions.appendChild(buy);
++    }
++    const details = document.createElement('button'); details.className='btn btn--ghost'; details.textContent = p.url ? 'Details' : 'View';
++    details.addEventListener('click', ()=>onQuickView(p));
++    actions.appendChild(details);
++
++    body.appendChild(t); body.appendChild(pr);
++    if ((p.sizes||[]).length) body.appendChild(sizes);
++    if ((p.tags||[]).length) body.appendChild(tags);
++    body.appendChild(actions);
++
++    card.appendChild(media);
++    card.appendChild(body);
++    container.appendChild(card);
++  }
++}
++
++function openQuickView(modalEl, product, currency){
++  const panel = qs('.modal__panel', modalEl);
++  qs('.modal__title', panel).textContent = product.title || 'Details';
++  qs('.modal__price', panel).textContent = typeof product.price==='number' ? fmtPrice(product.price, product.currency||currency) : '';
++  qs('.modal__desc', panel).textContent = product.description || '';
++
++  const img = qs('.modal__img', panel);
++  img.src = (product.images && product.images[0]) || product.thumbnail || '../assets/default-product.svg';
++  img.alt = product.title || 'Product image';
++
++  const sizes = qs('.modal__sizes', panel);
++  sizes.innerHTML='';
++  (product.sizes||[]).forEach(s=>{
++    const x = document.createElement('span'); x.className='size'; x.textContent=s; sizes.appendChild(x);
++  });
++
++  const buy = qs('.modal__buy', panel);
++  if (product.url){ buy.href = product.url; buy.style.display='inline-block'; }
++  else { buy.style.display='none'; }
++
++  modalEl.classList.add('show');
++  qs('.close', panel).focus();
++}
++
++function closeQuickView(modalEl){
++  modalEl.classList.remove('show');
++}
++
++// Main
++document.addEventListener('DOMContentLoaded', async function(){
++  const state = {
++    q: getQueryParam('q') || '',
++    category: getQueryParam('category') || '',
++    tags: getQueryParam('tag') ? [getQueryParam('tag')] : [],
++    size: '',
++    minPrice: '',
++    maxPrice: '',
++    sort: 'featured',
++    page: 1,
++    perPage: 12,
++  };
++
++  const grid = qs('#grid');
++  const pager = qs('#pager');
++  const tagsRow = qs('#tagsRow');
++  const modal = qs('#quickview');
++  const closeBtn = qs('#closeModal');
++
++  const searchEl = qs('#search');
++  const catEl = qs('#category');
++  const sizeEl = qs('#size');
++  const sortEl = qs('#sort');
++
++  // Load products
++  let products = [];
++  let currency = 'USD';
++  try {
++    products = await loadJSON('../data/products.json');
++    const sample = products.find(p=>typeof p.price==='number' && p.currency);
++    if (sample) currency = sample.currency;
++  } catch(e){
++    grid.innerHTML = `<div class="empty">Could not load products. Check <code>data/products.json</code>.</div>`;
++    console.error(e);
++    return;
++  }
++
++  // Populate category & size selects
++  const categories = unique(products.map(p=>p.category));
++  catEl.innerHTML = `<option value="">All categories</option>` + categories.map(c=>`<option>${c}</option>`).join('');
++  if (state.category) catEl.value = state.category;
++
++  const sizes = unique(products.flatMap(p=>p.sizes||[]));
++  sizeEl.innerHTML = `<option value="">Any size</option>` + sizes.map(s=>`<option>${s}</option>`).join('');
++
++  // Tag pills
++  const allTags = unique(products.flatMap(p=>p.tags||[]));
++  const handleTag = (t)=>{
++    const idx = state.tags.indexOf(t);
++    if (idx>=0) state.tags.splice(idx,1); else state.tags.push(t);
++    state.page = 1;
++    render();
++    buildTagPills(tagsRow, allTags, state.tags, handleTag);
++  };
++  buildTagPills(tagsRow, allTags, state.tags, handleTag);
++
++  // Wire controls
++  searchEl.value = state.q;
++  searchEl.addEventListener('input', ()=>{ state.q = searchEl.value.trim(); state.page=1; render(); });
++  catEl.addEventListener('change', ()=>{ state.category = catEl.value.trim(); state.page=1; render(); });
++  sizeEl.addEventListener('change', ()=>{ state.size = sizeEl.value.trim(); state.page=1; render(); });
++  sortEl.addEventListener('change', ()=>{ state.sort = sortEl.value.trim(); state.page=1; render(); });
++
++  closeBtn.addEventListener('click', ()=>closeQuickView(modal));
++  modal.addEventListener('click', (e)=>{ if (e.target===modal) closeQuickView(modal); });
++  document.addEventListener('keydown', (e)=>{ if (e.key==='Escape') closeQuickView(modal); });
++
++  function render(){
++    const filtered = filterProducts(products, state);
++    const { page, pages, items } = paginate(filtered, state.page, state.perPage);
++    renderGrid(grid, items, currency, (p)=>openQuickView(modal, p, currency));
++    renderPagination(pager, page, pages, (jump)=>{ state.page=jump; render(); });
++  }
++
++  render();
++});
+diff --git a/data/products.json b/data/products.json
+new file mode 100644
+--- /dev/null
++++ b/data/products.json
+@@ -0,0 +66 @@
++[
++  {
++    "id": "sku-tee-black",
++    "title": "Classic Tee — Black",
++    "price": 20.0,
++    "currency": "USD",
++    "thumbnail": "../assets/default-product.svg",
++    "images": ["../assets/default-product.svg"],
++    "category": "T-Shirts",
++    "tags": ["cotton","unisex","best-seller"],
++    "sizes": ["S","M","L","XL","2XL"],
++    "colors": ["Black"],
++    "url": "https://square.link/u/EXAMPLE-BLACK",
++    "status": "active",
++    "stock": 25,
++    "createdAt": "2025-01-10"
++  },
++  {
++    "id": "sku-tee-white",
++    "title": "Classic Tee — White",
++    "price": 20.0,
++    "currency": "USD",
++    "thumbnail": "../assets/default-product.svg",
++    "images": ["../assets/default-product.svg"],
++    "category": "T-Shirts",
++    "tags": ["cotton","unisex"],
++    "sizes": ["S","M","L","XL","2XL"],
++    "colors": ["White"],
++    "url": "https://square.link/u/EXAMPLE-WHITE",
++    "status": "active",
++    "stock": 0,
++    "createdAt": "2025-02-05"
++  },
++  {
++    "id": "sku-hoodie-charcoal",
++    "title": "Premium Hoodie — Charcoal",
++    "price": 45.0,
++    "currency": "USD",
++    "thumbnail": "../assets/default-product.svg",
++    "images": ["../assets/default-product.svg"],
++    "category": "Hoodies",
++    "tags": ["fleece","unisex"],
++    "sizes": ["S","M","L","XL","2XL","3XL"],
++    "colors": ["Charcoal"],
++    "url": "https://square.link/u/EXAMPLE-HOODIE",
++    "status": "active",
++    "stock": 8,
++    "createdAt": "2025-03-15"
++  },
++  {
++    "id": "sku-cap-navy",
++    "title": "Classic Cap — Navy",
++    "price": 18.0,
++    "currency": "USD",
++    "thumbnail": "../assets/default-product.svg",
++    "images": ["../assets/default-product.svg"],
++    "category": "Hats",
++    "tags": ["embroidered"],
++    "sizes": ["One Size"],
++    "colors": ["Navy"],
++    "url": "https://square.link/u/EXAMPLE-CAP",
++    "status": "active",
++    "stock": 50,
++    "createdAt": "2025-04-02"
++  }
++]
+diff --git a/gallery/index.html b/gallery/index.html
+new file mode 100644
+--- /dev/null
++++ b/gallery/index.html
+@@ -0,0 +64 @@
++<!doctype html>
++<html lang="en">
++<head>
++  <meta charset="utf-8" />
++  <title>Gallery</title>
++  <meta name="viewport" content="width=device-width, initial-scale=1" />
++  <link href="../assets/gallery.css" rel="stylesheet" />
++</head>
++<body>
++  <header class="header">
++    <h1>Gallery</h1>
++    <p class="subtle">Browse all available items. Use search and filters to find what you need.</p>
++  </header>
++
++  <main class="container">
++    <section class="filters" aria-label="Filters">
++      <input id="search" type="search" placeholder="Search products…" aria-label="Search products" />
++      <select id="category" aria-label="Category"></select>
++      <select id="size" aria-label="Size"></select>
++      <select id="sort" aria-label="Sort">
++        <option value="featured">Featured</option>
++        <option value="price-asc">Price: Low to High</option>
++        <option value="price-desc">Price: High to Low</option>
++        <option value="newest">Newest</option>
++      </select>
++    </section>
++
++    <div class="tag-row" id="tagsRow"></div>
++
++    <section aria-live="polite" id="grid" class="grid"></section>
++    <div id="pager" class="pagination" aria-label="Pagination"></div>
++  </main>
++
++  <!-- Quick View Modal -->
++  <div class="modal" id="quickview" role="dialog" aria-modal="true" aria-labelledby="qvTitle">
++    <div class="modal__panel">
++      <div class="modal__head">
++        <h2 id="qvTitle" class="modal__title">Details</h2>
++        <button id="closeModal" title="Close" class="close" aria-label="Close">&times;</button>
++      </div>
++      <div class="modal__body">
++        <img class="modal__img" alt="Product image" />
++        <div>
++          <div class="modal__price"></div>
++          <p class="modal__desc muted"></p>
++          <div class="modal__sizes sizes"></div>
++          <div class="modal__actions">
++            <a class="btn btn--buy modal__buy" target="_blank" rel="noopener">Buy</a>
++            <button class="btn btn--ghost" id="closeModal2">Close</button>
++          </div>
++        </div>
++      </div>
++    </div>
++  </div>
++
++  <script type="module" src="../assets/gallery.js"></script>
++  <script>
++    document.addEventListener('DOMContentLoaded', function(){
++      var m = document.getElementById('quickview');
++      document.getElementById('closeModal2').addEventListener('click', function(){ m.classList.remove('show'); });
++    });
++  </script>
++</body>
++</html>
+-- 
+2.39.2
