@@ -2,52 +2,11 @@
 /* Client Portals — Horizontal toolbar (matches Gallery/Shop style) */
 .header .subtle{color:#6b7280}
 .container{max-width:1080px;margin:0 auto;padding:18px 20px 48px}
-
-/* Horizontal toolbar layout */
-.toolbar{
-  display:flex;
-  align-items:center;
-  gap:12px;
-  margin:16px 0 20px;
-  flex-wrap:wrap; /* allow wrap on medium screens */
-}
-
-/* Inputs (search + any future selects) */
-.toolbar input[type="search"],
-.toolbar select{
-  padding:12px 14px;
-  border-radius:12px;
-  border:1px solid #e5e7eb;
-  background:#fff;
-  color:#0f172a;
-  outline:none;
-}
-
-/* Make search grow to fill remaining space */
-.toolbar input[type="search"]{
-  flex:1 1 320px;
-  min-width:260px;
-}
-
-/* Optional future filters align nicely */
-.toolbar select{
-  flex:0 1 180px;
-  min-width:160px;
-}
-
-/* Keep strictly horizontal on very small screens via scroll */
-@media (max-width: 520px){
-  .toolbar{
-    flex-wrap:nowrap;
-    overflow-x:auto;
-    -webkit-overflow-scrolling: touch;
-    padding-bottom:4px;
-  }
-  .toolbar > *{ flex:0 0 auto; }
-  .toolbar input[type="search"]{ width:60vw; }
-}
-
-/* Card styles preserved (safe replacement) */
+.toolbar{display:flex;align-items:center;gap:12px;margin:16px 0 20px;flex-wrap:wrap}
+.toolbar input[type="search"],.toolbar select{padding:12px 14px;border-radius:12px;border:1px solid #e5e7eb;background:#fff;color:#0f172a;outline:none}
+.toolbar input[type="search"]{flex:1 1 320px;min-width:260px}
+.toolbar select{flex:0 1 180px;min-width:160px}
+@media (max-width: 520px){.toolbar{flex-wrap:nowrap;overflow-x:auto;-webkit-overflow-scrolling:touch;padding-bottom:4px}.toolbar > *{flex:0 0 auto}.toolbar input[type="search"]{width:60vw}}
 .cards{display:grid;grid-template-columns:repeat(auto-fill,minmax(260px,1fr));gap:16px}
 .card{background:#fff;border:1px solid #e5e7eb;border-radius:16px;overflow:hidden;box-shadow:0 6px 18px rgba(16,24,40,.08)}
 .card__link{display:block;color:inherit;text-decoration:none}
