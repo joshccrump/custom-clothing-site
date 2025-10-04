@@ -1,0 +1,12 @@
+{
+  "name": "custom-clothing-site-square-sync",
+  "version": "1.0.0",
+  "type": "module",
+  "private": true,
+  "scripts": {
+    "sync:square": "node scripts/fetch-square.js"
+  },
+  "dependencies": {
+    "square": "^43.1.0"
+  }
+}
