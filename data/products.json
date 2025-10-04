@@ -4,9 +4,9 @@
     "title": "Classic Tee \u2014 Black",
     "price": 20.0,
     "currency": "USD",
-    "thumbnail": "../assets/default-product.svg",
+    "thumbnail": "assets/default-product.svg",
     "images": [
-      "../assets/default-product.svg"
+      "assets/default-product.svg"
     ],
     "category": "T-Shirts",
     "tags": [
@@ -34,9 +34,9 @@
     "title": "Classic Tee \u2014 White",
     "price": 20.0,
     "currency": "USD",
-    "thumbnail": "../assets/default-product.svg",
+    "thumbnail": "assets/default-product.svg",
     "images": [
-      "../assets/default-product.svg"
+      "assets/default-product.svg"
     ],
     "category": "T-Shirts",
     "tags": [
@@ -63,9 +63,9 @@
     "title": "Premium Hoodie \u2014 Charcoal",
     "price": 45.0,
     "currency": "USD",
-    "thumbnail": "../assets/default-product.svg",
+    "thumbnail": "assets/default-product.svg",
     "images": [
-      "../assets/default-product.svg"
+      "assets/default-product.svg"
     ],
     "category": "Hoodies",
     "tags": [
@@ -93,9 +93,9 @@
     "title": "Classic Cap \u2014 Navy",
     "price": 18.0,
     "currency": "USD",
-    "thumbnail": "../assets/default-product.svg",
+    "thumbnail": "assets/default-product.svg",
     "images": [
-      "../assets/default-product.svg"
+      "assets/default-product.svg"
     ],
     "category": "Hats",
     "tags": [

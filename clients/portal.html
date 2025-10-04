@@ -5,6 +5,8 @@
   <title>Client Portal</title>
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <link href="../assets/portals.css" rel="stylesheet" />
+  <link rel="stylesheet" href="../assets/site-nav.css" />
+  <script defer src="../assets/theme-loader.js" data-theme="crump"></script>
 </head>
 <body class="page page--portal">
   <header class="header">
@@ -61,12 +63,10 @@
       }
     })();
     function showContent(client){
-      logo.src = client.logo || '../assets/default-logo.svg';
-      logo.alt = `${client.name} logo`;
+      logo.src = client.logo || '../assets/default-logo.svg'; logo.alt = `${client.name} logo`;
       title.textContent = client.name;
       email.innerHTML = client.contactEmail ? `<a href="mailto:${client.contactEmail}">${client.contactEmail}</a>` : '';
-      tags.innerHTML='';
-      (client.tags||[]).forEach(t=>{ const span=document.createElement('span'); span.className='tag'; span.textContent=t; tags.appendChild(span); });
+      tags.innerHTML=''; (client.tags||[]).forEach(t=>{ const span=document.createElement('span'); span.className='tag'; span.textContent=t; tags.appendChild(span); });
       links.innerHTML='';
       if ((client.links||[]).length){
         for(const l of client.links){ const a=document.createElement('a'); a.className='link'; a.href=l.href; a.target='_blank'; a.rel='noopener'; a.textContent=l.label||l.href; links.appendChild(a); }
@@ -74,5 +74,6 @@
       content.hidden=false;
     }
   </script>
+  <script defer src="../assets/site-nav.js" data-brand="Created By Crump"></script>
 </body>
 </html>

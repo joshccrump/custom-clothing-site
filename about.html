@@ -6,12 +6,9 @@
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <link rel="stylesheet" href="assets/themes/base.css">
   <script defer src="assets/theme-loader.js" data-theme="crump"></script>
+  <link rel="stylesheet" href="assets/site-nav.css">
   <style>
     body { min-height: 100svh; display:flex; flex-direction:column; }
-    header { padding: 14px 20px; }
-    .brand { font-weight: 600; text-decoration: none; color: var(--text); }
-    nav a { text-decoration:none; color:var(--text); margin-right:12px; padding:8px 10px; border-radius: var(--radius-sm); }
-    nav a:hover { background: color-mix(in srgb, var(--accent) 10%, transparent); }
     main { flex:1; }
     .hero { padding: 48px 20px 16px; }
     .hero h1 { margin: 0; font-size: clamp(28px, 5vw, 42px); }
@@ -23,18 +20,6 @@
   </style>
 </head>
 <body>
-  <header>
-    <div class="container" style="display:flex;align-items:center;justify-content:space-between;gap:16px;">
-      <a class="brand" href="./">Custom Clothing</a>
-      <nav data-site-nav>
-        <a href="clients/">Client Portals</a>
-        <a href="gallery/">Gallery</a>
-        <a href="shop.html">Shop</a>
-        <a href="about.html" aria-current="page">About</a>
-        <a href="contact.html">Contact</a>
-      </nav>
-    </div>
-  </header>
   <main>
     <section class="hero">
       <div class="container">
@@ -61,11 +46,8 @@
       </div>
     </section>
   </main>
-  <footer>
-    <div class="container">© <span id="y"></span> Custom Clothing</div>
-  </footer>
-  <script src="assets/nav-autobase.js" defer></script>
-  <script src="assets/nav-links.js" defer></script>
+  <footer><div class="container">© <span id="y"></span> Custom Clothing</div></footer>
+  <script defer src="assets/site-nav.js" data-brand="Created By Crump"></script>
   <script>document.getElementById('y').textContent = new Date().getFullYear();</script>
 </body>
 </html>

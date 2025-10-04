@@ -10,11 +10,7 @@
   function loadPreset(name){
     if (!name) return;
     var href = 'assets/themes/presets/' + name + '.css';
-    var link = document.createElement('link');
-    link.rel = 'stylesheet';
-    link.href = href;
-    document.head.appendChild(link);
+    var link = document.createElement('link'); link.rel = 'stylesheet'; link.href = href; document.head.appendChild(link);
   }
-  var theme = getPreferred();
-  loadPreset(theme);
+  var theme = getPreferred(); loadPreset(theme||'crump');
 })();

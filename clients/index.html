@@ -5,6 +5,8 @@
   <title>Client Portals</title>
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <link href="../assets/portals.css" rel="stylesheet" />
+  <link rel="stylesheet" href="../assets/site-nav.css" />
+  <script defer src="../assets/theme-loader.js" data-theme="crump"></script>
   <link rel="preload" href="../data/clients.json" as="fetch" crossorigin="anonymous" />
 </head>
 <body class="page page--list">
@@ -22,9 +24,7 @@
   <template id="cardTemplate">
     <article class="card">
       <a class="card__link" href="#">
-        <div class="card__media">
-          <img class="card__logo" alt="" />
-        </div>
+        <div class="card__media"><img class="card__logo" alt="" /></div>
         <div class="card__body">
           <h2 class="card__title"></h2>
           <p class="card__notes"></p>
@@ -53,5 +53,6 @@
     function onTagClick(tag){ activeTag=(activeTag===tag?'':tag); render(filterClients(clients, searchEl.value, activeTag)); makeTagPills(tagRow, clients, activeTag, onTagClick); }
     (async()=>{ clients=await loadClients('../data/clients.json'); makeTagPills(tagRow, clients, activeTag, onTagClick); render(clients); searchEl.addEventListener('input', ()=>{ render(filterClients(clients, searchEl.value, activeTag)); }); })();
   </script>
+  <script defer src="../assets/site-nav.js" data-brand="Created By Crump"></script>
 </body>
 </html>

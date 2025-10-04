@@ -6,42 +6,23 @@
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <link rel="stylesheet" href="assets/themes/base.css">
   <script defer src="assets/theme-loader.js" data-theme="crump"></script>
+  <link rel="stylesheet" href="assets/site-nav.css">
   <style>
     body { min-height: 100svh; display:flex; flex-direction:column; }
-    header { padding: 14px 20px; }
-    .brand { font-weight: 600; text-decoration: none; color: var(--text); }
-    nav a { text-decoration:none; color:var(--text); margin-right:12px; padding:8px 10px; border-radius: var(--radius-sm); }
-    nav a:hover { background: color-mix(in srgb, var(--accent) 10%, transparent); }
     main { flex:1; }
     .wrap { padding: 32px 20px 48px; }
     form { max-width: 680px; margin: 0 auto; background: var(--card); border:1px solid var(--border); border-radius: var(--radius); padding: 18px; box-shadow: var(--shadow-1); }
     label { display:block; margin-top:12px; margin-bottom:6px; }
-    input, textarea {
-      width:100%; padding:12px 14px; border-radius:12px; border:1px solid var(--border); background:#fff; color:#0b1220;
-    }
+    input, textarea { width:100%; padding:12px 14px; border-radius:12px; border:1px solid var(--border); background:#fff; color:#0b1220; }
     textarea { min-height: 140px; }
     .row { display:grid; grid-template-columns: 1fr 1fr; gap:12px; }
     .actions { margin-top: 14px; display:flex; gap:10px; }
-    .btn { display:inline-block; text-decoration:none; border:1px solid var(--border); background: color-mix(in srgb, var(--accent) 12%, transparent); color: var(--text); padding: 10px 14px; border-radius: var(--radius-sm); }
     .btn--primary { border-color: color-mix(in srgb, var(--accent) 55%, var(--border)); background: var(--accent); color:#fff; }
     .muted { color: var(--muted); }
-    footer { padding:20px; color: var(--muted); }
     @media (max-width: 700px){ .row { grid-template-columns: 1fr; } }
   </style>
 </head>
 <body>
-  <header>
-    <div class="container" style="display:flex;align-items:center;justify-content:space-between;gap:16px;">
-      <a class="brand" href="./">Custom Clothing</a>
-      <nav data-site-nav>
-        <a href="clients/">Client Portals</a>
-        <a href="gallery/">Gallery</a>
-        <a href="shop.html">Shop</a>
-        <a href="about.html">About</a>
-        <a href="contact.html" aria-current="page">Contact</a>
-      </nav>
-    </div>
-  </header>
   <main class="wrap">
     <div class="container">
       <h1>Contact</h1>
@@ -69,11 +50,8 @@
       </form>
     </div>
   </main>
-  <footer>
-    <div class="container">© <span id="y"></span> Custom Clothing</div>
-  </footer>
-  <script src="assets/nav-autobase.js" defer></script>
-  <script src="assets/nav-links.js" defer></script>
+  <footer><div class="container">© <span id="y"></span> Custom Clothing</div></footer>
+  <script defer src="assets/site-nav.js" data-brand="Created By Crump"></script>
   <script>
     document.getElementById('y').textContent = new Date().getFullYear();
     const TO = "hello@yourdomain.com"; // ← change to your real email

@@ -1,50 +1,38 @@
 [
   {
-    "name": "Acme Apparel",
-    "slug": "acme-apparel",
+    "name": "OFPY Makos",
+    "slug": "ofpy-makos",
     "logo": "../assets/default-logo.svg",
-    "contactEmail": "project@acme.com",
-    "notes": "Holiday collection mockups & PO tracker",
+    "contactEmail": "ofpy.makos@yourdomain.com",
+    "notes": "Team merch & meet gear",
     "tags": [
-      "wholesale",
-      "mockups"
+      "team"
     ],
     "passcodeHash": "",
-    "links": [
-      {
-        "label": "Design Proofs",
-        "href": "https://drive.google.com/drive/folders/EXAMPLE"
-      },
-      {
-        "label": "PO #1134 (PDF)",
-        "href": "/docs/acme/po-1134.pdf"
-      },
-      {
-        "label": "Timeline",
-        "href": "/docs/acme/timeline.html"
-      }
-    ]
+    "links": []
   },
   {
-    "name": "Blue River Swim Club",
-    "slug": "blue-river-swim",
+    "name": "JD Wallace",
+    "slug": "jd-wallace",
     "logo": "../assets/default-logo.svg",
-    "contactEmail": "coach@blueriver.org",
-    "notes": "Meet merch & size runs",
+    "contactEmail": "jd.wallace@yourdomain.com",
+    "notes": "Personal brand merch",
     "tags": [
-      "events",
-      "merch"
+      "creator"
     ],
     "passcodeHash": "",
-    "links": [
-      {
-        "label": "Merch Catalog",
-        "href": "/docs/blue-river/catalog.pdf"
-      },
-      {
-        "label": "Size Run Plan",
-        "href": "/docs/blue-river/size-run.xlsx"
-      }
-    ]
+    "links": []
+  },
+  {
+    "name": "K. Harris",
+    "slug": "k-harris",
+    "logo": "../assets/default-logo.svg",
+    "contactEmail": "k.harris@yourdomain.com",
+    "notes": "Event tees",
+    "tags": [
+      "events"
+    ],
+    "passcodeHash": "",
+    "links": []
   }
 ]

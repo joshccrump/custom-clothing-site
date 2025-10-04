@@ -6,22 +6,12 @@
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <link rel="stylesheet" href="assets/themes/base.css">
   <script defer src="assets/theme-loader.js" data-theme="crump"></script>
+  <link rel="stylesheet" href="assets/site-nav.css">
   <link rel="stylesheet" href="assets/gallery.css">
 </head>
 <body>
   <header class="header">
-    <div class="container" style="display:flex;align-items:center;justify-content:space-between;gap:16px;">
-      <a class="brand" href="./" style="font-weight:600; text-decoration:none; color:var(--text);">Custom Clothing</a>
-      <nav data-site-nav>
-        <a href="clients/">Client Portals</a>
-        <a href="gallery/">Gallery</a>
-        <a href="shop.html" aria-current="page">Shop</a>
-        <a href="about.html">About</a>
-        <a href="contact.html">Contact</a>
-      </nav>
-    </div>
-    <h1 style="margin:8px 20px 0">Shop</h1>
-    <p class="subtle" style="margin:6px 20px 0">Browse a curated selection. For the full catalog, see the <a href="gallery/">Gallery</a>.</p>
+    <div class="container"><h1>Shop</h1><p class="subtle">Curated picks. For the full catalog, see the <a href="gallery/">Gallery</a>.</p></div>
   </header>
   <main class="container" style="padding-top:12px;">
     <section class="filters" aria-label="Filters">
@@ -38,21 +28,13 @@
     <section aria-live="polite" id="grid" class="grid"></section>
     <div id="pager" class="pagination" aria-label="Pagination"></div>
   </main>
-  <footer>
-    <div class="container" style="color:var(--muted); padding:20px;">© <span id="y"></span> Custom Clothing</div>
-  </footer>
-  <script src="assets/nav-autobase.js" defer></script>
-  <script src="assets/nav-links.js" defer></script>
+  <footer><div class="container" style="color:var(--muted); padding:20px;">© <span id="y"></span> Custom Clothing</div></footer>
+  <script defer src="assets/site-nav.js" data-brand="Created By Crump"></script>
   <script type="module">
-    const $ = (s,r=document)=>r.querySelector(s);
     const fmt = (n,c='USD') => { try { return new Intl.NumberFormat(undefined,{style:'currency',currency:c}).format(n); } catch { return '$'+Number(n).toFixed(2); } };
     const unique = a => [...new Set(a.filter(Boolean))];
     document.getElementById('y').textContent = new Date().getFullYear();
-    async function loadProducts(){
-      const res = await fetch('data/products.json', { cache: 'no-store' });
-      if(!res.ok) throw new Error('Failed to load products.json');
-      return await res.json();
-    }
+    async function loadProducts(){ const res = await fetch('data/products.json', { cache: 'no-store' }); if(!res.ok) throw new Error('Failed to load products.json'); return await res.json(); }
     function filter(products, state){
       const q = (state.q||'').toLowerCase().trim();
       const cat = (state.category||'').toLowerCase();
