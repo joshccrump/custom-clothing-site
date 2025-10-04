@@ -1,13 +1,10 @@
 [
   {
-    "id": "sku-tee-black",
+    "id": "tee-black",
     "title": "Classic Tee \u2014 Black",
     "price": 20.0,
     "currency": "USD",
     "thumbnail": "assets/default-product.svg",
-    "images": [
-      "assets/default-product.svg"
-    ],
     "category": "T-Shirts",
     "tags": [
       "cotton",
@@ -30,14 +27,11 @@
     "createdAt": "2025-01-10"
   },
   {
-    "id": "sku-tee-white",
+    "id": "tee-white",
     "title": "Classic Tee \u2014 White",
     "price": 20.0,
     "currency": "USD",
     "thumbnail": "assets/default-product.svg",
-    "images": [
-      "assets/default-product.svg"
-    ],
     "category": "T-Shirts",
     "tags": [
       "cotton",
@@ -59,14 +53,11 @@
     "createdAt": "2025-02-05"
   },
   {
-    "id": "sku-hoodie-charcoal",
+    "id": "hoodie-charcoal",
     "title": "Premium Hoodie \u2014 Charcoal",
     "price": 45.0,
     "currency": "USD",
     "thumbnail": "assets/default-product.svg",
-    "images": [
-      "assets/default-product.svg"
-    ],
     "category": "Hoodies",
     "tags": [
       "fleece",
@@ -87,29 +78,5 @@
     "status": "active",
     "stock": 8,
     "createdAt": "2025-03-15"
-  },
-  {
-    "id": "sku-cap-navy",
-    "title": "Classic Cap \u2014 Navy",
-    "price": 18.0,
-    "currency": "USD",
-    "thumbnail": "assets/default-product.svg",
-    "images": [
-      "assets/default-product.svg"
-    ],
-    "category": "Hats",
-    "tags": [
-      "embroidered"
-    ],
-    "sizes": [
-      "One Size"
-    ],
-    "colors": [
-      "Navy"
-    ],
-    "url": "https://square.link/u/EXAMPLE-CAP",
-    "status": "active",
-    "stock": 50,
-    "createdAt": "2025-04-02"
   }
 ]
