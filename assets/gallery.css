@@ -1,1 +1,62 @@
-.header{max-width:1200px;margin:0 auto;padding:28px 20px 8px}.header h1{margin:0 0 6px;font-size:clamp(24px,3vw,36px)}.header .subtle{color:#6b7280;margin:0}.container{max-width:1200px;margin:0 auto;padding:16px 20px 48px}.filters{display:grid;grid-template-columns:1fr 220px 180px 180px;gap:10px;align-items:center;margin-bottom:16px}.filters input[type=search],.filters select{width:100%;padding:10px 12px;border-radius:10px;border:1px solid #e5e7eb;background:#fff;color:#0f172a;outline:none}.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(220px,1fr));gap:14px}.card{background:#fff;border:1px solid #e5e7eb;border-radius:16px;overflow:hidden;box-shadow:0 6px 18px rgba(16,24,40,.08)}.card__media{position:relative;height:200px;background:#f2f4f8;border-bottom:1px solid #e5e7eb;display:flex;align-items:center;justify-content:center}.card__img{max-height:100%;max-width:100%;object-fit:cover}.badge{position:absolute;top:10px;left:10px;font-size:12px;padding:4px 8px;border-radius:999px;background:#eef2ff;border:1px solid #e0e7ff;color:#1e3a8a}.out{position:absolute;top:10px;right:10px;background:#fff1f2;border:1px solid #ffe4e6;color:#9f1239}.card__body{padding:12px}.title{margin:0 0 4px;font-size:16px}.price{margin:0 0 8px;color:#065f46}.sizes,.tags{display:flex;flex-wrap:wrap;gap:6px}.tag,.size{font-size:12px;padding:3px 8px;background:#eef2ff;border:1px solid #e0e7ff;border-radius:999px;color:#1e3a8a}.card__actions{margin-top:12px;display:flex;gap:8px}.btn{padding:9px 12px;border-radius:10px;border:1px solid #e5e7eb;background:#fff;color:#0f172a;text-decoration:none;display:inline-block}.btn--buy{border-color:#059669;background:#059669;color:#fff}
+
+/* Horizontal filters toolbar for Gallery + Shop */
+.header .subtle{color:#6b7280}
+.container{max-width:1200px;margin:0 auto;padding:16px 20px 48px}
+
+/* Make filters a horizontal row (with smart wrapping) */
+.filters{
+  display:flex;
+  align-items:center;
+  gap:12px;
+  margin-bottom:16px;
+  flex-wrap:wrap; /* wrap on medium screens */
+}
+
+/* Field sizing for a nice single-line feel on desktop */
+.filters input[type="search"]{
+  flex:1 1 320px;
+  min-width:260px;
+  padding:10px 12px;
+  border-radius:10px;
+  border:1px solid #e5e7eb;
+  background:#fff;
+  color:#0f172a;
+  outline:none;
+}
+.filters select{
+  flex:0 1 180px;
+  min-width:160px;
+  padding:10px 12px;
+  border-radius:10px;
+  border:1px solid #e5e7eb;
+  background:#fff;
+  color:#0f172a;
+  outline:none;
+}
+
+/* Keep it strictly horizontal on very small screens — enable scroll */
+@media (max-width: 520px){
+  .filters{
+    flex-wrap:nowrap;
+    overflow-x:auto;
+    -webkit-overflow-scrolling: touch;
+    padding-bottom:4px; /* space for scroll bar */
+  }
+  .filters > *{ flex:0 0 auto; }
+  .filters input[type="search"]{ width:60vw; }
+}
+
+/* Card/grid styles (unchanged, included for context so you can replace the whole file safely) */
+.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(220px,1fr));gap:14px}
+.card{background:#fff;border:1px solid #e5e7eb;border-radius:16px;overflow:hidden;box-shadow:0 6px 18px rgba(16,24,40,.08)}
+.card__media{position:relative;height:200px;background:#f2f4f8;border-bottom:1px solid #e5e7eb;display:flex;align-items:center;justify-content:center}
+.card__img{max-height:100%;max-width:100%;object-fit:cover}
+.badge{position:absolute;top:10px;left:10px;font-size:12px;padding:4px 8px;border-radius:999px;background:#eef2ff;border:1px solid #e0e7ff;color:#1e3a8a}
+.out{position:absolute;top:10px;right:10px;background:#fff1f2;border:1px solid #ffe4e6;color:#9f1239}
+.card__body{padding:12px}
+.title{margin:0 0 4px;font-size:16px}
+.price{margin:0 0 8px;color:#065f46}
+.tag,.size{font-size:12px;padding:3px 8px;background:#eef2ff;border:1px solid #e0e7ff;border-radius:999px;color:#1e3a8a}
+.card__actions{margin-top:12px;display:flex;gap:8px}
+.btn{padding:9px 12px;border-radius:10px;border:1px solid #e5e7eb;background:#fff;color:#0f172a;text-decoration:none;display:inline-block}
+.btn--buy{border-color:#059669;background:#059669;color:#fff}
