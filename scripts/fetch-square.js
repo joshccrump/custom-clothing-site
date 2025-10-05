@@ -4,22 +4,18 @@
 //      SQUARE_LOCATION_ID or SQUARE_LOCATION_IDS="LOC1,LOC2"
 //      OUTPUT_DIR=docs/data (optional), OUTPUT_FILE=products.json (optional)
 
-import Square from "square";                 // <-- default import (CommonJS module)
-const { Client, Environment } = Square;      // then destructure
 import fs from "node:fs/promises";
 import path from "node:path";
 
+// --- Env ---
 const ACCESS_TOKEN = process.env.SQUARE_ACCESS_TOKEN;
 if (!ACCESS_TOKEN) {
   console.error("❌ Missing SQUARE_ACCESS_TOKEN");
   process.exit(1);
 }
-
-const ENV =
-  (process.env.SQUARE_ENV || "production").toLowerCase() === "production"
-    ? Environment.Production
-    : Environment.Sandbox;
-
+const ENV_RAW = (process.env.SQUARE_ENV || "production").toLowerCase();
+const OUTPUT_DIR = process.env.OUTPUT_DIR || "data";
+const OUTPUT_FILE = process.env.OUTPUT_FILE || "products.json";
 const LOCATION_IDS = (() => {
   const multi = (process.env.SQUARE_LOCATION_IDS || "").trim();
   if (multi) return multi.split(",").map(s => s.trim()).filter(Boolean);
@@ -27,69 +23,118 @@ const LOCATION_IDS = (() => {
   return single ? [single] : [];
 })();
 
-const OUTPUT_DIR = process.env.OUTPUT_DIR || "data";
-const OUTPUT_FILE = process.env.OUTPUT_FILE || "products.json";
+// --- Load Square SDK safely for BOTH new and legacy shapes ---
+const SqMod = await import("square").catch(e => {
+  console.error("❌ Unable to import 'square' package. Did you run `npm i square`?", e?.message || e);
+  process.exit(1);
+});
 
-const client = new Client({ accessToken: ACCESS_TOKEN, environment: ENV });
-const { catalogApi, inventoryApi } = client;
+// helper to pick the first defined export
+const pick = (...candidates) => candidates.find(Boolean);
 
-/** Money → number */
-function moneyToNumber(m) {
-  if (!m || m.amount == null) return null;
-  return Number(m.amount) / 100;
+// handles both ESM named exports and CJS default export
+const M = SqMod.default && typeof SqMod.default === "object" ? { ...SqMod, ...SqMod.default } : SqMod;
+
+// New SDK (v40+) exports
+const SquareClient = pick(M.SquareClient);
+const SquareEnvironment = pick(M.SquareEnvironment);
+
+// Legacy SDK exports
+const Client = pick(M.Client, M.default?.Client);
+const Environment = pick(M.Environment, M.default?.Environment);
+
+// Build client for either SDK
+let client;
+let envEnum;
+if (SquareClient && SquareEnvironment) {
+  envEnum = ENV_RAW === "production" ? SquareEnvironment.Production : SquareEnvironment.Sandbox;
+  client = new SquareClient({ token: ACCESS_TOKEN, environment: envEnum });
+} else if (Client && Environment) {
+  envEnum = ENV_RAW === "production" ? Environment.Production : Environment.Sandbox;
+  client = new Client({
+    bearerAuthCredentials: { accessToken: ACCESS_TOKEN },
+    environment: envEnum
+  });
+} else {
+  console.error("❌ Could not resolve Square SDK exports (SquareClient/Client). Check your 'square' version.");
+  process.exit(1);
 }
 
-/** Pull all catalog objects of given types */
+// --- Helpers ---
+const moneyToNumber = (m) => (m && m.amount != null) ? Number(m.amount) / 100 : null;
+
 async function listAllCatalog(typesCsv) {
-  let cursor;
-  const objects = [];
+  let cursor, out = [];
+  // New SDK path: client.catalog.list({ types, cursor })
+  const useNew = !!client.catalog?.list;
   do {
-    const { result } = await catalogApi.listCatalog({ types: typesCsv, cursor });
-    objects.push(...(result.objects ?? []));
-    cursor = result.cursor;
+    if (useNew) {
+      const page = await client.catalog.list({ types: typesCsv, cursor });
+      out.push(...(page.data ?? page.result ?? page.objects ?? []));
+      cursor = page.cursor ?? page.result?.cursor;
+    } else {
+      // Legacy path: client.catalogApi.listCatalog({ types, cursor })
+      const page = await client.catalogApi.listCatalog({ types: typesCsv, cursor });
+      out.push(...(page.result.objects ?? []));
+      cursor = page.result.cursor;
+    }
   } while (cursor);
-  return objects;
+  return out;
 }
 
-/** Batch inventory counts for many variation IDs (sum across locations if provided) */
 async function batchCounts(variationIds, locationIds) {
   const counts = new Map();
   if (!variationIds.length || !locationIds.length) return counts;
+
   const CHUNK = 100;
+  const useNew = !!client.inventory?.counts?.batchRetrieve;
+
   for (let i = 0; i < variationIds.length; i += CHUNK) {
     const slice = variationIds.slice(i, i + CHUNK);
-    const { result } = await inventoryApi.batchRetrieveInventoryCounts({
-      catalogObjectIds: slice,
-      locationIds
-    });
-    for (const c of result.counts ?? []) {
-      const id = c.catalogObjectId;
-      const qty = Number(c.quantity ?? 0);
-      counts.set(id, (counts.get(id) ?? 0) + qty);
+    let res;
+    if (useNew) {
+      // New SDK: client.inventory.counts.batchRetrieve({ catalogObjectIds, locationIds })
+      res = await client.inventory.counts.batchRetrieve({
+        catalogObjectIds: slice,
+        locationIds
+      });
+      for (const c of (res.counts ?? res.result?.counts ?? [])) {
+        const id = c.catalogObjectId;
+        const qty = Number(c.quantity ?? 0);
+        counts.set(id, (counts.get(id) ?? 0) + qty);
+      }
+    } else {
+      // Legacy: client.inventoryApi.batchRetrieveInventoryCounts(...)
+      res = await client.inventoryApi.batchRetrieveInventoryCounts({
+        catalogObjectIds: slice,
+        locationIds
+      });
+      for (const c of (res.result.counts ?? [])) {
+        const id = c.catalogObjectId;
+        const qty = Number(c.quantity ?? 0);
+        counts.set(id, (counts.get(id) ?? 0) + qty);
+      }
     }
   }
   return counts;
 }
 
-function extractCustomAttributes(obj) {
+const extractCustomAttributes = (obj) => {
   const out = {};
   const cav = obj?.customAttributeValues ?? obj?.customAttributes ?? null;
   if (cav && typeof cav === "object") {
-    for (const [key, val] of Object.entries(cav)) {
-      if (val && typeof val === "object" && "value" in val) out[key] = val.value;
-      else if (val && typeof val === "object" && "stringValue" in val)
-        out[key] =
-          val.stringValue ?? val.numberValue ?? val.booleanValue ?? val.selectionUidValues ?? null;
-      else out[key] = val;
+    for (const [k, v] of Object.entries(cav)) {
+      if (v && typeof v === "object" && "value" in v) out[k] = v.value;
+      else if (v && typeof v === "object" && "stringValue" in v)
+        out[k] = v.stringValue ?? v.numberValue ?? v.booleanValue ?? v.selectionUidValues ?? null;
+      else out[k] = v;
     }
   }
   return out;
-}
+};
 
-function deriveOptionsFromName(name) {
-  if (!name) return [];
-  return name.split(/[\/,•|>-]/).map(s => s.trim()).filter(Boolean);
-}
+const deriveOptionsFromName = (name) =>
+  (name || "").split(/[\/,•|>-]/).map(s => s.trim()).filter(Boolean);
 
 function getMainImageUrl(item, imageMap) {
   const ids = item?.itemData?.imageIds ?? [];
@@ -100,15 +145,16 @@ function getMainImageUrl(item, imageMap) {
   return null;
 }
 
+// --- Main ---
 (async () => {
   console.log("🔎 Fetching Square catalog…");
   const types = "ITEM,ITEM_VARIATION,IMAGE,CATEGORY";
   const all = await listAllCatalog(types);
 
   const imageMap = new Map();
-  const itemMap = new Map();
-  const varMap = new Map();
-  const catMap = new Map();
+  const itemMap  = new Map();
+  const varMap   = new Map();
+  const catMap   = new Map();
 
   for (const o of all) {
     if (o.type === "IMAGE") imageMap.set(o.id, o);
@@ -121,7 +167,6 @@ function getMainImageUrl(item, imageMap) {
   const counts = await batchCounts(variationIds, LOCATION_IDS);
 
   const products = [];
-
   for (const item of itemMap.values()) {
     const vIds = item?.itemData?.variations?.map(v => v.id).filter(Boolean) ?? [];
     const variationsRaw = vIds.map(id => varMap.get(id)).filter(Boolean);
@@ -139,7 +184,6 @@ function getMainImageUrl(item, imageMap) {
     const prices = variations.map(v => v.price).filter(n => typeof n === "number");
     const priceMin = prices.length ? Math.min(...prices) : null;
     const priceMax = prices.length ? Math.max(...prices) : null;
-
     const sizes = Array.from(new Set(variations.flatMap(v => deriveOptionsFromName(v.name))));
 
     const categoryId = item.itemData?.categoryId;
@@ -167,16 +211,13 @@ function getMainImageUrl(item, imageMap) {
       createdAt: item.createdAt
     };
 
-    // Fallback thumbnail from any variation image
+    // fallback thumbnail from any variation image
     if (!prod.thumbnail) {
       for (const v of variationsRaw) {
-        const vImgIds = v?.itemVariationData?.imageIds ?? [];
-        for (const id of vImgIds) {
+        const ids = v?.itemVariationData?.imageIds ?? [];
+        for (const id of ids) {
           const img = imageMap.get(id);
-          if (img?.imageData?.url) {
-            prod.thumbnail = img.imageData.url;
-            break;
-          }
+          if (img?.imageData?.url) { prod.thumbnail = img.imageData.url; break; }
         }
         if (prod.thumbnail) break;
       }
@@ -185,6 +226,7 @@ function getMainImageUrl(item, imageMap) {
     products.push(prod);
   }
 
+  // Write output
   const outDir = path.resolve(process.cwd(), OUTPUT_DIR);
   await fs.mkdir(outDir, { recursive: true });
   const outFile = path.join(outDir, OUTPUT_FILE);
