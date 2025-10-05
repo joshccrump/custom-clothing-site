@@ -1,0 +1,91 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <title>Checkout</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <script src="https://web.squarecdn.com/v1/square.js"></script>
+  <style>
+    :root { --border:#e3e3e3; --muted:#666; }
+    body { font-family: system-ui, Arial, sans-serif; max-width: 720px; margin: 32px auto; padding: 0 16px; }
+    .card { border: 1px solid var(--border); border-radius: 12px; padding: 16px; }
+    .row { display:flex; gap:16px; align-items:center; }
+    .muted { color: var(--muted); font-size: 14px; }
+    #pay { padding: 12px 16px; border: 0; border-radius: 8px; cursor: pointer; }
+    #pay[disabled] { opacity: .6; cursor: default; }
+    #card-container { margin-top: 8px; }
+    a { color: inherit; }
+  </style>
+</head>
+<body>
+  <h1>Secure Checkout</h1>
+  <p class="muted">You're checking out on this site. Payment is processed by Square.</p>
+
+  <div id="item" class="card">
+    <div class="row"><strong>Item variation</strong>: <span id="var"></span></div>
+    <div class="row"><strong>Quantity</strong>: <span id="qty"></span></div>
+  </div>
+
+  <div class="card" style="margin-top:16px;">
+    <div id="card-container"></div>
+    <button id="pay">Pay now</button>
+    <div id="msg" class="muted" style="margin-top:8px;"></div>
+  </div>
+
+  <p class="muted" style="margin-top:16px;"><a href="javascript:history.back()">← Go back</a></p>
+
+  <script>
+    // ---- CONFIG (edit these) ----
+    const SQUARE_APPLICATION_ID = "YOUR_APP_ID";
+    const SQUARE_LOCATION_ID = "YOUR_LOCATION_ID";
+    const API_BASE = "https://YOUR-VERCEL-APP.vercel.app";
+
+    // ---- URL params ----
+    const params = new URLSearchParams(location.search);
+    const variationId = params.get("variationId");
+    const quantity = Number(params.get("quantity") || 1);
+
+    document.getElementById("var").textContent = variationId || "(missing)";
+    document.getElementById("qty").textContent = quantity;
+
+    const payBtn = document.getElementById("pay");
+    const msg = document.getElementById("msg");
+
+    if (!variationId) {
+      payBtn.disabled = true;
+      msg.textContent = "Missing variationId. Go back and choose a variation.";
+    }
+
+    let card;
+    (async () => {
+      const payments = window.Square.payments(SQUARE_APPLICATION_ID, SQUARE_LOCATION_ID);
+      card = await payments.card();
+      await card.attach("#card-container");
+    })();
+
+    async function createPayment(token) {
+      const r = await fetch(`${API_BASE}/api/checkout`, {
+        method: "POST",
+        headers: {"Content-Type":"application/json"},
+        body: JSON.stringify({ variationId, quantity, token })
+      });
+      const out = await r.json().catch(() => ({}));
+      if (!r.ok) throw new Error(out.error || `Payment failed (${r.status})`);
+      return out;
+    }
+
+    payBtn.addEventListener("click", async () => {
+      try {
+        payBtn.disabled = true; payBtn.textContent = "Processing…"; msg.textContent = "";
+        const tokenRes = await card.tokenize();
+        if (tokenRes.status !== "OK") throw new Error("Could not tokenize card.");
+        await createPayment(tokenRes.token);
+        location.href = "./thank-you.html";
+      } catch (e) {
+        msg.textContent = e.message || String(e);
+        payBtn.disabled = false; payBtn.textContent = "Pay now";
+      }
+    });
+  </script>
+</body>
+</html>

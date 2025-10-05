@@ -1,0 +1,9 @@
+{
+  "name": "square-onsite-serverless",
+  "version": "1.0.0",
+  "private": true,
+  "type": "module",
+  "dependencies": {
+    "square": "^43.1.0"
+  }
+}
