@@ -1,8 +1,8 @@
 {
-  "name": "custom-clothing-site-square-sync",
+  "name": "custom-clothing-site",
   "version": "1.0.0",
-  "type": "module",
   "private": true,
+  "type": "module",
   "scripts": {
     "sync:square": "node scripts/fetch-square.js"
   },
