@@ -4,7 +4,8 @@
 //      SQUARE_LOCATION_ID or SQUARE_LOCATION_IDS="LOC1,LOC2"
 //      OUTPUT_DIR=docs/data (optional), OUTPUT_FILE=products.json (optional)
 
-import { Client, Environment } from "square";
+import Square from "square";                 // <-- default import (CommonJS module)
+const { Client, Environment } = Square;      // then destructure
 import fs from "node:fs/promises";
 import path from "node:path";
 
@@ -32,7 +33,7 @@ const OUTPUT_FILE = process.env.OUTPUT_FILE || "products.json";
 const client = new Client({ accessToken: ACCESS_TOKEN, environment: ENV });
 const { catalogApi, inventoryApi } = client;
 
-/** Money → number (USD-style; most currencies use 2 decimals) */
+/** Money → number */
 function moneyToNumber(m) {
   if (!m || m.amount == null) return null;
   return Number(m.amount) / 100;
@@ -54,14 +55,12 @@ async function listAllCatalog(typesCsv) {
 async function batchCounts(variationIds, locationIds) {
   const counts = new Map();
   if (!variationIds.length || !locationIds.length) return counts;
-
   const CHUNK = 100;
   for (let i = 0; i < variationIds.length; i += CHUNK) {
     const slice = variationIds.slice(i, i + CHUNK);
     const { result } = await inventoryApi.batchRetrieveInventoryCounts({
       catalogObjectIds: slice,
-      locationIds,
-      // states: ["IN_STOCK"], // uncomment if you only want in-stock
+      locationIds
     });
     for (const c of result.counts ?? []) {
       const id = c.catalogObjectId;
@@ -134,7 +133,7 @@ function getMainImageUrl(item, imageMap) {
       price: moneyToNumber(v.itemVariationData?.priceMoney),
       currency: v.itemVariationData?.priceMoney?.currency ?? "USD",
       stock: Number(counts.get(v.id) ?? 0),
-      custom: extractCustomAttributes(v),
+      custom: extractCustomAttributes(v)
     }));
 
     const prices = variations.map(v => v.price).filter(n => typeof n === "number");
@@ -165,7 +164,7 @@ function getMainImageUrl(item, imageMap) {
       custom,
       status: "active",
       stock: variations.reduce((a, v) => a + (Number.isFinite(v.stock) ? v.stock : 0), 0),
-      createdAt: item.createdAt,
+      createdAt: item.createdAt
     };
 
     // Fallback thumbnail from any variation image
@@ -186,7 +185,6 @@ function getMainImageUrl(item, imageMap) {
     products.push(prod);
   }
 
-  // Write products.json
   const outDir = path.resolve(process.cwd(), OUTPUT_DIR);
   await fs.mkdir(outDir, { recursive: true });
   const outFile = path.join(outDir, OUTPUT_FILE);
