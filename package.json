@@ -5,7 +5,7 @@
   "type": "module",
   "scripts": {
     "sync:square": "node scripts/fetch-square.js"
-  }
+  },
   "dependencies": {
     "square": "^43.1.0"
   }
