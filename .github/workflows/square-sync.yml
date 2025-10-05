@@ -15,18 +15,34 @@ concurrency:
 jobs:
   sync:
     runs-on: ubuntu-latest
+
     steps:
       - name: Checkout
         uses: actions/checkout@v4
 
-      - name: Setup Node
+      # --- Future-proof: use npm cache ONLY if a lockfile exists ---
+      - name: Setup Node (cached)
+        if: ${{ hashFiles('package-lock.json') != '' || hashFiles('npm-shrinkwrap.json') != '' || hashFiles('yarn.lock') != '' }}
         uses: actions/setup-node@v4
         with:
           node-version: 20
           cache: npm
 
+      # --- Easy fix: no cache path when lockfile is missing ---
+      - name: Setup Node (no cache)
+        if: ${{ hashFiles('package-lock.json') == '' && hashFiles('npm-shrinkwrap.json') == '' && hashFiles('yarn.lock') == '' }}
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+
+      # Install deps: ci if lockfile present, else plain install
       - name: Install deps
-        run: npm ci || npm i
+        run: |
+          if [ -f package-lock.json ] || [ -f npm-shrinkwrap.json ]; then
+            npm ci
+          else
+            npm i --no-audit --no-fund
+          fi
 
       - name: Run sync
         env:
@@ -37,7 +53,9 @@ jobs:
 
       # ---- If your site is served from /docs, UNCOMMENT this block ----
       # - name: Move products.json to docs
-      #   run: mkdir -p docs/data && cp -f data/products.json docs/data/products.json
+      #   run: |
+      #     mkdir -p docs/data
+      #     cp -f data/products.json docs/data/products.json
 
       - name: Commit changes
         run: |
