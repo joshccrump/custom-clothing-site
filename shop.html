@@ -10,7 +10,6 @@
     body { margin:0; font-family: system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif; color:var(--fg); background:var(--bg); }
     header { padding:16px 20px; border-bottom:1px solid var(--border); background:#fff; position:sticky; top:0; }
     main { max-width:1100px; margin:24px auto; padding:0 16px; }
-    h1 { margin:0 0 12px; font-size:28px; }
     .toolbar { display:flex; flex-wrap:wrap; gap:10px; margin:12px 0 20px; }
     .toolbar input, .toolbar select { padding:10px 12px; border:1px solid var(--border); border-radius:8px; background:#fff; }
     .grid { display:grid; grid-template-columns: repeat(auto-fill, minmax(220px,1fr)); gap:16px; }
@@ -29,15 +28,12 @@
     .btn { display:inline-flex; align-items:center; justify-content:center; padding:10px 12px; border-radius:8px; text-decoration:none; border:1px solid #111; }
     .btn--buy { background:#111; color:#fff; }
     .pager { display:flex; gap:10px; align-items:center; justify-content:center; margin:20px 0; }
-    .pager button { padding:8px 12px; border:1px solid var(--border); background:#fff; border-radius:8px; cursor:pointer; }
     .subtle { color:var(--muted); }
   </style>
 </head>
 <body>
-  <!-- If you have a global header, you can paste it here -->
-  <header>
-    <strong>Shop</strong>
-  </header>
+  <!-- Real site nav will be injected here (cloned from index.html) -->
+  <div id="site-header"></div>
 
   <main>
     <div class="toolbar">
@@ -56,7 +52,34 @@
     <div id="pager" class="pager"></div>
   </main>
 
-  <!-- ✅ New script that adds the Buy button linking to checkout.html -->
+  <!-- Try to load your existing nav script if present -->
+  <script src="assets/nav-autobase.js" defer></script>
+
+  <!-- Fallback: clone header/nav from index.html to keep site-wide navigation -->
+  <script>
+  (function(){
+    function basePath(){
+      try{
+        const host=location.hostname.toLowerCase();
+        const parts=location.pathname.split('/').filter(Boolean);
+        if(host.endsWith('github.io') && parts.length) return '/' + parts[0] + '/';
+      }catch(e){}
+      return '/';
+    }
+    async function cloneNav(){
+      try{
+        const r=await fetch(basePath()+'index.html', {cache:'no-store'});
+        const html=await r.text();
+        const doc=new DOMParser().parseFromString(html,'text/html');
+        const header=doc.querySelector('#site-header, header, nav, [data-site-nav]');
+        if(header){ document.getElementById('site-header').innerHTML = header.outerHTML; }
+      }catch(e){ /* ignore */ }
+    }
+    cloneNav();
+  })();
+  </script>
+
+  <!-- Gallery logic (adds Buy → checkout.html) -->
   <script src="assets/gallery.js" defer></script>
 </body>
 </html>
