@@ -8,7 +8,11 @@
     :root { --fg:#111; --muted:#666; --card:#fff; --border:#e5e7eb; --bg:#f8fafc; }
     * { box-sizing: border-box; }
     body { margin:0; font-family: system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif; color:var(--fg); background:var(--bg); }
-    header { padding:16px 20px; border-bottom:1px solid var(--border); background:#fff; position:sticky; top:0; }
+    
+  .site-nav{display:flex;gap:18px;align-items:center;padding:14px 18px;border-bottom:1px solid #e5e7eb;background:#fff;position:sticky;top:0;z-index:10}
+  .site-nav a{color:#111;text-decoration:none;padding:8px 10px;border-radius:10px;border:1px solid transparent;font-weight:600}
+  .site-nav a:hover{background:#111;color:#fff}
+
     main { max-width:1100px; margin:24px auto; padding:0 16px; }
     .toolbar { display:flex; flex-wrap:wrap; gap:10px; margin:12px 0 20px; }
     .toolbar input, .toolbar select { padding:10px 12px; border:1px solid var(--border); border-radius:8px; background:#fff; }
@@ -32,10 +36,35 @@
   </style>
 </head>
 <body>
-  <!-- Real site nav will be injected here (cloned from index.html) -->
-  <div id="site-header"></div>
+  
+  <nav class="site-nav" data-site-nav>
+    <a data-href="">Home</a>
+    <a data-href="shop.html">Shop</a>
+    <a data-href="gallery/">Gallery</a>
+    <a data-href="clients/">Client Portals</a>
+    <a data-href="about.html">About</a>
+    <a data-href="contact.html">Contact</a>
+  </nav>
+  <script>
+    (function(){
+      function basePath(){
+        try{
+          const host=location.hostname.toLowerCase();
+          const parts=location.pathname.split('/').filter(Boolean);
+          if(host.endsWith('github.io') && parts.length) return '/' + parts[0] + '/';
+        }catch(e){}
+        return '/';
+      }
+      const BASE=basePath();
+      document.querySelectorAll('.site-nav a[data-href]').forEach(a=>{
+        const rel=a.getAttribute('data-href')||'';
+        a.href = BASE + rel;
+      });
+    })();
+  </script>
 
   <main>
+    <h1>Shop</h1>
     <div class="toolbar">
       <input id="search" type="search" placeholder="Search products…" />
       <select id="category" aria-label="Category"></select>
@@ -47,39 +76,9 @@
         <option value="price-desc">Price: High → Low</option>
       </select>
     </div>
-
     <section id="grid" class="grid"></section>
     <div id="pager" class="pager"></div>
   </main>
-
-  <!-- Try to load your existing nav script if present -->
-  <script src="assets/nav-autobase.js" defer></script>
-
-  <!-- Fallback: clone header/nav from index.html to keep site-wide navigation -->
-  <script>
-  (function(){
-    function basePath(){
-      try{
-        const host=location.hostname.toLowerCase();
-        const parts=location.pathname.split('/').filter(Boolean);
-        if(host.endsWith('github.io') && parts.length) return '/' + parts[0] + '/';
-      }catch(e){}
-      return '/';
-    }
-    async function cloneNav(){
-      try{
-        const r=await fetch(basePath()+'index.html', {cache:'no-store'});
-        const html=await r.text();
-        const doc=new DOMParser().parseFromString(html,'text/html');
-        const header=doc.querySelector('#site-header, header, nav, [data-site-nav]');
-        if(header){ document.getElementById('site-header').innerHTML = header.outerHTML; }
-      }catch(e){ /* ignore */ }
-    }
-    cloneNav();
-  })();
-  </script>
-
-  <!-- Gallery logic (adds Buy → checkout.html) -->
   <script src="assets/gallery.js" defer></script>
 </body>
 </html>
