@@ -4,6 +4,8 @@
   <meta charset="utf-8" />
   <title>Cart</title>
   <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <!-- Set this meta to your Vercel URL so modifier lists can load if not in products.json -->
+  <meta name="api-base" content="https://YOUR-VERCEL-APP.vercel.app">
   <style>
     :root { --fg:#111; --muted:#666; --card:#fff; --border:#e5e7eb; --bg:#f8fafc; }
     * { box-sizing: border-box; }
@@ -28,6 +30,10 @@
     .totals { margin-top:16px; display:flex; justify-content:space-between; align-items:center; }
     .empty { padding:24px; border:1px dashed var(--border); border-radius:12px; background:#fff; }
     .note { margin-top:10px; font-size:13px; color:var(--muted) }
+    fieldset{border:1px solid var(--border);border-radius:12px;margin-top:12px}
+    legend{padding:0 8px;color:#0f172a}
+    .mods{display:flex;flex-wrap:wrap;gap:10px;padding:12px}
+    .mods label{display:flex;align-items:center;gap:8px;background:#fff;border:1px solid var(--border);padding:8px 10px;border-radius:10px}
   </style>
 </head>
 <body>
@@ -54,13 +60,14 @@
         const rel=a.getAttribute('data-href')||'';
         a.href = BASE + rel;
       });
+      window.API_BASE = document.querySelector('meta[name=api-base]')?.content || '';
     })();
   </script>
 
   <main>
     <h1>Your Cart</h1>
     <div id="cart"></div>
-    <div class="note">This cart reviews your selection before payment. Clicking “Continue to payment” opens the secure Square checkout on this site.</div>
+    <div class="note">Review your selection. Optional choices below come from your Square item’s modifier sets.</div>
   </main>
 
   <script src="assets/cart.js" defer></script>

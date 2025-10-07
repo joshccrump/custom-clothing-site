@@ -1,4 +1,3 @@
-// assets/cart.js
 (function(){
   function basePath(){
     try{
@@ -13,35 +12,86 @@
     if (!r.ok) throw new Error('HTTP '+r.status+' '+u);
     return r.json();
   }
-  async function loadProducts(){
+  function qs(name){ return new URLSearchParams(location.search).get(name); }
+  function fmt(n,c='USD'){ try{ return new Intl.NumberFormat(undefined,{style:'currency',currency:c}).format(n); }catch{ return '$'+Number(n||0).toFixed(2);} }
+
+  // Try to find product + modifiers from static JSON first
+  async function findFromStatic(variationId){
     const BASE=basePath();
     const candidates=[
       BASE + 'data/products.json',
-      'data/products.json',
-      '../data/products.json',
-      '/data/products.json',
-      BASE + 'web/data/products.json',
-      'web/data/products.json',
-      '../web/data/products.json',
-      '/web/data/products.json'
+      'data/products.json','../data/products.json','/data/products.json',
+      BASE + 'web/data/products.json','web/data/products.json','../web/data/products.json','/web/data/products.json'
     ];
-    for(const u of candidates){
-      try{ return await fetchJSON(u); }catch(_){}
-    }
-    return []; // still render with raw ids
-  }
-  function fmt(n,c='USD'){ try{ return new Intl.NumberFormat(undefined,{style:'currency',currency:c}).format(n); }catch{ return '$'+Number(n||0).toFixed(2);} }
-  function findByVariation(products, vid){
-    for(const p of products){
-      const vs = Array.isArray(p.variations) ? p.variations : [];
-      for(const v of vs){
-        const id = v.id || v.variation_id;
-        if(id===vid) return { product:p, variation:v };
+    let products=[];
+    for(const u of candidates){ try{ products = await fetchJSON(u); break; }catch(_){} }
+    if (!products.length) return null;
+
+    for (const p of products){
+      if (Array.isArray(p.variations)){
+        for (const v of p.variations){
+          const id = v.id || v.variation_id;
+          if (id === variationId){
+            return {
+              product: p,
+              variation: v,
+              modifierLists: p.modifier_lists || p.modifiers || [] // optional if your JSON contains it
+            };
+          }
+        }
       }
     }
     return null;
   }
-  function qs(name){ return new URLSearchParams(location.search).get(name); }
+
+  async function fetchCatalog(variationId){
+    const api = (window.API_BASE||'').trim();
+    if (!api){ throw new Error('API_BASE not set: add <meta name=\"api-base\" content=\"https://YOUR-VERCEL-APP.vercel.app\"> to cart.html'); }
+    return await fetchJSON(api + '/api/catalog?variationId=' + encodeURIComponent(variationId));
+  }
+
+  function renderModifiers(container, lists, onChangePrice){
+    container.innerHTML='';
+    for (const list of (lists||[])){
+      const fs = document.createElement('fieldset');
+      const lg = document.createElement('legend');
+      lg.textContent = list.name || 'Options';
+      fs.appendChild(lg);
+
+      const mods = document.createElement('div'); mods.className='mods';
+      const multi = list.selectionType === 'MULTIPLE' || list.maxSelected > 1;
+      for (const m of (list.options||[])){
+        const id = m.id;
+        const label = document.createElement('label');
+        const input = document.createElement('input');
+        input.type = multi ? 'checkbox' : 'radio';
+        input.name = 'mod_' + (list.id||lg.textContent);
+        input.value = id;
+        input.dataset.price = String(m.priceMoney?.amount || 0);
+        input.dataset.currency = String(m.priceMoney?.currency || 'USD');
+
+        const span = document.createElement('span');
+        const priceStr = (m.priceMoney?.amount ? ' + ' + fmt(m.priceMoney.amount/100, m.priceMoney.currency) : '');
+        span.textContent = (m.name || 'Option') + priceStr;
+
+        label.appendChild(input);
+        label.appendChild(span);
+        mods.appendChild(label);
+      }
+      fs.appendChild(mods);
+      container.appendChild(fs);
+    }
+
+    container.addEventListener('change', () => {
+      const checked = container.querySelectorAll('input:checked');
+      let add = 0, curr = 'USD';
+      checked.forEach(inp => {
+        const amt = Number(inp.dataset.price||'0');
+        if (amt) { add += amt; curr = inp.dataset.currency || curr; }
+      });
+      onChangePrice(add, curr);
+    });
+  }
 
   document.addEventListener('DOMContentLoaded', async function(){
     const mount = document.getElementById('cart');
@@ -55,15 +105,24 @@
       return;
     }
 
-    const products = await loadProducts();
-    const found = findByVariation(products, variationId);
+    let data = await findFromStatic(variationId);
+    if (!data){
+      try{ data = await fetchCatalog(variationId); } catch(e){
+        mount.innerHTML = '<div class="empty">Could not load item details. Set API base in cart.html & ensure your Vercel serverless is deployed.</div>';
+        return;
+      }
+    }
 
-    const title = found?.product?.title || 'Selected Item';
-    const currency = found?.product?.currency || 'USD';
-    const thumbnail = found?.product?.thumbnail || (BASE+'images/placeholder.png');
-    const vname = found?.variation?.name || 'Variation';
-    const vprice = typeof found?.variation?.price === 'number' ? found.variation.price : (found?.product?.price || 0);
-    const subtotal = vprice * quantity;
+    const p = data.product || {};
+    const v = data.variation || {};
+    const lists = data.modifierLists || [];
+
+    const title = p.title || p.name || 'Selected Item';
+    const currency = p.currency || 'USD';
+    const thumbnail = p.thumbnail || (BASE+'images/placeholder.png');
+    const vname = v.name || 'Variation';
+    const unitPrice = (typeof v.price === 'number') ? v.price : (typeof p.price==='number' ? p.price : 0);
+    let modsCents = 0, modsCurr = currency;
 
     mount.innerHTML = `
       <div class="card">
@@ -72,13 +131,22 @@
           <div class="meta">
             <h2 class="title">${title}</h2>
             <div class="muted">${vname}</div>
+
+            <div id="mod-lists"></div>
+
             <div class="qty">
               <label>Quantity</label>
               <input id="qty" type="number" min="1" value="${quantity}">
             </div>
+
+            <label class="muted" style="display:block;margin-top:10px">
+              Personalization / Note (optional)
+              <input id="note" style="display:block;width:100%;padding:10px;margin-top:6px;border:1px solid #e5e7eb;border-radius:8px" placeholder="e.g., Name and number">
+            </label>
+
             <div class="totals">
-              <div class="muted">Unit price: ${fmt(vprice, currency)}</div>
-              <div><strong>Subtotal: <span id="subtotal">${fmt(subtotal, currency)}</span></strong></div>
+              <div class="muted">Unit price: <span id="unit">${fmt(unitPrice, currency)}</span></div>
+              <div><strong>Subtotal: <span id="subtotal">${fmt(unitPrice*quantity, currency)}</span></strong></div>
             </div>
             <div class="actions">
               <a class="btn btn--ghost" href="${BASE}shop.html">← Continue shopping</a>
@@ -89,17 +157,34 @@
       </div>
     `;
 
+    const modContainer = document.getElementById('mod-lists');
     const qtyEl = document.getElementById('qty');
     const subEl = document.getElementById('subtotal');
+    const noteEl = document.getElementById('note');
     const payEl = document.getElementById('pay');
 
-    function updateSubtotal(){
+    function updateTotals(){
       const q = Math.max(1, parseInt(qtyEl.value||'1',10));
-      subEl.textContent = fmt(vprice * q, currency);
-      const href = `${BASE}checkout.html?variationId=${encodeURIComponent(variationId)}&quantity=${q}`;
-      payEl.setAttribute('href', href);
+      const total = (unitPrice*100 + modsCents) * q / 100;
+      subEl.textContent = fmt(total, modsCurr || currency);
     }
-    qtyEl.addEventListener('input', updateSubtotal);
-    updateSubtotal();
+    renderModifiers(modContainer, lists, (addCents, curr)=>{ modsCents = addCents; modsCurr = curr; updateTotals(); });
+    updateTotals();
+
+    function selectedModifierIds(){
+      return Array.from(modContainer.querySelectorAll('input:checked')).map(inp=>inp.value);
+    }
+
+    payEl.addEventListener('click', () => {
+      const q = Math.max(1, parseInt(qtyEl.value||'1',10));
+      const mods = selectedModifierIds();
+      const n = (noteEl.value||'').trim();
+      const url = new URL(BASE + 'checkout.html', location.origin);
+      url.searchParams.set('variationId', variationId);
+      url.searchParams.set('quantity', String(q));
+      if (mods.length) url.searchParams.set('mods', mods.join(','));
+      if (n) url.searchParams.set('note', n);
+      location.href = url.toString();
+    });
   });
 })();

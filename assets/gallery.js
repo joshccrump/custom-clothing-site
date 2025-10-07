@@ -1,4 +1,3 @@
-// assets/gallery.js (Buy → cart.html so customers review before payment)
 (function(){
   function basePath() {
     try {
@@ -17,38 +16,15 @@
     const BASE = basePath();
     const candidates = [
       BASE + 'data/products.json',
-      'data/products.json',
-      '../data/products.json',
-      '/data/products.json',
-      BASE + 'web/data/products.json',
-      'web/data/products.json',
-      '../web/data/products.json',
-      '/web/data/products.json'
+      'data/products.json','../data/products.json','/data/products.json',
+      BASE + 'web/data/products.json','web/data/products.json','../web/data/products.json','/web/data/products.json'
     ];
     for (const u of candidates) {
       try { return await fetchJSON(u); } catch (e) {}
     }
     throw new Error('Could not find products.json');
   }
-  function fmt(n, c='USD'){
-    try { return new Intl.NumberFormat(undefined,{style:'currency',currency:c}).format(n); }
-    catch { return '$'+Number(n||0).toFixed(2); }
-  }
-  function uniq(a){ return [...new Set((a||[]).filter(Boolean))]; }
-  function paginate(list, p, per){ const pages=Math.max(1,Math.ceil(list.length/per)); const P=Math.min(Math.max(1,p),pages); return {page:P,pages,items:list.slice((P-1)*per,(P-1)*per+per)};}
-  function filterProducts(ps, s) {
-    const q=(s.q||'').toLowerCase().trim(), cat=(s.category||'').toLowerCase(), size=(s.size||'').toLowerCase();
-    let out=ps.filter(p=>{
-      if (p.status && p.status.toLowerCase()==='hidden') return false;
-      const text=[p.title,p.description,p.category,...(p.tags||[]),...(p.sizes||[])].join(' ').toLowerCase();
-      const textOk=q?text.includes(q):true, catOk=cat?((p.category||'').toLowerCase()===cat):true, sizeOk=size?((p.sizes||[]).map(s=>String(s).toLowerCase()).includes(size)):true;
-      return textOk && catOk && sizeOk;
-    });
-    if (s.sort==='price-asc') out.sort((a,b)=>(a.price_min??a.price??0)-(b.price_min??b.price??0));
-    else if (s.sort==='price-desc') out.sort((a,b)=>(b.price_max??b.price??0)-(a.price_max??a.price??0));
-    else if (s.sort==='newest') out.sort((a,b)=>new Date(b.createdAt||0)-new Date(a.createdAt||0));
-    return out;
-  }
+  function fmt(n, c='USD'){ try { return new Intl.NumberFormat(undefined,{style:'currency',currency:c}).format(n); } catch { return '$'+Number(n||0).toFixed(2); } }
   function firstVariationId(p){
     if (Array.isArray(p.variations) && p.variations.length) return p.variations[0].id || p.variations[0].variation_id;
     return p.default_variation_id || p.variation_id || p.variationId || p.square_variation_id || null;
@@ -97,32 +73,24 @@
       container.appendChild(el);
     }
   }
+  function uniq(a){ return [...new Set((a||[]).filter(Boolean))]; }
+  function paginate(list, p, per){ const pages=Math.max(1,Math.ceil(list.length/per)); const P=Math.min(Math.max(1,p),pages); return {page:P,pages,items:list.slice((P-1)*per,(P-1)*per+per)};}
+  function filterProducts(ps, s) {
+    const q=(s.q||'').toLowerCase().trim(), cat=(s.category||'').toLowerCase(), size=(s.size||'').toLowerCase();
+    let out=ps.filter(p=>{
+      if (p.status && p.status.toLowerCase()==='hidden') return false;
+      const text=[p.title,p.description,p.category,...(p.tags||[]),...(p.sizes||[])].join(' ').toLowerCase();
+      const textOk=q?text.includes(q):true, catOk=cat?((p.category||'').toLowerCase()===cat):true, sizeOk=size?((p.sizes||[]).map(s=>String(s).toLowerCase()).includes(size)):true;
+      return textOk && catOk && sizeOk;
+    });
+    return out;
+  }
   document.addEventListener('DOMContentLoaded', async function(){
-    const s={q:'',category:'',size:'',sort:'featured',page:1,per:12};
-    const grid=document.getElementById('grid'), pager=document.getElementById('pager');
-    const searchEl=document.getElementById('search'), catEl=document.getElementById('category'), sizeEl=document.getElementById('size'), sortEl=document.getElementById('sort');
-
+    const s={};
+    const grid=document.getElementById('grid');
     let ps=[];
     try { ps = await loadProducts(); }
     catch(e){ grid.innerHTML='<div class="subtle">Could not load products. Check data/products.json path.</div>'; console.error(e); return; }
-
-    function render(){
-      const filtered=filterProducts(ps,s);
-      const {page,pages,items}=paginate(filtered,s.page,s.per);
-      renderGrid(grid,items);
-      if (pager){
-        pager.innerHTML='';
-        const prev=document.createElement('button'); prev.textContent='Prev'; prev.disabled=(page<=1); prev.onclick=()=>{s.page=Math.max(1,page-1);render()};
-        const info=document.createElement('span'); info.style.padding='8px 6px'; info.className='subtle'; info.textContent=`Page ${page} of ${pages}`;
-        const next=document.createElement('button'); next.textContent='Next'; next.disabled=(page>=pages); next.onclick=()=>{s.page=Math.min(pages,page+1);render()};
-        pager.append(prev,info,next);
-      }
-    }
-
-    if (searchEl) searchEl.oninput = ()=>{s.q=searchEl.value.trim();s.page=1;render()};
-    if (catEl)    catEl.onchange  = ()=>{s.category=catEl.value.trim();s.page=1;render()};
-    if (sizeEl)   sizeEl.onchange = ()=>{s.size=sizeEl.value.trim();s.page=1;render()};
-    if (sortEl)   sortEl.onchange = ()=>{s.sort=sortEl.value.trim();s.page=1;render()};
-    render();
+    renderGrid(grid, ps);
   });
 })();
