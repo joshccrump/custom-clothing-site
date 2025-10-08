@@ -1,0 +1,1 @@
+Copy all files to your repo root. Edit meta[name=api-base] in cart.html and Square IDs in checkout.html. Add <script src='assets/nav-cart.js' defer></script> before </body> on every page for a global Cart link.
