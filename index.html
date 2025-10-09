@@ -1,2 +1,49 @@
-<!doctype html><html lang='en'><head><meta charset='utf-8'/><meta name='viewport' content='width=device-width, initial-scale=1'/><title>Custom Clothing</title><link rel='stylesheet' href='assets/themes/base.css'><script defer src='assets/theme-loader.js' data-theme='crump-square'></script><link rel='stylesheet' href='assets/consistent-nav.css'><style>body{min-height:100svh;display:flex;flex-direction:column}main{flex:1}.hero{padding:56px 20px}.hero .container{display:grid;gap:18px}.hero h1{margin:0;font-size:clamp(28px,5vw,42px);line-height:1.15}.hero p{margin:0;color:#6b7280;max-width:64ch}.cta{display:flex;gap:10px;margin-top:16px}.btn--primary{border-color:color-mix(in srgb,var(--accent)55%,var(--border));background:var(--accent);color:#fff}</style></head><body><main><section class='hero'><div class='container'><h1>Made-to-order apparel for teams, clubs, and events</h1><p>Browse the full catalog or jump into your client portal for proofs, timelines, and resources.</p><div class='cta'><a class='btn btn--primary' href='gallery/'>Browse Gallery</a><a class='btn' href='clients/'>Client Portals</a></div></div></section></main><script defer src='assets/consistent-nav.js' data-brand='Created By Crump'></script><script src="assets/nav-cart.js" defer></script>
-</body></html>
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Custom Clothing</title>
+  <style>
+    body{margin:0;font-family:system-ui,-apple-system,Segoe UI,Roboto,Arial,sans-serif;background:#f8fafc;color:#111}
+    nav{display:flex;gap:16px;align-items:center;padding:14px 18px;border-bottom:1px solid #e5e7eb;background:#fff;position:sticky;top:0}
+    nav a{color:#111;text-decoration:none;padding:8px 10px;border-radius:10px;border:1px solid transparent;font-weight:600}
+    nav a:hover{background:#111;color:#fff}
+    main{max-width:1000px;margin:24px auto;padding:0 16px}
+    .hero{background:#fff;border:1px solid #e5e7eb;border-radius:14px;padding:24px}
+  </style>
+</head>
+<body>
+  <nav data-site-nav class="site-nav">
+    <a data-href="">Home</a>
+    <a data-href="shop.html">Shop</a>
+    <a data-href="gallery/">Gallery</a>
+    <a data-href="clients/">Client Portals</a>
+    <a data-href="about.html">About</a>
+    <a data-href="contact.html">Contact</a>
+    <a data-href="cart.html">Cart</a>
+  </nav>
+  <script>
+    (function(){
+      function base(){
+        try{
+          const host=location.hostname.toLowerCase();
+          const parts=location.pathname.split('/').filter(Boolean);
+          if(host.endsWith('github.io')&&parts.length) return '/' + parts[0] + '/';
+        }catch(e){}
+        return '/';
+      }
+      const BASE=base();
+      document.querySelectorAll('[data-site-nav] a[data-href]').forEach(a=>{
+        a.href = BASE + (a.getAttribute('data-href') || '');
+      });
+    })();
+  </script>
+  <main>
+    <div class="hero">
+      <h1>Welcome to Custom Clothing</h1>
+      <p>Use the navigation above to shop, browse the gallery, or access client portals.</p>
+    </div>
+  </main>
+</body>
+</html>
