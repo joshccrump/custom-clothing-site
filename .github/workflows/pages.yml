@@ -1,0 +1,62 @@
+name: Deploy to GitHub Pages
+
+on:
+  push:
+    branches: [ main ]     # change if your default branch is different
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+concurrency:
+  group: "pages"
+  cancel-in-progress: true
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      # Optional Node build (keeps working even for pure-static repos)
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+
+      - name: Build site (best-effort)
+        run: |
+          if [ -f package.json ]; then
+            if [ -f package-lock.json ] || [ -f npm-shrinkwrap.json ]; then
+              npm ci
+            else
+              npm i --no-audit --no-fund
+            fi
+            npm run build || echo "No build script; continuing with static files."
+          fi
+
+      - name: Pick site directory
+        id: prep
+        run: |
+          if [ -d dist ]; then SITE_DIR=dist;
+          elif [ -d web ]; then SITE_DIR=web;
+          elif [ -d docs ]; then SITE_DIR=docs;
+          else SITE_DIR=.;
+          fi
+          echo "site_dir=$SITE_DIR" >> "$GITHUB_OUTPUT"
+
+      - name: Upload Pages artifact (single uploader)
+        uses: actions/upload-pages-artifact@v3
+        with:
+          path: ${{ steps.prep.outputs.site_dir }}
+
+  deploy:
+    needs: build
+    runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - id: deployment
+        uses: actions/deploy-pages@v4
