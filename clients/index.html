@@ -1,1 +1,52 @@
-<!doctype html><html lang='en'><head><meta charset='utf-8'/><meta name='viewport' content='width=device-width, initial-scale=1'/><title>Client Portals</title><link rel='stylesheet' href='../assets/themes/base.css'><script defer src='../assets/theme-loader.js' data-theme='crump-square'></script><link rel='stylesheet' href='../assets/consistent-nav.css'><link rel='stylesheet' href='../assets/portals.css'><link rel='preload' href='../data/clients.json' as='fetch' crossorigin='anonymous'/></head><body><header class='header'><h1>Client Portals</h1><p class='subtle'>Select your portal below.</p></header><main class='container'><div class='toolbar'><input id='search' type='search' placeholder='Search clients…' aria-label='Search clients'/></div><section id='cards' class='cards' aria-live='polite'></section></main><template id='cardTemplate'><article class='card'><a class='card__link' href='#'><div class='card__media'><img class='card__logo' alt=''></div><div class='card__body'><h2 class='card__title'></h2><p class='card__notes'></p><div class='card__tags'></div></div></a></article></template><script type='module'>import {loadClients,filterClients}from'../assets/portals.js';const s=document.getElementById('search'),cards=document.getElementById('cards'),tpl=document.getElementById('cardTemplate');let clients=[];function render(list){cards.innerHTML='';if(!list.length){cards.innerHTML='<p class="subtle">No matching clients.</p>';return;}for(const c of list){const node=tpl.content.cloneNode(true);node.querySelector('.card__link').href=`./portal.html?c=${encodeURIComponent(c.slug)}`;node.querySelector('.card__logo').src=c.logo||'../assets/default-logo.svg';node.querySelector('.card__logo').alt=`${c.name} logo`;node.querySelector('.card__title').textContent=c.name;node.querySelector('.card__notes').textContent=c.notes||'';const tags=node.querySelector('.card__tags');(c.tags||[]).forEach(t=>{const span=document.createElement('span');span.className='tag';span.textContent=t;tags.appendChild(span);});cards.appendChild(node);}}(async()=>{try{clients=await loadClients('../data/clients.json');render(clients);s.addEventListener('input',()=>{render(filterClients(clients,s.value));});}catch(e){cards.innerHTML='<p class="subtle">Could not load clients (check <code>data/clients.json</code> path).</p>';console.error(e);}})();</script><script defer src='../assets/consistent-nav.js' data-brand='Created By Crump'></script></body></html>
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Client Portals</title>
+  
+  <style>
+    :root { --fg:#111; --muted:#666; --card:#fff; --border:#e5e7eb; --bg:#f8fafc; }
+    *{box-sizing:border-box}
+    body{margin:0;font-family:system-ui,-apple-system,Segoe UI,Roboto,Arial,sans-serif;color:var(--fg);background:var(--bg)}
+    .site-nav{display:flex;gap:16px;align-items:center;padding:14px 18px;border-bottom:1px solid var(--border);background:#fff;position:sticky;top:0;z-index:10}
+    .site-nav a{color:#111;text-decoration:none;padding:8px 10px;border-radius:10px;border:1px solid transparent;font-weight:600}
+    .site-nav a:hover{background:#111;color:#fff}
+    main{max-width:1100px;margin:24px auto;padding:0 16px}
+    .grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(220px,1fr));gap:16px}
+    .card{background:#fff;border:1px solid var(--border);border-radius:14px;overflow:hidden;display:flex;flex-direction:column}
+    .card__media{aspect-ratio:1/1;background:#f1f5f9;display:flex;align-items:center;justify-content:center}
+    .card__img{width:100%;height:100%;object-fit:cover}
+    .card__body{padding:12px 12px 14px}
+    .title{margin:0 0 6px}
+    .price{color:#111;font-weight:700;margin-bottom:8px}
+    .btn{display:inline-flex;align-items:center;justify-content:center;padding:10px 14px;border-radius:8px;text-decoration:none;cursor:pointer;border:1px solid var(--border);background:#fff}
+    .btn--buy{background:#111;color:#fff;border-color:#111}
+    .subtle{color:var(--muted)}
+    .hero{background:#fff;border:1px solid var(--border);border-radius:14px;padding:24px}
+  </style>
+
+</head>
+<body>
+  
+  <nav class="site-nav" data-site-nav>
+    <a href="/custom-clothing-site/">Home</a>
+    <a href="/custom-clothing-site/shop.html">Shop</a>
+    <a href="/custom-clothing-site/gallery/">Gallery</a>
+    <a href="/custom-clothing-site/clients/">Client Portals</a>
+    <a href="/custom-clothing-site/about.html">About</a>
+    <a href="/custom-clothing-site/contact.html">Contact</a>
+    <a href="/custom-clothing-site/cart.html">Cart</a>
+  </nav>
+
+  <main>
+    <h1>Client Portals</h1>
+    <ul>
+      <li><a href="#">OFPY Makos</a></li>
+      <li><a href="#">JD Wallace</a></li>
+      <li><a href="#">K. Harris</a></li>
+    </ul>
+  </main>
+  <script src="/custom-clothing-site/assets/nav-cart.js" defer></script>
+</body>
+</html>
