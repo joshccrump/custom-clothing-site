@@ -61,8 +61,8 @@ jobs:
         run: mkdir -p "$(dirname "${OUTPUT_PATH}")"
 
             - name: Run Square fetch script (REST)
-        run: |
-          node scripts/fetch-square.mjs --out "${OUTPUT_PATH}"
+              run: | 
+              node scripts/fetch-square.mjs --out "${OUTPUT_PATH}"
 
 
       - name: Show diff
