@@ -5,7 +5,7 @@
 const APPLICATION_ID = "sq0idp-dcSCzq-77WsFTjHDRARpEQ";
 const LOCATION_ID = "L116Z8RBA1RJ4";
 // Example: https://custom-clothing-api.vercel.app  (no trailing slash)
-const API_BASE = "https://custom-clothing-site.vercel.app";
+const API_BASE = "https://custom-clothing-api.vercel.app";
 
 async function initPayments() {
   if (!window.Square) {
