@@ -2,83 +2,49 @@
 <html lang="en">
 <head>
   <meta charset="utf-8" />
-  <title>Gallery</title>
   <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Gallery</title>
+  
   <style>
     :root { --fg:#111; --muted:#666; --card:#fff; --border:#e5e7eb; --bg:#f8fafc; }
-    * { box-sizing: border-box; }
-    body { margin:0; font-family: system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif; color:var(--fg); background:var(--bg); }
-    
-  .site-nav{display:flex;gap:18px;align-items:center;padding:14px 18px;border-bottom:1px solid #e5e7eb;background:#fff;position:sticky;top:0;z-index:10}
-  .site-nav a{color:#111;text-decoration:none;padding:8px 10px;border-radius:10px;border:1px solid transparent;font-weight:600}
-  .site-nav a:hover{background:#111;color:#fff}
-
-    main { max-width:1100px; margin:24px auto; padding:0 16px; }
-    .toolbar { display:flex; flex-wrap:wrap; gap:10px; margin:12px 0 20px; }
-    .toolbar input, .toolbar select { padding:10px 12px; border:1px solid var(--border); border-radius:8px; background:#fff; }
-    .grid { display:grid; grid-template-columns: repeat(auto-fill, minmax(220px,1fr)); gap:16px; }
-    .card { background:var(--card); border:1px solid var(--border); border-radius:14px; overflow:hidden; display:flex; flex-direction:column; }
-    .card__media { aspect-ratio: 1/1; background:#f1f5f9; position:relative; }
-    .card__img { width:100%; height:100%; object-fit:cover; display:block; }
-    .badge { position:absolute; left:8px; top:8px; font-size:12px; background:#111; color:#fff; padding:4px 8px; border-radius:999px; }
-    .badge.out { background:#9A3412; }
-    .card__body { padding:12px; display:flex; flex-direction:column; gap:6px; }
-    .title { font-size:16px; margin:0; }
-    .price { color:#0f172a; font-weight:600; }
-    .sizes { display:flex; flex-wrap:wrap; gap:6px; }
-    .size { font-size:12px; padding:4px 6px; border:1px dashed var(--border); border-radius:6px; color:var(--muted); }
-    .card__actions { margin-top:8px; display:flex; gap:8px; }
-    select[data-variation-select] { flex:1; padding:10px; border:1px solid var(--border); border-radius:8px; }
-    .btn { display:inline-flex; align-items:center; justify-content:center; padding:10px 12px; border-radius:8px; text-decoration:none; border:1px solid #111; }
-    .btn--buy { background:#111; color:#fff; }
-    .pager { display:flex; gap:10px; align-items:center; justify-content:center; margin:20px 0; }
-    .subtle { color:var(--muted); }
+    *{box-sizing:border-box}
+    body{margin:0;font-family:system-ui,-apple-system,Segoe UI,Roboto,Arial,sans-serif;color:var(--fg);background:var(--bg)}
+    .site-nav{display:flex;gap:16px;align-items:center;padding:14px 18px;border-bottom:1px solid var(--border);background:#fff;position:sticky;top:0;z-index:10}
+    .site-nav a{color:#111;text-decoration:none;padding:8px 10px;border-radius:10px;border:1px solid transparent;font-weight:600}
+    .site-nav a:hover{background:#111;color:#fff}
+    main{max-width:1100px;margin:24px auto;padding:0 16px}
+    .grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(220px,1fr));gap:16px}
+    .card{background:#fff;border:1px solid var(--border);border-radius:14px;overflow:hidden;display:flex;flex-direction:column}
+    .card__media{aspect-ratio:1/1;background:#f1f5f9;display:flex;align-items:center;justify-content:center}
+    .card__img{width:100%;height:100%;object-fit:cover}
+    .card__body{padding:12px 12px 14px}
+    .title{margin:0 0 6px}
+    .price{color:#111;font-weight:700;margin-bottom:8px}
+    .btn{display:inline-flex;align-items:center;justify-content:center;padding:10px 14px;border-radius:8px;text-decoration:none;cursor:pointer;border:1px solid var(--border);background:#fff}
+    .btn--buy{background:#111;color:#fff;border-color:#111}
+    .subtle{color:var(--muted)}
+    .hero{background:#fff;border:1px solid var(--border);border-radius:14px;padding:24px}
   </style>
+
 </head>
 <body>
   
   <nav class="site-nav" data-site-nav>
-    <a data-href="">Home</a>
-    <a data-href="shop.html">Shop</a>
-    <a data-href="gallery/">Gallery</a>
-    <a data-href="clients/">Client Portals</a>
-    <a data-href="about.html">About</a>
-    <a data-href="contact.html">Contact</a>
+    <a href="/custom-clothing-site/">Home</a>
+    <a href="/custom-clothing-site/shop.html">Shop</a>
+    <a href="/custom-clothing-site/gallery/">Gallery</a>
+    <a href="/custom-clothing-site/clients/">Client Portals</a>
+    <a href="/custom-clothing-site/about.html">About</a>
+    <a href="/custom-clothing-site/contact.html">Contact</a>
+    <a href="/custom-clothing-site/cart.html">Cart</a>
   </nav>
-  <script>
-    (function(){
-      function basePath(){
-        try{
-          const host=location.hostname.toLowerCase();
-          const parts=location.pathname.split('/').filter(Boolean);
-          if(host.endsWith('github.io') && parts.length) return '/' + parts[0] + '/';
-        }catch(e){}
-        return '/';
-      }
-      const BASE=basePath();
-      document.querySelectorAll('.site-nav a[data-href]').forEach(a=>{
-        const rel=a.getAttribute('data-href')||'';
-        a.href = BASE + rel;
-      });
-    })();
-  </script>
 
   <main>
     <h1>Gallery</h1>
-    <div class="toolbar">
-      <input id="search" type="search" placeholder="Search…" />
-      <select id="category" aria-label="Category"></select>
-      <select id="size" aria-label="Size"></select>
-      <select id="sort" aria-label="Sort">
-        <option value="featured">Featured</option>
-        <option value="newest">Newest</option>
-        <option value="price-asc">Price: Low → High</option>
-        <option value="price-desc">Price: High → Low</option>
-      </select>
-    </div>
-    <section id="grid" class="grid"></section>
-    <div id="pager" class="pager"></div>
+    <div id="grid" class="grid"></div>
+    <p class="subtle">If no items appear, ensure <code>/custom-clothing-site/data/products.json</code> exists and paths are correct.</p>
   </main>
- <script src="../assets/gallery.js" defer></script>
+  <script src="/custom-clothing-site/assets/gallery.js" defer></script>
+  <script src="/custom-clothing-site/assets/nav-cart.js" defer></script>
 </body>
 </html>
