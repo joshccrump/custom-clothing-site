@@ -1,79 +1,51 @@
 <!doctype html>
 <html lang="en">
 <head>
-  <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>Checkout</title>
-  <script>
-    window.SQUARE_APPLICATION_ID = "YOUR_APP_ID";
-    window.SQUARE_LOCATION_ID    = "YOUR_LOCATION_ID";
-    window.API_BASE              = "https://YOUR-VERCEL-APP.vercel.app";
-  </script>
-  <script src="https://sandbox.web.squarecdn.com/v1/square.js"></script>
-  
-  <style>
-    :root { --fg:#111; --muted:#666; --card:#fff; --border:#e5e7eb; --bg:#f8fafc; }
-    *{box-sizing:border-box}
-    body{margin:0;font-family:system-ui,-apple-system,Segoe UI,Roboto,Arial,sans-serif;color:var(--fg);background:var(--bg)}
-    .site-nav{display:flex;gap:16px;align-items:center;padding:14px 18px;border-bottom:1px solid var(--border);background:#fff;position:sticky;top:0;z-index:10}
-    .site-nav a{color:#111;text-decoration:none;padding:8px 10px;border-radius:10px;border:1px solid transparent;font-weight:600}
-    .site-nav a:hover{background:#111;color:#fff}
-    main{max-width:1100px;margin:24px auto;padding:0 16px}
-    .grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(220px,1fr));gap:16px}
-    .card{background:#fff;border:1px solid var(--border);border-radius:14px;overflow:hidden;display:flex;flex-direction:column}
-    .card__media{aspect-ratio:1/1;background:#f1f5f9;display:flex;align-items:center;justify-content:center}
-    .card__img{width:100%;height:100%;object-fit:cover}
-    .card__body{padding:12px 12px 14px}
-    .title{margin:0 0 6px}
-    .price{color:#111;font-weight:700;margin-bottom:8px}
-    .btn{display:inline-flex;align-items:center;justify-content:center;padding:10px 14px;border-radius:8px;text-decoration:none;cursor:pointer;border:1px solid var(--border);background:#fff}
-    .btn--buy{background:#111;color:#fff;border-color:#111}
-    .subtle{color:var(--muted)}
-    .hero{background:#fff;border:1px solid var(--border);border-radius:14px;padding:24px}
-  </style>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Checkout • Custom Clothing</title>
 
+  <!-- Important for GitHub Pages repo path -->
+  <base href="/custom-clothing-site/">
+
+  <!-- Your existing site stylesheet, if any -->
+  <link rel="stylesheet" href="assets/style.css">
+
+  <!-- Square Web Payments SDK (SANDBOX for testing) -->
+  <script src="https://sandbox.web.squarecdn.com/v1/square.js"></script>
 </head>
 <body>
-  
-  <nav class="site-nav" data-site-nav>
-    <a href="/custom-clothing-site/">Home</a>
-    <a href="/custom-clothing-site/shop.html">Shop</a>
-    <a href="/custom-clothing-site/gallery/">Gallery</a>
-    <a href="/custom-clothing-site/clients/">Client Portals</a>
-    <a href="/custom-clothing-site/about.html">About</a>
-    <a href="/custom-clothing-site/contact.html">Contact</a>
-    <a href="/custom-clothing-site/cart.html">Cart</a>
-  </nav>
+  <header>
+    <nav>
+      <a href="index.html">Home</a> ·
+      <a href="shop.html">Shop</a> ·
+      <a href="checkout.html" aria-current="page">Checkout</a>
+    </nav>
+  </header>
 
-  <main>
+  <main class="container" style="max-width: 720px; margin: 2rem auto; padding: 1rem;">
     <h1>Checkout</h1>
-    <div id="summary" class="subtle">Preparing payment…</div>
-    <div id="card-container" class="card" style="padding:16px;margin-top:10px"></div>
-    <button id="pay" class="btn btn--buy" style="margin-top:10px">Pay now</button>
-    <div id="error" style="color:#b91c1c;margin-top:10px"></div>
+    <p>Enter your card details below. This page uses Square's Web Payments SDK in Sandbox mode.</p>
+
+    <section id="summary" style="margin: 1rem 0;">
+      <!-- Replace this with your real cart summary -->
+      <h2>Order Summary</h2>
+      <ul>
+        <li>Sample Tee ×1 — $50.00</li>
+      </ul>
+      <p><strong>Total: $50.00</strong></p>
+    </section>
+
+    <!-- Square Card UI mounts here -->
+    <div id="card-container" style="margin: 1rem 0;"></div>
+    <button id="pay-btn" style="padding: 0.75rem 1rem; font-weight: 600;">Pay $50.00</button>
+    <p id="status" role="status" aria-live="polite" style="margin-top: 1rem;"></p>
   </main>
-  <script>
-    function qs(n){return new URLSearchParams(location.search).get(n)}
-    const variationId=qs('variationId');const quantity=Math.max(1,parseInt(qs('quantity')||'1',10));
-    const mods=(qs('mods')||'').split(',').map(s=>s.trim()).filter(Boolean);const note=qs('note')||'';
-    async function main(){
-      if(!window.Square){document.getElementById('error').textContent='Square SDK failed to load';return}
-      const payments = Square.payments(window.SQUARE_APPLICATION_ID, window.SQUARE_LOCATION_ID);
-      const card = await payments.card(); await card.attach('#card-container');
-      document.getElementById('summary').textContent='Enter your card to complete payment.';
-      document.getElementById('pay').addEventListener('click', async() => {
-        document.getElementById('pay').disabled=true; document.getElementById('error').textContent='';
-        try{
-          const t = await card.tokenize(); if(t.status!=='OK') throw new Error(t.errors?.[0]?.message||'Tokenize failed');
-          const body={ variationId, quantity, token:t.token, modifiers:mods.map(id=>({catalogObjectId:id})), note };
-          const r = await fetch((window.API_BASE||'') + '/api/checkout', { method:'POST', headers:{'Content-Type':'application/json'}, body: JSON.stringify(body) });
-          const j = await r.json(); if(!r.ok) throw new Error(j.error||'Payment failed');
-          location.href='/custom-clothing-site/thank-you.html';
-        }catch(e){ document.getElementById('error').textContent=e.message||'Error'; document.getElementById('pay').disabled=false; }
-      });
-    }
-    main();
-  </script>
-  <script src="/custom-clothing-site/assets/nav-cart.js" defer></script>
+
+  <footer style="text-align:center; margin: 3rem 0 2rem; opacity: 0.7;">
+    <small>Sandbox test checkout • Replace credentials before going live.</small>
+  </footer>
+
+  <script src="assets/checkout.js" type="module"></script>
 </body>
 </html>
