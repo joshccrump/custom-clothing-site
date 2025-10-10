@@ -1,8 +1,8 @@
 diff --git a/assets/gallery.js b/assets/gallery.js
-index 778fa00bfb3c4fba09739f08a9399deee00d1913..0aaa0c922a8083d090c35a4edcd98814db788351 100644
+index 778fa00bfb3c4fba09739f08a9399deee00d1913..17b14d6cac456724d60581707647aa9ed3f94c43 100644
 --- a/assets/gallery.js
 +++ b/assets/gallery.js
-@@ -1 +1,230 @@
+@@ -1 +1,245 @@
 -(function(){console.log('gallery.js loaded')})();
 +// Gallery/Shop script that loads Square-synced products from data/products.json
 +async function fetchWithFallback(urls) {
@@ -110,13 +110,16 @@ index 778fa00bfb3c4fba09739f08a9399deee00d1913..0aaa0c922a8083d090c35a4edcd98814
 +  const BASE = baseCheckout();
 +  for (const product of items) {
 +    const currency = product.currency || 'USD';
-+    const hasVariations = Array.isArray(product.variations) && product.variations.length > 0;
++    const variations = Array.isArray(product.variations)
++      ? product.variations.filter(v => v && v.id)
++      : [];
++    const hasVariations = variations.length > 0;
 +    const priceLine = hasVariations
 +      ? ((product.price_min === product.price_max)
 +        ? fmt(product.price_min, currency)
 +        : `${fmt(product.price_min, currency)} – ${fmt(product.price_max, currency)}`)
 +      : (typeof product.price === 'number' ? fmt(product.price, currency) : '');
-+    const outOfStock = Number(product.stock || 0) === 0;
++    const outOfStock = typeof product.stock === 'number' ? Number(product.stock) === 0 : false;
 +    const badges = [];
 +    if (outOfStock) badges.push('<span class="badge out">Out of stock</span>');
 +    if ((product.tags || []).includes('best-seller')) badges.push('<span class="badge">Best Seller</span>');
@@ -140,7 +143,7 @@ index 778fa00bfb3c4fba09739f08a9399deee00d1913..0aaa0c922a8083d090c35a4edcd98814
 +      select = document.createElement('select');
 +      select.setAttribute('data-variation-select', '');
 +      select.style.marginRight = '8px';
-+      for (const variation of product.variations) {
++      for (const variation of variations) {
 +        const option = document.createElement('option');
 +        option.value = variation.id;
 +        const price = (typeof variation.price === 'number') ? ` — ${fmt(variation.price, currency)}` : '';
@@ -152,15 +155,27 @@ index 778fa00bfb3c4fba09739f08a9399deee00d1913..0aaa0c922a8083d090c35a4edcd98814
 +    const buy = document.createElement('a');
 +    buy.className = 'btn btn--buy';
 +    buy.textContent = 'Buy';
-+    const firstVariation = product.variations?.[0]?.id || '';
 +    function hrefFor(id) {
 +      return `${BASE}checkout.html?variationId=${encodeURIComponent(id)}&quantity=1`;
 +    }
-+    buy.href = hrefFor(firstVariation);
-+    if (select) {
-+      select.addEventListener('change', () => {
-+        buy.href = hrefFor(select.value);
-+      });
++    if (variations[0]?.id) {
++      buy.href = hrefFor(variations[0].id);
++      if (select) {
++        select.addEventListener('change', () => {
++          buy.href = hrefFor(select.value);
++        });
++      }
++    } else if (product.url) {
++      buy.href = product.url;
++      buy.target = '_blank';
++      buy.rel = 'noopener';
++      buy.textContent = 'View';
++    } else {
++      buy.href = '#';
++      buy.setAttribute('aria-disabled', 'true');
++      buy.classList.add('is-disabled');
++      buy.style.pointerEvents = 'none';
++      buy.style.opacity = '0.6';
 +    }
 +    actions.appendChild(buy);
 +    container.appendChild(article);
