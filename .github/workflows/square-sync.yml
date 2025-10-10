@@ -1,126 +1,57 @@
-name: Sync Square Catalog
-
-on:
-  schedule:
-    - cron: "*/15 * * * *"   # every 15 minutes
-  workflow_dispatch:         # adds the "Run workflow" button in Actions
-
-permissions:
-  contents: write
-
-concurrency:
-  group: square-sync
-  cancel-in-progress: true
-
-jobs:
-  sync:
-    runs-on: ubuntu-latest
-
-    steps:
-      - name: Checkout
-        uses: actions/checkout@v4
-
-      - name: Show repo tree (top-level)
-        run: |
-          pwd
-          ls -la
-
-      # Detect working directory: root or /docs
-      - name: Detect working directory
-        id: workdir
-        run: |
-          if [ -f package.json ]; then
-            echo "dir=." >> $GITHUB_OUTPUT
-            echo "Found package.json in repo root"
-          elif [ -f docs/package.json ]; then
-            echo "dir=docs" >> $GITHUB_OUTPUT
-            echo "Found package.json in /docs"
-          else
-            echo "::error::No package.json found in repo root or /docs. Commit package.json and scripts/fetch-square.js."
-            exit 1
-          fi
-
-      - name: Show working directory tree
-        run: |
-          echo "Working directory: ${{ steps.workdir.outputs.dir }}"
-          ls -la "${{ steps.workdir.outputs.dir }}"
-
-      # --- Future-proof: use npm cache ONLY if a lockfile exists ---
-      - name: Setup Node (cached)
-        if: ${{ hashFiles( format('{0}/package-lock.json', steps.workdir.outputs.dir) ) != '' ||
-                hashFiles( format('{0}/npm-shrinkwrap.json', steps.workdir.outputs.dir) ) != '' ||
-                hashFiles( format('{0}/yarn.lock', steps.workdir.outputs.dir) ) != '' }}
-        uses: actions/setup-node@v4
-        with:
-          node-version: 20
-          cache: npm
-          cache-dependency-path: |
-            ${{ steps.workdir.outputs.dir }}/package-lock.json
-            ${{ steps.workdir.outputs.dir }}/npm-shrinkwrap.json
-            ${{ steps.workdir.outputs.dir }}/yarn.lock
-
-      # --- Easy fix: no cache path when lockfile is missing ---
-      - name: Setup Node (no cache)
-        if: ${{ hashFiles( format('{0}/package-lock.json', steps.workdir.outputs.dir) ) == '' &&
-                hashFiles( format('{0}/npm-shrinkwrap.json', steps.workdir.outputs.dir) ) == '' &&
-                hashFiles( format('{0}/yarn.lock', steps.workdir.outputs.dir) ) == '' }}
-        uses: actions/setup-node@v4
-        with:
-          node-version: 20
-
-      # Install deps: ci if lockfile present, else plain install
-      - name: Install deps
-        working-directory: ${{ steps.workdir.outputs.dir }}
-        run: |
-          if [ -f package-lock.json ] || [ -f npm-shrinkwrap.json ]; then
-            npm ci
-          else
-            npm i --no-audit --no-fund
-          fi
-
-      - name: Node & NPM versions
-        run: |
-          node -v
-          npm -v
-
-      - name: Verify script and npm scripts
-        working-directory: ${{ steps.workdir.outputs.dir }}
-        run: |
-          test -f scripts/fetch-square.js || { echo "::error::Missing scripts/fetch-square.js"; exit 1; }
-          node -e "try{const pj=require('./package.json'); console.log('package name:', pj.name); console.log('has script sync:square:', Boolean(pj.scripts && pj.scripts['sync:square']));}catch(e){console.error(e); process.exit(1)}"
-
-      - name: Run sync
-        working-directory: ${{ steps.workdir.outputs.dir }}
-        env:
-          SQUARE_ACCESS_TOKEN: ${{ secrets.SQUARE_ACCESS_TOKEN }}
-          SQUARE_ENV: ${{ secrets.SQUARE_ENV || 'production' }}
-          SQUARE_LOCATION_ID: ${{ secrets.SQUARE_LOCATION_ID }}
-        run: |
-          npm run sync:square
-
-      - name: Verify products.json
-        working-directory: ${{ steps.workdir.outputs.dir }}
-        run: |
-          test -f data/products.json || { echo "::error::data/products.json was not created"; exit 1; }
-          ls -lh data/products.json
-          head -n 5 data/products.json || true
-
-      # If your site is served from /docs but your workdir is root, copy over.
-      - name: Move products.json to docs if site serves from /docs
-        if: ${{ steps.workdir.outputs.dir == '.' && (hashFiles('docs/index.html') != '' || hashFiles('docs/index.htm') != '') }}
-        run: |
-          mkdir -p docs/data
-          cp -f data/products.json docs/data/products.json
-          ls -lh docs/data/products.json
-
-      - name: Commit changes
-        run: |
-          if ! git diff --quiet; then
-            git config user.name "square-sync-bot"
-            git config user.email "action@github.com"
-            git add -A
-            git commit -m "chore: update products.json from Square"
-            git push
-          else
-            echo "No changes."
-          fi
+diff --git a/.github/workflows/square-sync.yml b/.github/workflows/square-sync.yml
+index 9699e00bdde53961b2a48d38fb53657ccdec6104..30573ceaa0cdf7e2e64a624accfd2cdeca4750be 100644
+--- a/.github/workflows/square-sync.yml
++++ b/.github/workflows/square-sync.yml
+@@ -65,51 +65,51 @@ jobs:
+                 hashFiles( format('{0}/npm-shrinkwrap.json', steps.workdir.outputs.dir) ) == '' &&
+                 hashFiles( format('{0}/yarn.lock', steps.workdir.outputs.dir) ) == '' }}
+         uses: actions/setup-node@v4
+         with:
+           node-version: 20
+ 
+       # Install deps: ci if lockfile present, else plain install
+       - name: Install deps
+         working-directory: ${{ steps.workdir.outputs.dir }}
+         run: |
+           if [ -f package-lock.json ] || [ -f npm-shrinkwrap.json ]; then
+             npm ci
+           else
+             npm i --no-audit --no-fund
+           fi
+ 
+       - name: Node & NPM versions
+         run: |
+           node -v
+           npm -v
+ 
+       - name: Verify script and npm scripts
+         working-directory: ${{ steps.workdir.outputs.dir }}
+         run: |
+           test -f scripts/fetch-square.js || { echo "::error::Missing scripts/fetch-square.js"; exit 1; }
+-          node -e "try{const pj=require('./package.json'); console.log('package name:', pj.name); console.log('has script sync:square:', Boolean(pj.scripts && pj.scripts['sync:square']));}catch(e){console.error(e); process.exit(1)}"
++          node --input-type=module -e "import { readFileSync } from 'fs'; const pkg = JSON.parse(readFileSync(new URL('./package.json', import.meta.url))); console.log('package name:', pkg.name); console.log('has script sync:square:', Boolean(pkg.scripts && pkg.scripts['sync:square']));"
+ 
+       - name: Run sync
+         working-directory: ${{ steps.workdir.outputs.dir }}
+         env:
+           SQUARE_ACCESS_TOKEN: ${{ secrets.SQUARE_ACCESS_TOKEN }}
+           SQUARE_ENV: ${{ secrets.SQUARE_ENV || 'production' }}
+           SQUARE_LOCATION_ID: ${{ secrets.SQUARE_LOCATION_ID }}
+         run: |
+           npm run sync:square
+ 
+       - name: Verify products.json
+         working-directory: ${{ steps.workdir.outputs.dir }}
+         run: |
+           test -f data/products.json || { echo "::error::data/products.json was not created"; exit 1; }
+           ls -lh data/products.json
+           head -n 5 data/products.json || true
+ 
+       # If your site is served from /docs but your workdir is root, copy over.
+       - name: Move products.json to docs if site serves from /docs
+         if: ${{ steps.workdir.outputs.dir == '.' && (hashFiles('docs/index.html') != '' || hashFiles('docs/index.htm') != '') }}
+         run: |
+           mkdir -p docs/data
+           cp -f data/products.json docs/data/products.json
+           ls -lh docs/data/products.json
+ 
