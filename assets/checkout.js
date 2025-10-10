@@ -2,10 +2,10 @@
 // Minimal client that renders Square's card, tokenizes, and calls your Vercel API.
 // Fill in the placeholders below.
 
-const APPLICATION_ID = "REPLACE_WITH_YOUR_SQUARE_APPLICATION_ID";
-const LOCATION_ID = "REPLACE_WITH_YOUR_SQUARE_LOCATION_ID";
+const APPLICATION_ID = "sq0idp-dcSCzq-77WsFTjHDRARpEQ";
+const LOCATION_ID = "L116Z8RBA1RJ4";
 // Example: https://custom-clothing-api.vercel.app  (no trailing slash)
-const API_BASE = "https://YOUR-VERCEL-PROJECT.vercel.app";
+const API_BASE = "https://custom-clothing-site.vercel.app";
 
 async function initPayments() {
   if (!window.Square) {
