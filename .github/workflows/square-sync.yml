@@ -1,57 +1,87 @@
-diff --git a/.github/workflows/square-sync.yml b/.github/workflows/square-sync.yml
-index 9699e00bdde53961b2a48d38fb53657ccdec6104..30573ceaa0cdf7e2e64a624accfd2cdeca4750be 100644
---- a/.github/workflows/square-sync.yml
-+++ b/.github/workflows/square-sync.yml
-@@ -65,51 +65,51 @@ jobs:
-                 hashFiles( format('{0}/npm-shrinkwrap.json', steps.workdir.outputs.dir) ) == '' &&
-                 hashFiles( format('{0}/yarn.lock', steps.workdir.outputs.dir) ) == '' }}
-         uses: actions/setup-node@v4
-         with:
-           node-version: 20
- 
-       # Install deps: ci if lockfile present, else plain install
-       - name: Install deps
-         working-directory: ${{ steps.workdir.outputs.dir }}
-         run: |
-           if [ -f package-lock.json ] || [ -f npm-shrinkwrap.json ]; then
-             npm ci
-           else
-             npm i --no-audit --no-fund
-           fi
- 
-       - name: Node & NPM versions
-         run: |
-           node -v
-           npm -v
- 
-       - name: Verify script and npm scripts
-         working-directory: ${{ steps.workdir.outputs.dir }}
-         run: |
-           test -f scripts/fetch-square.js || { echo "::error::Missing scripts/fetch-square.js"; exit 1; }
--          node -e "try{const pj=require('./package.json'); console.log('package name:', pj.name); console.log('has script sync:square:', Boolean(pj.scripts && pj.scripts['sync:square']));}catch(e){console.error(e); process.exit(1)}"
-+          node --input-type=module -e "import { readFileSync } from 'fs'; const pkg = JSON.parse(readFileSync(new URL('./package.json', import.meta.url))); console.log('package name:', pkg.name); console.log('has script sync:square:', Boolean(pkg.scripts && pkg.scripts['sync:square']));"
- 
-       - name: Run sync
-         working-directory: ${{ steps.workdir.outputs.dir }}
-         env:
-           SQUARE_ACCESS_TOKEN: ${{ secrets.SQUARE_ACCESS_TOKEN }}
-           SQUARE_ENV: ${{ secrets.SQUARE_ENV || 'production' }}
-           SQUARE_LOCATION_ID: ${{ secrets.SQUARE_LOCATION_ID }}
-         run: |
-           npm run sync:square
- 
-       - name: Verify products.json
-         working-directory: ${{ steps.workdir.outputs.dir }}
-         run: |
-           test -f data/products.json || { echo "::error::data/products.json was not created"; exit 1; }
-           ls -lh data/products.json
-           head -n 5 data/products.json || true
- 
-       # If your site is served from /docs but your workdir is root, copy over.
-       - name: Move products.json to docs if site serves from /docs
-         if: ${{ steps.workdir.outputs.dir == '.' && (hashFiles('docs/index.html') != '' || hashFiles('docs/index.htm') != '') }}
-         run: |
-           mkdir -p docs/data
-           cp -f data/products.json docs/data/products.json
-           ls -lh docs/data/products.json
- 
+name: Square Sync
+
+on:
+  workflow_dispatch:
+    inputs:
+      dry_run:
+        description: "Run without committing changes"
+        required: false
+        default: "false"
+  schedule:
+    - cron: "0 */6 * * *"  # every 6 hours
+
+permissions:
+  contents: write   # needed to push updates back to the repo
+
+concurrency:
+  group: square-sync-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  sync:
+    runs-on: ubuntu-latest
+    env:
+      # Required secrets/vars (set these in repo Settings → Secrets and variables → Actions)
+      SQUARE_ACCESS_TOKEN: ${{ secrets.SQUARE_ACCESS_TOKEN }}
+      SQUARE_ENVIRONMENT: ${{ vars.SQUARE_ENVIRONMENT || 'production' }}
+      SQUARE_LOCATION_ID: ${{ vars.SQUARE_LOCATION_ID }}
+      # Optional: override output path
+      OUTPUT_PATH: data/square-items.json
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: 'npm'
+
+      - name: Install deps
+        run: |
+          if [ -f package-lock.json ] || [ -f package.json ]; then
+            npm ci || npm install
+          fi
+
+      - name: Ensure output folder exists
+        run: |
+          mkdir -p "$(dirname "${OUTPUT_PATH}")"
+
+      - name: Run Square fetch script (ESM/CJS-compatible)
+        run: |
+          # If your script is CommonJS but repo has "type": "module", Node may error on require().
+          # We copy to .mjs and run as ESM to be safe.
+          if [ -f "fetch-square.js" ]; then
+            cp fetch-square.js fetch-square.mjs
+            node fetch-square.mjs --out "${OUTPUT_PATH}"
+          elif [ -f "scripts/fetch-square.js" ]; then
+            cp scripts/fetch-square.js scripts/fetch-square.mjs
+            node scripts/fetch-square.mjs --out "${OUTPUT_PATH}"
+          else
+            echo "Could not find fetch-square.js. Update the workflow to point to your script path." >&2
+            exit 1
+          fi
+
+      - name: Show diff
+        run: |
+          git status --porcelain
+          if git diff --quiet -- "${OUTPUT_PATH}"; then
+            echo "No changes in ${OUTPUT_PATH}"
+          else
+            echo "Detected changes in ${OUTPUT_PATH}"
+          fi
+
+      - name: Commit & push changes (unless dry run)
+        if: ${{ inputs.dry_run != 'true' }}
+        uses: stefanzweifel/git-auto-commit@v6
+        with:
+          commit_message: "chore(square): sync items from Square API"
+          branch: ${{ github.ref_name }}
+          file_pattern: ${{ env.OUTPUT_PATH }}
+
+      - name: Dry run note
+        if: ${{ inputs.dry_run == 'true' }}
+        run: echo "Dry run selected — not committing changes."
