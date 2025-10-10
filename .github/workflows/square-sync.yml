@@ -60,26 +60,10 @@ jobs:
       - name: Ensure output folder exists
         run: mkdir -p "$(dirname "${OUTPUT_PATH}")"
 
-      - name: Run Square fetch script (supports ESM/CJS)
+            - name: Run Square fetch script (REST)
         run: |
-          set -e
-          if [ -f "fetch-square.js" ]; then
-            # Respect your original filename; run as ESM if needed
-            node --experimental-modules fetch-square.js --out "${OUTPUT_PATH}" || node fetch-square.mjs --out "${OUTPUT_PATH}" || true
-            if [ ! -f "${OUTPUT_PATH}" ]; then
-              cp fetch-square.js fetch-square.mjs
-              node fetch-square.mjs --out "${OUTPUT_PATH}"
-            fi
-          elif [ -f "scripts/fetch-square.js" ]; then
-            node --experimental-modules scripts/fetch-square.js --out "${OUTPUT_PATH}" || node scripts/fetch-square.mjs --out "${OUTPUT_PATH}" || true
-            if [ ! -f "${OUTPUT_PATH}" ]; then
-              cp scripts/fetch-square.js scripts/fetch-square.mjs
-              node scripts/fetch-square.mjs --out "${OUTPUT_PATH}"
-            fi
-          else
-            echo "Could not find fetch-square.js. Update the workflow to point to your script path." >&2
-            exit 1
-          fi
+          node scripts/fetch-square.mjs --out "${OUTPUT_PATH}"
+
 
       - name: Show diff
         run: |
