@@ -1,81 +1,22 @@
 // scripts/fetch-square.js
 import fs from "fs";
 import path from "path";
-import SquareSdk from "square";
+import { Client, Environment as SquareEnvironment } from "square";
 
-const { Client, Environment: SquareEnvironment } = SquareSdk || {};
 const Environment = SquareEnvironment || { Production: "production", Sandbox: "sandbox" };
+// scripts/fetch-square.js (ESM)
+// Generates data/products.json from your Square Catalog
+// Requires env: SQUARE_ACCESS_TOKEN, SQUARE_ENV (production|sandbox)
 
-function resolveMockPath(token) {
-  if (process.env.SQUARE_MOCK_CATALOG && process.env.SQUARE_MOCK_CATALOG.trim()) {
-    return process.env.SQUARE_MOCK_CATALOG.trim();
-  }
-  if (typeof token === "string" && token.startsWith("mock:")) {
-    return token.slice("mock:".length);
-  }
-  return null;
-}
+import fs from "node:fs";
+import path from "node:path";
+import Square from "square"; // Square SDK is CJS; use default import in ESM
 
-function loadMockCatalog(mockPath) {
-  const resolvedPath = path.isAbsolute(mockPath) ? mockPath : path.resolve(process.cwd(), mockPath);
-  if (!fs.existsSync(resolvedPath)) {
-    throw new Error(`Mock catalog not found at ${resolvedPath}`);
-  }
-  const raw = fs.readFileSync(resolvedPath, "utf8");
-  let parsed;
-  try {
-    parsed = JSON.parse(raw);
-  } catch (err) {
-    throw new Error(`Unable to parse mock catalog JSON (${resolvedPath}): ${err?.message || err}`);
-  }
-  const objects = Array.isArray(parsed)
-    ? parsed
-    : Array.isArray(parsed?.objects)
-      ? parsed.objects
-      : null;
-  if (!objects) {
-    throw new Error("Mock catalog must be an array or an object with an 'objects' array");
-  }
-  return { objects, resolvedPath };
-}
-
-function createMockClient(mockPath) {
-  const { objects, resolvedPath } = loadMockCatalog(mockPath);
-  let served = false;
-
-  function filterByTypes(requestedTypes) {
-    if (!requestedTypes) return objects;
-    const typeSet = new Set(
-      requestedTypes
-        .split(",")
-        .map((t) => t.trim())
-        .filter(Boolean)
-    );
-    if (!typeSet.size) return objects;
-    return objects.filter((o) => typeSet.has(o.type));
-  }
-
-  return {
-    catalogApi: {
-      async listCatalog(cursor, types) {
-        if (served && !cursor) {
-          return { result: { objects: [], cursor: undefined } };
-        }
-        served = true;
-        const filtered = filterByTypes(types);
-        console.log(`[mock] Serving ${filtered.length} catalog objects from ${resolvedPath}`);
-        return { result: { objects: filtered, cursor: undefined } };
-      }
-    }
-  };
-}
-
-function resolveEnvironment() {
-  const envName = (process.env.SQUARE_ENV || process.env.SQUARE_ENVIRONMENT || "production").toLowerCase();
-  return envName === "production" ? Environment.Production : Environment.Sandbox;
-}
+const { Client } = Square;
+const Environment = Square?.Environment ?? { Production: "production", Sandbox: "sandbox" };
 
 function makeClient() {
+  const environment = resolveEnvironment();
   const token = process.env.SQUARE_ACCESS_TOKEN;
   const mockPath = resolveMockPath(token);
   if (mockPath) {
@@ -87,26 +28,6 @@ function makeClient() {
     bearerAuthCredentials: { accessToken: token },
     environment
   });
-}
-
-function resolveOutputPath(argv = process.argv.slice(2)) {
-  let out = process.env.OUTPUT_PATH;
-  for (let i = 0; i < argv.length; i += 1) {
-    const arg = argv[i];
-    if (arg === "--out" || arg === "-o") {
-      if (i + 1 >= argv.length) {
-        throw new Error("--out requires a path argument");
-      }
-      out = argv[i + 1];
-      i += 1;
-    } else if (arg.startsWith("--out=")) {
-      out = arg.slice("--out=".length);
-    }
-  }
-
-  const fallback = path.join("data", "products.json");
-  const resolved = out && out.trim().length ? out.trim() : fallback;
-  return path.isAbsolute(resolved) ? resolved : path.resolve(process.cwd(), resolved);
 }
 
 function moneyToNumber(m) {
@@ -123,11 +44,18 @@ function moneyToNumber(m) {
   const modLists = new Map();
   const categories = new Map();
   const items = [];
+function moneyToCents(m) {
+  return (m && typeof m.amount === "number") ? m.amount : null;
+}
 
-  do {
-    const resp = await client.catalogApi.listCatalog(cursor, types);
-    cursor = resp?.result?.cursor;
-    const objects = resp?.result?.objects || [];
+const client = makeClient();
+
+// Pull catalog objects (items, images, modifier lists, etc.)
+let cursor = undefined;
+const types = "ITEM,MODIFIER_LIST,IMAGE,ITEM_OPTION";
+const images = new Map();
+const modLists = new Map();
+const items = [];
 
     for (const o of objects) {
       switch (o.type) {
@@ -146,20 +74,40 @@ function moneyToNumber(m) {
         default:
           break;
       }
-    }
-  } while (cursor);
+do {
+  const resp = await client.catalogApi.listCatalog(cursor, types);
+  cursor = resp?.result?.cursor;
+  const objects = resp?.result?.objects || [];
 
-  const out = [];
-  for (const it of items) {
-    const data = it.itemData;
-    if (!data) continue;
-    if (data.isArchived) continue;
-
-    let thumbnail = null;
-    if (Array.isArray(data.imageIds) && data.imageIds.length) {
-      const img = images.get(data.imageIds[0]);
-      thumbnail = img?.imageData?.url || null;
+  for (const o of objects) {
+    switch (o.type) {
+      case "IMAGE":
+        images.set(o.id, o);
+        break;
+      case "MODIFIER_LIST":
+        modLists.set(o.id, o);
+        break;
+      case "ITEM":
+        items.push(o);
+        break;
+      default:
+        break;
     }
+  }
+} while (cursor);
+
+// Build a frontend-friendly JSON
+const out = [];
+for (const it of items) {
+  const data = it.itemData;
+  if (!data || data.isArchived) continue;
+
+  // Thumbnail (first image)
+  let thumbnail = null;
+  if (Array.isArray(data.imageIds) && data.imageIds.length) {
+    const img = images.get(data.imageIds[0]);
+    thumbnail = img?.imageData?.url || null;
+  }
 
     const variations = [];
     let priceMin = null;
@@ -178,31 +126,47 @@ function moneyToNumber(m) {
           price: typeof price === "number" ? price : null,
           currency: vd.priceMoney?.currency || "USD",
         });
+  // Variations
+  const variations = [];
+  let priceMin = null;
+  let priceMax = null;
+  if (Array.isArray(data.variations)) {
+    for (const v of data.variations) {
+      const vd = v.itemVariationData || {};
+      const cents = moneyToCents(vd.priceMoney);
+      if (typeof cents === "number") {
+        priceMin = priceMin == null ? cents : Math.min(priceMin, cents);
+        priceMax = priceMax == null ? cents : Math.max(priceMax, cents);
       }
+      variations.push({
+        id: v.id,
+        name: vd.name || "Variation",
+        price: (typeof cents === "number") ? cents : null
+      });
     }
+  }
 
-    const modifier_lists = [];
-    if (Array.isArray(data.modifierListInfo)) {
-      for (const info of data.modifierListInfo) {
-        const ml = modLists.get(info.modifierListId);
-        if (!ml) continue;
-        const mld = ml.modifierListData || {};
-        const options = [];
-        for (const m of (mld.modifiers || [])) {
-          const md = m.modifierData || {};
-          options.push({
-            id: m.id,
-            name: md.name || "Option",
-            priceMoney: md.priceMoney || null
-          });
-        }
-        modifier_lists.push({
-          id: ml.id,
-          name: mld.name || "Options",
-          selectionType: mld.selectionType || "SINGLE",
-          options
-        });
-      }
+  // Modifier lists (expanded to options with priceMoney)
+  const modifier_lists = [];
+  if (Array.isArray(data.modifierListInfo)) {
+    for (const info of data.modifierListInfo) {
+      const ml = modLists.get(info.modifierListId);
+      if (!ml) continue;
+      const mld = ml.modifierListData || {};
+      const options = (mld.modifiers || []).map(m => {
+        const md = m.modifierData || {};
+        return {
+          id: m.id,
+          name: md.name || "Option",
+          priceMoney: md.priceMoney || null
+        };
+      });
+      modifier_lists.push({
+        id: ml.id,
+        name: mld.name || "Options",
+        selectionType: mld.selectionType || "SINGLE",
+        options
+      });
     }
 
     const description = data.descriptionHtml || data.description || "";
@@ -223,12 +187,21 @@ function moneyToNumber(m) {
     });
   }
 
-  const outPath = resolveOutputPath();
-  const outDir = path.dirname(outPath);
-  fs.mkdirSync(outDir, { recursive: true });
-  fs.writeFileSync(outPath, JSON.stringify(out, null, 2));
-  console.log(`Wrote ${out.length} items → ${outPath}`);
-})().catch((e) => {
-  console.error("Sync failed:", e?.message || e);
-  process.exit(1);
-});
+  out.push({
+    id: it.id,
+    title: data.name || "Untitled",
+    thumbnail,
+    currency: "USD",
+    variations,
+    price_min: priceMin,
+    price_max: priceMax,
+    modifier_lists
+  });
+}
+
+// Write data/products.json
+const outDir = path.join(process.cwd(), "data");
+fs.mkdirSync(outDir, { recursive: true });
+const outPath = path.join(outDir, "products.json");
+fs.writeFileSync(outPath, JSON.stringify(out, null, 2));
+console.log(`Wrote ${out.length} items → ${outPath}`);

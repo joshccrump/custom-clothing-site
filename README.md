@@ -57,12 +57,6 @@ validates `SQUARE_ACCESS_TOKEN`, `SQUARE_LOCATION_ID`, and `SQUARE_ENV`. Missing
 credentials now produce a clear 500 response instead of throwing `require`
 errors in the Node 20 runtime.
 
-> **Heads up:** If your Vercel project is pinned to the repository root instead
-> of the `serverless-vercel` subdirectory, the lightweight re-export handlers in
-> `/api/catalog.js`, `/api/inventory.js`, and `/api/checkout.js` simply forward
-> requests into the maintained implementations inside `serverless-vercel/api/`.
-> After redeploying, either configuration will expose the same endpoints.
-
 ## Front-end Configuration
 
 The static pages expect a few values to be set before deploying:
