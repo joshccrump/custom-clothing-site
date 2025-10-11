@@ -1,12 +1,14 @@
 {
-  "name": "custom-clothing-site",
-  "version": "1.0.0",
+  "name": "custom-clothing-api",
   "private": true,
   "type": "module",
+  "dependencies": {}
+}
+
+{
+  "type": "module",
   "scripts": {
-    "sync:square": "node scripts/fetch-square.js"
+    "sync:square": "node scripts/fetch-square.mjs"
   },
-  "dependencies": {
-    "square": "^43.1.0"
-  }
+  "engines": { "node": ">=20 <23" }
 }

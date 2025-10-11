@@ -1,87 +1,61 @@
-name: Sync Square Catalog
+name: Square Sync
 
 on:
+  workflow_dispatch:
+    inputs:
+      dry_run:
+        description: "Run without committing changes"
+        required: false
+        default: "false"
   schedule:
-    - cron: "*/15 * * * *"   # every 15 minutes
-  workflow_dispatch:         # adds the "Run workflow" button in Actions
+    - cron: "0 */6 * * *"  # every 6 hours
 
 permissions:
   contents: write
 
 concurrency:
-  group: square-sync
+  group: square-sync-${{ github.ref }}
   cancel-in-progress: true
 
 jobs:
   sync:
     runs-on: ubuntu-latest
+    env:
+      SQUARE_ACCESS_TOKEN: ${{ secrets.SQUARE_ACCESS_TOKEN }}
+      SQUARE_ENVIRONMENT: ${{ vars.SQUARE_ENVIRONMENT || 'production' }}
+      SQUARE_LOCATION_ID: ${{ vars.SQUARE_LOCATION_ID }}
+      OUTPUT_PATH: data/square-items.json
 
     steps:
       - name: Checkout
         uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
 
-      - name: Show repo tree (top-level)
-        run: |
-          pwd
-          ls -la
-
-      # Detect working directory: root or /docs
-      - name: Detect working directory
-        id: workdir
-        run: |
-          if [ -f package.json ]; then
-            echo "dir=." >> $GITHUB_OUTPUT
-            echo "Found package.json in repo root"
-          elif [ -f docs/package.json ]; then
-            echo "dir=docs" >> $GITHUB_OUTPUT
-            echo "Found package.json in /docs"
-          else
-            echo "::error::No package.json found in repo root or /docs. Commit package.json and scripts/fetch-square.js."
-            exit 1
-          fi
-
-      - name: Show working directory tree
-        run: |
-          echo "Working directory: ${{ steps.workdir.outputs.dir }}"
-          ls -la "${{ steps.workdir.outputs.dir }}"
-
-      # --- Future-proof: use npm cache ONLY if a lockfile exists ---
-      - name: Setup Node (cached)
-        if: ${{ hashFiles( format('{0}/package-lock.json', steps.workdir.outputs.dir) ) != '' ||
-                hashFiles( format('{0}/npm-shrinkwrap.json', steps.workdir.outputs.dir) ) != '' ||
-                hashFiles( format('{0}/yarn.lock', steps.workdir.outputs.dir) ) != '' }}
+      - name: Setup Node.js
         uses: actions/setup-node@v4
         with:
           node-version: 20
-          cache: npm
-          cache-dependency-path: |
-            ${{ steps.workdir.outputs.dir }}/package-lock.json
-            ${{ steps.workdir.outputs.dir }}/npm-shrinkwrap.json
-            ${{ steps.workdir.outputs.dir }}/yarn.lock
+          cache: 'npm'
 
-      # --- Easy fix: no cache path when lockfile is missing ---
-      - name: Setup Node (no cache)
-        if: ${{ hashFiles( format('{0}/package-lock.json', steps.workdir.outputs.dir) ) == '' &&
-                hashFiles( format('{0}/npm-shrinkwrap.json', steps.workdir.outputs.dir) ) == '' &&
-                hashFiles( format('{0}/yarn.lock', steps.workdir.outputs.dir) ) == '' }}
-        uses: actions/setup-node@v4
-        with:
-          node-version: 20
-
-      # Install deps: ci if lockfile present, else plain install
-      - name: Install deps
-        working-directory: ${{ steps.workdir.outputs.dir }}
+      - name: Ensure Node project & install Square SDK
         run: |
-          if [ -f package-lock.json ] || [ -f npm-shrinkwrap.json ]; then
-            npm ci
-          else
-            npm i --no-audit --no-fund
+          # Create package.json if the repo doesn't have one
+          if [ ! -f package.json ]; then
+            npm init -y
           fi
+          # Ensure ESM so .mjs / import works cleanly
+          npm pkg set type=module
+          # Install/upgrade Square SDK (works for both new and legacy imports via square/legacy)
+          npm install square@^40
 
-      - name: Node & NPM versions
+      - name: Install deps (if the repo already had a package.json/lock)
         run: |
-          node -v
-          npm -v
+          if [ -f package-lock.json ]; then
+            npm ci || npm install
+          else
+            npm install
+          fi
 
       - name: Verify script and npm scripts
         working-directory: ${{ steps.workdir.outputs.dir }}
@@ -101,29 +75,28 @@ jobs:
         run: |
           npm run sync:square
 
-      - name: Verify products.json
-        working-directory: ${{ steps.workdir.outputs.dir }}
-        run: |
-          test -f data/products.json || { echo "::error::data/products.json was not created"; exit 1; }
-          ls -lh data/products.json
-          head -n 5 data/products.json || true
+            - name: Run Square fetch script (REST)
+              run: | 
+              node scripts/fetch-square.mjs --out "${OUTPUT_PATH}"
 
-      # If your site is served from /docs but your workdir is root, copy over.
-      - name: Move products.json to docs if site serves from /docs
-        if: ${{ steps.workdir.outputs.dir == '.' && (hashFiles('docs/index.html') != '' || hashFiles('docs/index.htm') != '') }}
-        run: |
-          mkdir -p docs/data
-          cp -f data/products.json docs/data/products.json
-          ls -lh docs/data/products.json
 
-      - name: Commit changes
+      - name: Show diff
         run: |
-          if ! git diff --quiet; then
-            git config user.name "square-sync-bot"
-            git config user.email "action@github.com"
-            git add -A
-            git commit -m "chore: update products.json from Square"
-            git push
+          if git diff --quiet -- "${OUTPUT_PATH}"; then
+            echo "No changes in ${OUTPUT_PATH}"
           else
-            echo "No changes."
+            echo "Detected changes in ${OUTPUT_PATH}"
+            git --no-pager diff -- "${OUTPUT_PATH}" | tail -n +1 | sed -n '1,120p'
           fi
+
+      - name: Commit & push changes (unless dry run)
+        if: ${{ inputs.dry_run != 'true' }}
+        uses: stefanzweifel/git-auto-commit-action@v6
+        with:
+          commit_message: "chore(square): sync items from Square API"
+          branch: ${{ github.ref_name }}
+          file_pattern: ${{ env.OUTPUT_PATH }}
+
+      - name: Dry run note
+        if: ${{ inputs.dry_run == 'true' }}
+        run: echo "Dry run selected — not committing changes."

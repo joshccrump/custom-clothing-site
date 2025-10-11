@@ -6,13 +6,13 @@ function cors(res) {
   res.setHeader("Access-Control-Allow-Headers", "Content-Type");
 }
 
-function moneyToNumber(m) {
+function moneyToNumber(m){
   if (!m || typeof m.amount !== "number") return null;
   const scale = typeof m.decimalPlaces === "number" ? Math.pow(10, m.decimalPlaces) : 100;
   return m.amount / scale;
 }
 
-export default async function handler(req, res) {
+export default async function handler(req, res){
   cors(res);
   if (req.method === "OPTIONS") return res.status(200).end();
 
@@ -35,10 +35,10 @@ export default async function handler(req, res) {
     if (!itemId) return res.status(404).json({ error: "Parent item not found" });
 
     let item = relatedMap.get(itemId) || null;
-    if (!item) {
+    if (!item){
       const { result: ires } = await client.catalogApi.retrieveCatalogObject(itemId, true);
       item = ires.object;
-      for (const obj of ires.relatedObjects || []) {
+      for (const obj of ires.relatedObjects || []){
         related.push(obj);
         relatedMap.set(obj.id, obj);
       }
@@ -49,7 +49,7 @@ export default async function handler(req, res) {
     const resolveImage = (obj) => {
       const ids = obj?.itemData?.imageIds || obj?.imageIds || [];
       if (!Array.isArray(ids)) return null;
-      for (const id of ids) {
+      for (const id of ids){
         const img = relatedMap.get(id);
         if (img?.type === "IMAGE" && img?.imageData?.url) return img.imageData.url;
       }
@@ -57,11 +57,11 @@ export default async function handler(req, res) {
     };
 
     let thumbnail = resolveImage(item);
-    if (!thumbnail) {
+    if (!thumbnail){
       const vImages = variation?.itemVariationData?.imageIds || [];
-      for (const id of vImages) {
+      for (const id of vImages){
         const img = relatedMap.get(id);
-        if (img?.type === "IMAGE" && img?.imageData?.url) {
+        if (img?.type === "IMAGE" && img?.imageData?.url){
           thumbnail = img.imageData.url;
           break;
         }
@@ -72,33 +72,30 @@ export default async function handler(req, res) {
     const listIds = mInfos.map((mi) => mi.modifierListId).filter(Boolean);
 
     let modifierLists = [];
-    if (listIds.length) {
-      const { result: lres } = await client.catalogApi.batchRetrieveCatalogObjects({
-        objectIds: listIds,
-        includeRelatedObjects: true,
-      });
-      const lists = (lres.objects || []).filter((o) => o.type === "MODIFIER_LIST");
+    if (listIds.length){
+      const { result: lres } = await client.catalogApi.batchRetrieveCatalogObjects({ objectIds: listIds, includeRelatedObjects:true });
+      const lists = (lres.objects || []).filter(o => o.type === "MODIFIER_LIST");
       const relatedMods = lres.relatedObjects || [];
       const modsByList = new Map();
-      for (const mod of relatedMods) {
+      for (const mod of relatedMods){
         const listId = mod?.modifierData?.modifierListId;
-        if (mod.type === "MODIFIER" && listId) {
+        if (mod.type === "MODIFIER" && listId){
           const arr = modsByList.get(listId) || [];
           arr.push(mod);
           modsByList.set(listId, arr);
         }
       }
-      modifierLists = lists.map((list) => ({
+      modifierLists = lists.map(list => ({
         id: list.id,
         name: list.modifierListData?.name || "Options",
         selectionType: list.modifierListData?.selectionType || "SINGLE",
         minSelected: list.modifierListData?.minSelected ?? 0,
         maxSelected: list.modifierListData?.maxSelected ?? 0,
-        options: (modsByList.get(list.id) || []).map((m) => ({
+        options: (modsByList.get(list.id) || []).map(m => ({
           id: m.id,
           name: m.modifierData?.name || "Option",
-          priceMoney: m.modifierData?.priceMoney || null,
-        })),
+          priceMoney: m.modifierData?.priceMoney || null
+        }))
       }));
     }
 
@@ -111,12 +108,12 @@ export default async function handler(req, res) {
         title: item.itemData?.name || "Item",
         description: item.itemData?.description || "",
         currency: priceMoney?.currency || "USD",
-        thumbnail,
+        thumbnail
       },
       variation: {
         id: variation.id,
         name: variation.itemVariationData?.name || "",
-        price: variationPrice,
+        price: variationPrice
       },
       modifierLists,
     });
