@@ -1,27 +1,62 @@
-// Node 20+ / ESM + CommonJS interop for 'square' SDK
+// scripts/fetch-square.mjs
+// Node 20+ | ESM | Works with Square SDK v40+ (CJS/ESM) and both naming schemes
 
 import fs from "node:fs/promises";
 import path from "node:path";
 import { fileURLToPath } from "node:url";
 
-// IMPORTANT: 'square' is CommonJS — import default, then destructure:
-import squarePkg from "square";
-const { Client, Environment } = squarePkg;
+// Import default (CJS) or ESM and normalize exports
+import squareMod from "square";
 
+// Resolve possible export names across SDK versions:
+// - v40+ used { Client, Environment }
+// - newer docs/tools often use { SquareClient, SquareEnvironment }
+const mod = squareMod?.default ?? squareMod;
+
+const Client =
+  mod?.Client ??
+  mod?.SquareClient ??
+  squareMod?.Client ??
+  squareMod?.SquareClient;
+
+const EnvEnum =
+  mod?.Environment ??
+  mod?.SquareEnvironment ??
+  mod?.environments ?? // some builds expose this
+  squareMod?.Environment ??
+  squareMod?.SquareEnvironment ??
+  squareMod?.environments;
+
+if (!Client || !EnvEnum) {
+  console.error(
+    "Square SDK exports not found. Ensure `square` is installed and up to date."
+  );
+  console.error("Detected keys:", Object.keys(mod || {}));
+  process.exit(1);
+}
+
+// --- Config from env ---
 const ACCESS_TOKEN = process.env.SQUARE_ACCESS_TOKEN;
 const LOCATION_ID  = process.env.SQUARE_LOCATION_ID || "";
-// Accept SQUARE_ENV or SQUARE_ENVIRONMENT
-const RAW_ENV = (process.env.SQUARE_ENV || process.env.SQUARE_ENVIRONMENT || "production").toLowerCase();
+const RAW_ENV      =
+  (process.env.SQUARE_ENV || process.env.SQUARE_ENVIRONMENT || "production")
+    .toLowerCase();
 
 if (!ACCESS_TOKEN || !LOCATION_ID) {
   console.error("Missing SQUARE_ACCESS_TOKEN or SQUARE_LOCATION_ID env vars.");
   process.exit(1);
 }
 
-const envMap = { production: Environment.Production, sandbox: Environment.Sandbox };
+// Map our string ('production'|'sandbox') to the enum, handling both shapes
+const envValue =
+  RAW_ENV === "sandbox"
+    ? (EnvEnum.Sandbox ?? EnvEnum.SANDBOX ?? EnvEnum.sandbox ?? "sandbox")
+    : (EnvEnum.Production ?? EnvEnum.PRODUCTION ?? EnvEnum.production ?? "production");
+
+// Build Square client (works for both legacy/new constructors)
 const client = new Client({
   accessToken: ACCESS_TOKEN,
-  environment: envMap[RAW_ENV] ?? Environment.Production
+  environment: envValue,
 });
 
 const __filename = fileURLToPath(import.meta.url);
