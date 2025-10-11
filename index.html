@@ -30,21 +30,22 @@
 <body>
   
   <nav class="site-nav" data-site-nav>
-    <a href="/custom-clothing-site/">Home</a>
-    <a href="/custom-clothing-site/shop.html">Shop</a>
-    <a href="/custom-clothing-site/gallery/">Gallery</a>
-    <a href="/custom-clothing-site/clients/">Client Portals</a>
-    <a href="/custom-clothing-site/about.html">About</a>
-    <a href="/custom-clothing-site/contact.html">Contact</a>
-    <a href="/custom-clothing-site/cart.html">Cart</a>
+    <a href="/custom-clothing-site/" data-nav="home">Home</a>
+    <a href="/custom-clothing-site/shop.html" data-nav="shop">Shop</a>
+    <a href="/custom-clothing-site/gallery/" data-nav="gallery">Gallery</a>
+    <a href="/custom-clothing-site/clients/" data-nav="clients">Client Portals</a>
+    <a href="/custom-clothing-site/about.html" data-nav="about">About</a>
+    <a href="/custom-clothing-site/contact.html" data-nav="contact">Contact</a>
+    <a href="/custom-clothing-site/cart.html" data-nav="cart">Cart</a>
   </nav>
 
   <main>
     <div class="hero">
       <h1>Welcome</h1>
-      <p>Browse the <a href="/custom-clothing-site/gallery/">Gallery</a> or go straight to the <a href="/custom-clothing-site/shop.html">Shop</a>.</p>
+      <p>Browse the <a href="/custom-clothing-site/gallery/" data-nav-link="gallery">Gallery</a> or go straight to the <a href="/custom-clothing-site/shop.html" data-nav-link="shop">Shop</a>.</p>
     </div>
   </main>
-  <script src="/custom-clothing-site/assets/nav-cart.js" defer></script>
+  <script src="assets/site-utils.js" defer></script>
+  <script src="assets/nav-cart.js" defer></script>
 </body>
 </html>
