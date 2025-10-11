@@ -60,8 +60,20 @@ jobs:
       - name: Verify script and npm scripts
         working-directory: ${{ steps.workdir.outputs.dir }}
         run: |
-          test -f scripts/fetch-square.js || { echo "::error::Missing scripts/fetch-square.js"; exit 1; }
-          node --input-type=module -e "import { readFileSync } from 'fs'; const pkg = JSON.parse(readFileSync(new URL('./package.json', import.meta.url))); console.log('package name:', pkg.name); console.log('has script sync:square:', Boolean(pkg.scripts && pkg.scripts['sync:square']));"
+          if [ ! -f scripts/fetch-square.js ] && [ ! -f scripts/fetch-square.mjs ] && [ ! -f scripts/fetch-square.cjs ]; then
+            echo "::error::Missing Square sync script (scripts/fetch-square.js|mjs|cjs)"
+            exit 1
+          fi
+          node --input-type=module -e "import { readFileSync } from 'fs'; const pkg = JSON.parse(readFileSync(new URL('./package.json', import.meta.url))); if (!pkg?.scripts?.['sync:square']) { console.error('::error::package.json is missing a \\'sync:square\\' npm script'); process.exit(1); } console.log('package name:', pkg.name); console.log('has script sync:square:', true);"
+
+      - name: Run sync
+        working-directory: ${{ steps.workdir.outputs.dir }}
+        env:
+          SQUARE_ACCESS_TOKEN: ${{ secrets.SQUARE_ACCESS_TOKEN }}
+          SQUARE_ENV: ${{ secrets.SQUARE_ENV || 'production' }}
+          SQUARE_LOCATION_ID: ${{ secrets.SQUARE_LOCATION_ID }}
+        run: |
+          npm run sync:square
 
             - name: Run Square fetch script (REST)
               run: | 

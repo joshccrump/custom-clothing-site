@@ -16,8 +16,7 @@ const { Client } = Square;
 const Environment = Square?.Environment ?? { Production: "production", Sandbox: "sandbox" };
 
 function makeClient() {
-  const envName = (process.env.SQUARE_ENV || "production").toLowerCase();
-  const environment = envName === "production" ? Environment.Production : Environment.Sandbox;
+  const environment = resolveEnvironment();
   const token = process.env.SQUARE_ACCESS_TOKEN;
   if (!token) throw new Error("SQUARE_ACCESS_TOKEN not set");
   return new Client({
