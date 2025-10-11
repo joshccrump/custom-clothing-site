@@ -1,6 +1,6 @@
 {
   "name": "custom-clothing-site",
-  "version": "0.0.0",
+  "version": "0.1.0",
   "private": true,
   "type": "module",
   "engines": { "node": ">=20 <23" },
@@ -8,6 +8,6 @@
     "sync:square": "node scripts/fetch-square.mjs"
   },
   "dependencies": {
-    "square": "^40.0.0"
+    "square": "^43.1.0"
   }
 }
