@@ -1,9 +1,9 @@
 // scripts/fetch-square.js
-const fs = require("fs");
-const path = require("path");
-const Square = require("square");
-const { Client } = Square;
-const Environment = Square.Environment || { Production: "production", Sandbox: "sandbox" };
+import fs from "fs";
+import path from "path";
+import { Client, Environment as SquareEnvironment } from "square";
+
+const Environment = SquareEnvironment || { Production: "production", Sandbox: "sandbox" };
 
 function makeClient() {
   const envName = (process.env.SQUARE_ENV || "production").toLowerCase();
@@ -16,17 +16,19 @@ function makeClient() {
   });
 }
 
-function moneyToCents(m) {
+function moneyToNumber(m) {
   if (!m || typeof m.amount !== "number") return null;
-  return m.amount;
+  const scale = typeof m.decimalPlaces === "number" ? Math.pow(10, m.decimalPlaces) : 100;
+  return m.amount / scale;
 }
 
 (async () => {
   const client = makeClient();
   let cursor = undefined;
-  const types = "ITEM,MODIFIER_LIST,IMAGE,ITEM_OPTION";
+  const types = "ITEM,MODIFIER_LIST,IMAGE,ITEM_OPTION,CATEGORY";
   const images = new Map();
   const modLists = new Map();
+  const categories = new Map();
   const items = [];
 
   do {
@@ -44,6 +46,9 @@ function moneyToCents(m) {
           break;
         case "ITEM":
           items.push(o);
+          break;
+        case "CATEGORY":
+          categories.set(o.id, o);
           break;
         default:
           break;
@@ -69,15 +74,16 @@ function moneyToCents(m) {
     if (Array.isArray(data.variations)) {
       for (const v of data.variations) {
         const vd = v.itemVariationData || {};
-        const cents = moneyToCents(vd.priceMoney);
-        if (typeof cents === "number") {
-          priceMin = priceMin == null ? cents : Math.min(priceMin, cents);
-          priceMax = priceMax == null ? cents : Math.max(priceMax, cents);
+        const price = moneyToNumber(vd.priceMoney);
+        if (typeof price === "number") {
+          priceMin = priceMin == null ? price : Math.min(priceMin, price);
+          priceMax = priceMax == null ? price : Math.max(priceMax, price);
         }
         variations.push({
           id: v.id,
           name: vd.name || "Variation",
-          price: typeof cents === "number" ? cents : null,
+          price: typeof price === "number" ? price : null,
+          currency: vd.priceMoney?.currency || "USD",
         });
       }
     }
@@ -106,15 +112,21 @@ function moneyToCents(m) {
       }
     }
 
+    const description = data.descriptionHtml || data.description || "";
+    const categoryId = data.categoryId;
+    const categoryName = categoryId ? categories.get(categoryId)?.categoryData?.name : undefined;
+
     out.push({
       id: it.id,
       title: data.name || "Untitled",
+      description,
       thumbnail,
-      currency: "USD",
+      currency: variations[0]?.currency || "USD",
       variations,
       price_min: priceMin,
       price_max: priceMax,
-      modifier_lists
+      modifier_lists,
+      category: categoryName || null
     });
   }
 

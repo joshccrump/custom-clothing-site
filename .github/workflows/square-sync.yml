@@ -87,7 +87,7 @@ jobs:
         working-directory: ${{ steps.workdir.outputs.dir }}
         run: |
           test -f scripts/fetch-square.js || { echo "::error::Missing scripts/fetch-square.js"; exit 1; }
-          node -e "try{const pj=require('./package.json'); console.log('package name:', pj.name); console.log('has script sync:square:', Boolean(pj.scripts && pj.scripts['sync:square']));}catch(e){console.error(e); process.exit(1)}"
+          node --input-type=module -e "import { readFileSync } from 'fs'; const pkg = JSON.parse(readFileSync(new URL('./package.json', import.meta.url))); console.log('package name:', pkg.name); console.log('has script sync:square:', Boolean(pkg.scripts && pkg.scripts['sync:square']));"
 
       - name: Run sync
         working-directory: ${{ steps.workdir.outputs.dir }}
