@@ -1,13 +1,17 @@
-// scripts/fetch-square.mjs
+// Node 20+ / ESM + CommonJS interop for 'square' SDK
+
 import fs from "node:fs/promises";
 import path from "node:path";
 import { fileURLToPath } from "node:url";
-import { Client, Environment } from "square";
+
+// IMPORTANT: 'square' is CommonJS — import default, then destructure:
+import squarePkg from "square";
+const { Client, Environment } = squarePkg;
 
 const ACCESS_TOKEN = process.env.SQUARE_ACCESS_TOKEN;
 const LOCATION_ID  = process.env.SQUARE_LOCATION_ID || "";
-// Accept either SQUARE_ENV or SQUARE_ENVIRONMENT
-const RAW_ENV      = (process.env.SQUARE_ENV || process.env.SQUARE_ENVIRONMENT || "production").toLowerCase();
+// Accept SQUARE_ENV or SQUARE_ENVIRONMENT
+const RAW_ENV = (process.env.SQUARE_ENV || process.env.SQUARE_ENVIRONMENT || "production").toLowerCase();
 
 if (!ACCESS_TOKEN || !LOCATION_ID) {
   console.error("Missing SQUARE_ACCESS_TOKEN or SQUARE_LOCATION_ID env vars.");
@@ -17,7 +21,7 @@ if (!ACCESS_TOKEN || !LOCATION_ID) {
 const envMap = { production: Environment.Production, sandbox: Environment.Sandbox };
 const client = new Client({
   accessToken: ACCESS_TOKEN,
-  environment: envMap[RAW_ENV] ?? Environment.Production,
+  environment: envMap[RAW_ENV] ?? Environment.Production
 });
 
 const __filename = fileURLToPath(import.meta.url);
@@ -95,11 +99,7 @@ async function main() {
   const products = buildProducts(objects);
 
   await fs.mkdir(path.dirname(OUT_FILE), { recursive: true });
-  const payload = {
-    locationId: LOCATION_ID,
-    env: RAW_ENV,
-    products
-  };
+  const payload = { locationId: LOCATION_ID, env: RAW_ENV, products };
   await fs.writeFile(OUT_FILE, JSON.stringify(payload, null, 2));
   console.log(`Wrote ${products.length} products → ${path.relative(process.cwd(), OUT_FILE)}`);
 }
