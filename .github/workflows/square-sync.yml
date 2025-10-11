@@ -1,128 +1,48 @@
-name: Sync Square Catalog
+name: Square → Catalog JSON
 
 on:
+  workflow_dispatch: {}
   schedule:
-    - cron: "*/15 * * * *"   # every 15 minutes
-  workflow_dispatch:         # adds the "Run workflow" button in Actions
-
-permissions:
-  contents: write
-
-concurrency:
-  group: square-sync
-  cancel-in-progress: true
+    - cron: "0 */6 * * *"
 
 jobs:
   sync:
     runs-on: ubuntu-latest
-
+    permissions:
+      contents: write
     steps:
-      - name: Checkout
-        uses: actions/checkout@v4
+      - uses: actions/checkout@v4
 
-      - name: Show repo tree (top-level)
-        run: |
-          pwd
-          ls -la
-
-      # Detect working directory: root or /docs
-      - name: Detect working directory
-        id: workdir
-        run: |
-          if [ -f package.json ]; then
-            echo "dir=." >> $GITHUB_OUTPUT
-            echo "Found package.json in repo root"
-          elif [ -f docs/package.json ]; then
-            echo "dir=docs" >> $GITHUB_OUTPUT
-            echo "Found package.json in /docs"
-          else
-            echo "::error::No package.json found in repo root or /docs. Commit package.json and scripts/fetch-square.js."
-            exit 1
-          fi
-
-      - name: Show working directory tree
-        run: |
-          echo "Working directory: ${{ steps.workdir.outputs.dir }}"
-          ls -la "${{ steps.workdir.outputs.dir }}"
-
-      # --- Future-proof: use npm cache ONLY if a lockfile exists ---
-      - name: Setup Node (cached)
-        if: ${{ hashFiles( format('{0}/package-lock.json', steps.workdir.outputs.dir) ) != '' ||
-                hashFiles( format('{0}/npm-shrinkwrap.json', steps.workdir.outputs.dir) ) != '' ||
-                hashFiles( format('{0}/yarn.lock', steps.workdir.outputs.dir) ) != '' }}
-        uses: actions/setup-node@v4
+      - uses: actions/setup-node@v4
         with:
-          node-version: 20
-          cache: npm
-          cache-dependency-path: |
-            ${{ steps.workdir.outputs.dir }}/package-lock.json
-            ${{ steps.workdir.outputs.dir }}/npm-shrinkwrap.json
-            ${{ steps.workdir.outputs.dir }}/yarn.lock
+          node-version: "20"
 
-      # --- Easy fix: no cache path when lockfile is missing ---
-      - name: Setup Node (no cache)
-        if: ${{ hashFiles( format('{0}/package-lock.json', steps.workdir.outputs.dir) ) == '' &&
-                hashFiles( format('{0}/npm-shrinkwrap.json', steps.workdir.outputs.dir) ) == '' &&
-                hashFiles( format('{0}/yarn.lock', steps.workdir.outputs.dir) ) == '' }}
-        uses: actions/setup-node@v4
-        with:
-          node-version: 20
-
-      # Install deps: ci if lockfile present, else plain install
+      # Prefer ci; if lock is stale, fall back to install once, then ci
       - name: Install deps
-        working-directory: ${{ steps.workdir.outputs.dir }}
         run: |
-          if [ -f package-lock.json ] || [ -f npm-shrinkwrap.json ]; then
-            npm ci
+          if npm ci; then
+            echo "npm ci succeeded"
           else
-            npm i --no-audit --no-fund
+            echo "npm ci failed; attempting npm install to refresh lockfile"
+            npm install --no-audit --no-fund
+            npm ci
           fi
 
-      - name: Node & NPM versions
-        run: |
-          node -v
-          npm -v
-
-      - name: Verify script and npm scripts
-        working-directory: ${{ steps.workdir.outputs.dir }}
-        run: |
-          if [ ! -f scripts/fetch-square.js ] && [ ! -f scripts/fetch-square.mjs ] && [ ! -f scripts/fetch-square.cjs ]; then
-            echo "::error::Missing Square sync script (scripts/fetch-square.js|mjs|cjs)"
-            exit 1
-          fi
-          node --input-type=module -e "import { readFileSync } from 'fs'; const pkg = JSON.parse(readFileSync(new URL('./package.json', import.meta.url))); if (!pkg?.scripts?.['sync:square']) { console.error('::error::package.json is missing a \\'sync:square\\' npm script'); process.exit(1); } console.log('package name:', pkg.name); console.log('has script sync:square:', true);"
-
-      - name: Run sync
-        working-directory: ${{ steps.workdir.outputs.dir }}
+      - name: Run Square sync
+        run: npm run sync:square
         env:
           SQUARE_ACCESS_TOKEN: ${{ secrets.SQUARE_ACCESS_TOKEN }}
-          SQUARE_ENV: ${{ secrets.SQUARE_ENV || 'production' }}
-          SQUARE_LOCATION_ID: ${{ secrets.SQUARE_LOCATION_ID }}
-        run: |
-          npm run sync:square
+          SQUARE_LOCATION_ID:  ${{ secrets.SQUARE_LOCATION_ID }}
+          SQUARE_ENVIRONMENT:  ${{ vars.SQUARE_ENVIRONMENT || 'production' }}
+          OUTPUT_PATH:         data/products.json
 
-      - name: Verify products.json
-        working-directory: ${{ steps.workdir.outputs.dir }}
+      - name: Commit & push if changed
         run: |
-          test -f data/products.json || { echo "::error::data/products.json was not created"; exit 1; }
-          ls -lh data/products.json
-          head -n 5 data/products.json || true
-
-      # If your site is served from /docs but your workdir is root, copy over.
-      - name: Move products.json to docs if site serves from /docs
-        if: ${{ steps.workdir.outputs.dir == '.' && (hashFiles('docs/index.html') != '' || hashFiles('docs/index.htm') != '') }}
-        run: |
-          mkdir -p docs/data
-          cp -f data/products.json docs/data/products.json
-          ls -lh docs/data/products.json
-
-      - name: Commit changes
-        run: |
-          if ! git diff --quiet; then
-            git config user.name "square-sync-bot"
-            git config user.email "action@github.com"
-            git add -A
-            git commit -m "chore: update products.json from Square"
+          if ! git diff --quiet --exit-code data/products.json package-lock.json; then
+            git config user.name  "square-sync[bot]"
+            git config user.email "square-sync[bot]@users.noreply.github.com"
+            git add data/products.json package-lock.json
+            git commit -m "Square sync: refresh catalog JSON (and lockfile if needed)"
             git push
           else
             echo "No changes."
