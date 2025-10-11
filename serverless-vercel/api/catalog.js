@@ -1,6 +1,6 @@
 import { makeClient } from "./_square.js";
 
-function cors(res){
+function cors(res) {
   res.setHeader("Access-Control-Allow-Origin", "*");
   res.setHeader("Access-Control-Allow-Methods", "GET, OPTIONS");
   res.setHeader("Access-Control-Allow-Headers", "Content-Type");
@@ -15,7 +15,8 @@ function moneyToNumber(m){
 export default async function handler(req, res){
   cors(res);
   if (req.method === "OPTIONS") return res.status(200).end();
-  try{
+
+  try {
     const variationId = (req.query.variationId || "").trim();
     if (!variationId) return res.status(400).json({ error: "variationId required" });
 
@@ -68,7 +69,7 @@ export default async function handler(req, res){
     }
 
     const mInfos = item?.itemData?.modifierListInfo || [];
-    const listIds = mInfos.map(mi => mi.modifierListId).filter(Boolean);
+    const listIds = mInfos.map((mi) => mi.modifierListId).filter(Boolean);
 
     let modifierLists = [];
     if (listIds.length){
@@ -114,9 +115,9 @@ export default async function handler(req, res){
         name: variation.itemVariationData?.name || "",
         price: variationPrice
       },
-      modifierLists
+      modifierLists,
     });
-  }catch(e){
+  } catch (e) {
     console.error("catalog error", e);
     res.status(500).json({ error: e?.message || "Unknown error" });
   }
