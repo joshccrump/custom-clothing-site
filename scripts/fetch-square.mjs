@@ -1,102 +1,148 @@
 // scripts/fetch-square.mjs
-// Node 20+ | ESM | Square SDK v40–v43+ compatible (CJS/ESM, old/new class & method names)
-// Adds preflight auth + location checks to avoid opaque 401s.
+// Node 20+ | ESM | Square SDK v40+ compatible (CJS/ESM, old/new names)
+// Adds a preflight that validates token/env and Location ID to avoid 401 confusion.
 
 import fs from "node:fs/promises";
 import path from "node:path";
 import { fileURLToPath } from "node:url";
 
-// Normalize the Square SDK module (CJS default or ESM)
-import sq from "square";
-const mod = sq?.default ?? sq;
+// Square may export as CJS default or ESM named—normalize:
+import squareMod from "square";
+const mod = squareMod?.default ?? squareMod;
 
-// Resolve client constructor across versions
+// Client class across SDK versions
 const Client =
-  mod?.Client || mod?.SquareClient || sq?.Client || sq?.SquareClient;
+  mod?.Client ??
+  mod?.SquareClient ??
+  squareMod?.Client ??
+  squareMod?.SquareClient;
 
-// Resolve environment enum across versions
+// Environment enum / map across versions
 const EnvEnum =
-  mod?.Environment ||
-  mod?.SquareEnvironment ||
-  mod?.environments ||
-  sq?.Environment ||
-  sq?.SquareEnvironment ||
-  sq?.environments;
+  mod?.Environment ??
+  mod?.SquareEnvironment ??
+  mod?.environments ??
+  squareMod?.Environment ??
+  squareMod?.SquareEnvironment ??
+  squareMod?.environments;
 
 if (!Client || !EnvEnum) {
-  console.error("Square SDK not found or unsupported shape. Check that 'square' is installed.");
-  console.error("Available keys:", Object.keys(mod || {}));
+  console.error("Square SDK exports not found. Is 'square' installed?");
+  console.error("Available keys on module:", Object.keys(mod || {}));
   process.exit(1);
 }
 
-// ---- Read env
+// -------- Config --------
 const ACCESS_TOKEN = (process.env.SQUARE_ACCESS_TOKEN || "").trim();
 const LOCATION_ID  = (process.env.SQUARE_LOCATION_ID || "").trim();
+// Accept either SQUARE_ENV or SQUARE_ENVIRONMENT
 const RAW_ENV      = (process.env.SQUARE_ENV || process.env.SQUARE_ENVIRONMENT || "production").toLowerCase();
-const OUT_PATH     = process.env.OUTPUT_PATH || "data/products.json";
 
-// Basic env validation
 if (!ACCESS_TOKEN) {
-  console.error("Missing SQUARE_ACCESS_TOKEN (GitHub Actions secret).");
-  console.error("Tips: set repo Settings → Secrets and variables → Actions → New repository secret.");
-  console.error("Note: secrets do NOT pass to workflows from forked PRs.");
+  console.error("Missing SQUARE_ACCESS_TOKEN. Add it as a GitHub Actions Secret.");
   process.exit(1);
 }
 if (!LOCATION_ID) {
-  console.error("Missing SQUARE_LOCATION_ID (GitHub Actions secret).");
-  console.error("Get it from Square Dashboard → Locations. Use the ID, not the name.");
+  console.error("Missing SQUARE_LOCATION_ID. Add it as a GitHub Actions Secret.");
   process.exit(1);
 }
 
-// Map environment (handles old/new enum names)
 const environment =
   RAW_ENV === "sandbox"
     ? (EnvEnum.Sandbox ?? EnvEnum.SANDBOX ?? EnvEnum.sandbox ?? "sandbox")
     : (EnvEnum.Production ?? EnvEnum.PRODUCTION ?? EnvEnum.production ?? "production");
 
-// Init client
 const client = new Client({ accessToken: ACCESS_TOKEN, environment });
 
-// ---- Helpers that adapt to multiple SDK shapes
+const __filename = fileURLToPath(import.meta.url);
+const __dirname  = path.dirname(__filename);
+const OUT_FILE   = path.resolve(__dirname, "..", process.env.OUTPUT_PATH || "data/products.json");
 
-async function* iterLocations() {
-  // Newer style
-  if (client.locations?.list) {
-    const pager = await client.locations.list();
-    if (pager && pager[Symbol.asyncIterator]) {
-      for await (const loc of pager) yield loc;
-      return;
-    }
-    if (pager?.data) {
-      let page = pager;
-      while (page) {
-        for (const l of page.data) yield l;
-        page = page.hasNextPage ? await page.getNextPage() : null;
-      }
-      return;
-    }
-  }
-  // Legacy style
-  if (client.locationsApi?.listLocations) {
-    const resp = await client.locationsApi.listLocations();
-    const res = resp?.result ?? resp;
-    const arr = res?.locations || [];
-    for (const l of arr) yield l;
-    return;
-  }
-  throw new Error("Could not find a compatible Locations list method on the Square SDK client.");
+// -------- Helpers --------
+const moneyToNumber = (m) => (m && typeof m.amount === "number" ? m.amount / 100 : null);
+
+function maskToken(tok) {
+  if (!tok) return "";
+  const clean = tok.replace(/\s+/g, "");
+  const head = clean.slice(0, 6);
+  const tail = clean.slice(-4);
+  return `${head}…${tail} (len=${clean.length})`;
 }
 
+// Preflight: verify auth + location
+async function preflight() {
+  console.log("=== Square preflight ===");
+  console.log(`Env: ${RAW_ENV} → ${String(environment)}`);
+  console.log(`Token: ${maskToken(ACCESS_TOKEN)}`);
+  console.log(`Location ID: ${LOCATION_ID}`);
+
+  // 1) List locations to validate token/env; also ensures token has permissions.
+  try {
+    const res = await (client.locations?.list
+      ? client.locations.list()
+      : client.locationsApi?.listLocations
+      ? client.locationsApi.listLocations()
+      : Promise.reject(new Error("No locations API method found on client")));
+
+    const result = res?.result ?? res; // handle various return shapes
+    const locations =
+      result?.locations ??
+      result?.data ??
+      (Array.isArray(result) ? result : []);
+
+    if (!Array.isArray(locations) || locations.length === 0) {
+      console.warn("Preflight: token valid, but no locations returned.");
+    } else {
+      const ids = new Set(
+        locations.map((loc) => loc.id || loc.location?.id).filter(Boolean)
+      );
+      if (!ids.has(LOCATION_ID)) {
+        console.error(
+          "Preflight FAILED: LOCATION_ID not found for this token/environment."
+        );
+        console.error(
+          "Tip: Ensure SQUARE_LOCATION_ID belongs to the SAME account and SAME environment (sandbox vs production) as SQUARE_ACCESS_TOKEN."
+        );
+        console.error("Locations seen:", [...ids].join(", ") || "(none)");
+        process.exit(1);
+      }
+    }
+  } catch (e) {
+    // Friendly messages for 401s
+    const status = e?.statusCode || e?.rawResponse?.status;
+    if (status === 401) {
+      console.error("Preflight FAILED: 401 Unauthorized from Square.");
+      console.error(
+        [
+          "- If RAW_ENV=production, you must use a **Production** access token (starts with 'EAAA...' typically).",
+          "- If RAW_ENV=sandbox, use a **Sandbox** access token (starts with 'EAAA' as well, but created under Sandbox).",
+          "- Confirm the token hasn’t been revoked/expired and has Catalog/Items read scope.",
+          "- Verify there are no extra quotes or spaces in your GitHub Secret.",
+        ].join("\n")
+      );
+    } else {
+      console.error("Preflight FAILED:", e);
+    }
+    process.exit(1);
+  }
+
+  console.log("Preflight OK: token and Location ID look valid.");
+}
+
+// Iterator that works across SDK versions to list catalog objects
 async function* iterCatalogObjects(types = ["ITEM", "ITEM_VARIATION", "IMAGE"]) {
   const typesCsv = types.join(",");
 
-  // Newer catalog surface
-  if (client.catalog?.list) {
-    const pager = await client.catalog.list({ types: typesCsv });
-    if (pager && pager[Symbol.asyncIterator]) {
+  // New-style: client.catalog.list / client.catalogs.list
+  if (client.catalog?.list || client.catalogs?.list) {
+    const listFn = client.catalog?.list ?? client.catalogs?.list;
+    // Try async-iterable pager
+    const pager = await listFn({ types: typesCsv });
+    if (pager?.[Symbol.asyncIterator]) {
       for await (const obj of pager) yield obj;
       return;
     }
+    // Page-by-page fallback
     if (pager?.data) {
       let page = pager;
       while (page) {
@@ -106,23 +152,8 @@ async function* iterCatalogObjects(types = ["ITEM", "ITEM_VARIATION", "IMAGE"]) 
       return;
     }
   }
-  // Variant naming
-  if (client.catalogs?.list) {
-    const pager = await client.catalogs.list({ types: typesCsv });
-    if (pager && pager[Symbol.asyncIterator]) {
-      for await (const obj of pager) yield obj;
-      return;
-    }
-    if (pager?.data) {
-      let page = pager;
-      while (page) {
-        for (const obj of page.data) yield obj;
-        page = page.hasNextPage ? await page.getNextPage() : null;
-      }
-      return;
-    }
-  }
-  // Legacy API
+
+  // Legacy: client.catalogApi.listCatalog / .list
   if (client.catalogApi?.listCatalog || client.catalogApi?.list) {
     let cursor;
     const call = client.catalogApi.listCatalog
@@ -139,10 +170,9 @@ async function* iterCatalogObjects(types = ["ITEM", "ITEM_VARIATION", "IMAGE"]) 
     return;
   }
 
-  throw new Error("Could not find a compatible Catalog list method on the Square SDK client.");
+  throw new Error("No compatible catalog list method found on Square client.");
 }
 
-const moneyToNumber = (m) => (m && typeof m.amount === "number" ? m.amount / 100 : null);
 const indexById = (arr) => new Map(arr.map((o) => [o.id, o]));
 
 function buildProducts(objects) {
@@ -162,7 +192,7 @@ function buildProducts(objects) {
           name: vd.name || "Default",
           sku: vd.sku || null,
           price: moneyToNumber(vd.priceMoney),
-          inventory: null
+          inventory: null,
         };
       })
       .sort((a, b) => String(a.name).localeCompare(String(b.name)));
@@ -175,7 +205,7 @@ function buildProducts(objects) {
 
     const modifiers = (d.modifierListInfo || []).map((m) => ({
       id: m.modifierListId,
-      enabled: m.enabled ?? true
+      enabled: m.enabled ?? true,
     }));
 
     const priceFrom = variations.reduce(
@@ -193,47 +223,12 @@ function buildProducts(objects) {
       modifiers,
       priceFrom: Number.isFinite(priceFrom) ? priceFrom : null,
       squareUrl: null,
-      updatedAt: item.updatedAt
+      updatedAt: item.updatedAt,
     };
   });
 }
 
-// ---- Preflight auth + location validation
-async function preflight() {
-  try {
-    const locs = [];
-    for await (const l of iterLocations()) locs.push(l);
-
-    if (!locs.length) {
-      console.error("Auth OK but no locations returned for this token.");
-      console.error("Check that the token belongs to a Square account with active locations.");
-      process.exit(1);
-    }
-
-    const ids = new Set(locs.map((l) => l.id));
-    if (!ids.has(LOCATION_ID)) {
-      console.error("Auth OK but SQUARE_LOCATION_ID does not match any accessible location.");
-      console.error("Provided LOCATION_ID:", LOCATION_ID);
-      console.error("Accessible IDs:", [...ids].join(", "));
-      console.error("Fix: set the correct SQUARE_LOCATION_ID (Dashboard → Locations → copy ID).");
-      process.exit(1);
-    }
-  } catch (err) {
-    const status = err?.statusCode || err?.rawResponse?.status;
-    if (status === 401) {
-      console.error("Authentication failed (401). Common fixes:");
-      console.error("• Token/env mismatch: Use a sandbox token with SQUARE_ENVIRONMENT=sandbox, or a production token with SQUARE_ENVIRONMENT=production.");
-      console.error("• Secret missing in this workflow: ensure SQUARE_ACCESS_TOKEN is set as a repo secret (not only an org secret blocked by policy).");
-      console.error("• Secrets don’t pass to forked PRs: run the workflow from a branch in this repo or use workflow_dispatch.");
-      console.error("• Revoked/expired token: create a new access token in Square Developer Dashboard and update the secret.");
-      process.exit(1);
-    }
-    throw err; // unknown failure — let main() surface it
-  }
-}
-
 async function main() {
-  console.log(`Environment: ${RAW_ENV} | Location: ${LOCATION_ID}`);
   await preflight();
 
   console.log("Fetching Square catalog…");
@@ -242,12 +237,11 @@ async function main() {
 
   const products = buildProducts(all);
 
-  const __filename = fileURLToPath(import.meta.url);
-  const __dirname  = path.dirname(__filename);
-  const OUT_FILE   = path.resolve(__dirname, "..", OUT_PATH);
-
   await fs.mkdir(path.dirname(OUT_FILE), { recursive: true });
-  await fs.writeFile(OUT_FILE, JSON.stringify({ locationId: LOCATION_ID, env: RAW_ENV, products }, null, 2));
+  await fs.writeFile(
+    OUT_FILE,
+    JSON.stringify({ locationId: LOCATION_ID, env: RAW_ENV, products }, null, 2)
+  );
   console.log(`Wrote ${products.length} products → ${path.relative(process.cwd(), OUT_FILE)}`);
 }
 
