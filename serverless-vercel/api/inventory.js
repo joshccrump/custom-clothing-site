@@ -1,13 +1,13 @@
 // serverless-vercel/api/inventory.js
-import Square from "square";
-
-// Some Square builds export Environment, some don't in ESM/CommonJS interop.
-// Use a safe fallback so we never crash.
-const { Client } = Square;
-const Environment = Square?.Environment ?? { Production: "production", Sandbox: "sandbox" };
+import { makeClient } from "./_square.js";
 
 export default async function handler(req, res) {
   res.setHeader("Access-Control-Allow-Origin", "*");
+  res.setHeader("Access-Control-Allow-Methods", "GET, OPTIONS");
+  res.setHeader("Access-Control-Allow-Headers", "Content-Type");
+
+  if (req.method === "OPTIONS") return res.status(200).end();
+  if (req.method !== "GET") return res.status(405).json({ error: "Use GET" });
 
   try {
     const ids = (req.query.ids || "")
@@ -19,15 +19,7 @@ export default async function handler(req, res) {
       return res.status(400).json({ error: "ids required" });
     }
 
-    const env =
-      (process.env.SQUARE_ENV || "production").toLowerCase() === "production"
-        ? Environment.Production
-        : Environment.Sandbox;
-
-    const client = new Client({
-      bearerAuthCredentials: { accessToken: process.env.SQUARE_ACCESS_TOKEN },
-      environment: env,
-    });
+    const client = makeClient();
 
     const { result } = await client.inventoryApi.batchRetrieveInventoryCounts({
       catalogObjectIds: ids,
