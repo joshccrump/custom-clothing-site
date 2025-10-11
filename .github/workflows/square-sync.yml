@@ -27,6 +27,52 @@ jobs:
             npm ci
           fi
 
+- name: Preflight: verify Square token & location
+  shell: bash
+  run: |
+    set -euo pipefail
+    echo "Env: $SQUARE_ENVIRONMENT"
+    # Show token head/tail + length (no full token in logs)
+    tok_len=${#SQUARE_ACCESS_TOKEN}
+    echo "Token head: ${SQUARE_ACCESS_TOKEN:0:6}…${SQUARE_ACCESS_TOKEN: -4} (len=$tok_len)"
+    echo "Location: $SQUARE_LOCATION_ID"
+
+    # Hit /v2/locations directly against PRODUCTION host if env=production, else sandbox
+    if [ "${SQUARE_ENVIRONMENT,,}" = "production" ]; then
+      base="https://connect.squareup.com"
+    else
+      base="https://connect.squareupsandbox.com"
+    fi
+
+    echo "GET $base/v2/locations"
+    resp="$(curl -sS -w '\n%{http_code}' "$base/v2/locations" \
+      -H "Authorization: Bearer $SQUARE_ACCESS_TOKEN" \
+      -H "Content-Type: application/json")"
+
+    body="$(echo "$resp" | sed '$d')"
+    code="$(echo "$resp" | tail -n1)"
+    echo "HTTP $code"
+    echo "$body" | head -c 1200; echo
+
+    if [ "$code" != "200" ]; then
+      echo "❌ Token rejected by $base. Check that the token is from the SAME environment you're calling and has Catalog/Locations scope."
+      exit 1
+    fi
+
+    # Check that your LOCATION_ID is among returned locations
+    if ! echo "$body" | grep -q "\"id\" *: *\"$SQUARE_LOCATION_ID\""; then
+      echo "❌ Location $SQUARE_LOCATION_ID not found for this token. Use a Location ID from the SAME account & environment as the token."
+      echo "Tip: copy a Production Location ID from Seller Dashboard → Locations."
+      exit 1
+    fi
+
+    echo "✅ Token & Location match this environment."
+  env:
+    SQUARE_ACCESS_TOKEN: ${{ secrets.SQUARE_ACCESS_TOKEN }}
+    SQUARE_LOCATION_ID:  ${{ secrets.SQUARE_LOCATION_ID }}
+    SQUARE_ENVIRONMENT:  ${{ vars.SQUARE_ENVIRONMENT || 'production' }}
+
+
       - name: Run Square sync
         run: npm run sync:square
         env:
