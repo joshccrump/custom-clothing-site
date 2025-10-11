@@ -1,102 +1,44 @@
-name: Square Sync
+name: Square → Catalog JSON
 
 on:
-  workflow_dispatch:
-    inputs:
-      dry_run:
-        description: "Run without committing changes"
-        required: false
-        default: "false"
+  workflow_dispatch: {}
   schedule:
-    - cron: "0 */6 * * *"  # every 6 hours
-
-permissions:
-  contents: write
-
-concurrency:
-  group: square-sync-${{ github.ref }}
-  cancel-in-progress: true
+    - cron: "0 */6 * * *"
 
 jobs:
   sync:
     runs-on: ubuntu-latest
-    env:
-      SQUARE_ACCESS_TOKEN: ${{ secrets.SQUARE_ACCESS_TOKEN }}
-      SQUARE_ENVIRONMENT: ${{ vars.SQUARE_ENVIRONMENT || 'production' }}
-      SQUARE_LOCATION_ID: ${{ vars.SQUARE_LOCATION_ID }}
-      OUTPUT_PATH: data/square-items.json
-
+    permissions:
+      contents: write
     steps:
-      - name: Checkout
-        uses: actions/checkout@v4
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
         with:
-          fetch-depth: 0
+          node-version: "20"
 
-      - name: Setup Node.js
-        uses: actions/setup-node@v4
-        with:
-          node-version: 20
-          cache: 'npm'
+      - run: npm ci
 
-      - name: Ensure Node project & install Square SDK
-        run: |
-          # Create package.json if the repo doesn't have one
-          if [ ! -f package.json ]; then
-            npm init -y
-          fi
-          # Ensure ESM so .mjs / import works cleanly
-          npm pkg set type=module
-          # Install/upgrade Square SDK (works for both new and legacy imports via square/legacy)
-          npm install square@^40
+      # Ensure the Square SDK is present (in case lockfile is old)
+      - run: npm i square@^40
 
-      - name: Install deps (if the repo already had a package.json/lock)
-        run: |
-          if [ -f package-lock.json ]; then
-            npm ci || npm install
-          else
-            npm install
-          fi
-
-      - name: Verify script and npm scripts
-        working-directory: ${{ steps.workdir.outputs.dir }}
-        run: |
-          if [ ! -f scripts/fetch-square.js ] && [ ! -f scripts/fetch-square.mjs ] && [ ! -f scripts/fetch-square.cjs ]; then
-            echo "::error::Missing Square sync script (scripts/fetch-square.js|mjs|cjs)"
-            exit 1
-          fi
-          node --input-type=module -e "import { readFileSync } from 'fs'; const pkg = JSON.parse(readFileSync(new URL('./package.json', import.meta.url))); if (!pkg?.scripts?.['sync:square']) { console.error('::error::package.json is missing a \\'sync:square\\' npm script'); process.exit(1); } console.log('package name:', pkg.name); console.log('has script sync:square:', true);"
-
-      - name: Run sync
-        working-directory: ${{ steps.workdir.outputs.dir }}
+      - name: Run Square sync
+        run: npm run sync:square
         env:
           SQUARE_ACCESS_TOKEN: ${{ secrets.SQUARE_ACCESS_TOKEN }}
-          SQUARE_ENV: ${{ secrets.SQUARE_ENV || 'production' }}
-          SQUARE_LOCATION_ID: ${{ secrets.SQUARE_LOCATION_ID }}
+          SQUARE_LOCATION_ID:  ${{ secrets.SQUARE_LOCATION_ID }}
+          # Accept either variable name; prefer ENV, fall back inside the script
+          SQUARE_ENVIRONMENT:  ${{ vars.SQUARE_ENVIRONMENT || 'production' }}
+          OUTPUT_PATH:         data/products.json
+
+      - name: Commit & push if changed
         run: |
-          npm run sync:square
-
-            - name: Run Square fetch script (REST)
-              run: | 
-              node scripts/fetch-square.mjs --out "${OUTPUT_PATH}"
-
-
-      - name: Show diff
-        run: |
-          if git diff --quiet -- "${OUTPUT_PATH}"; then
-            echo "No changes in ${OUTPUT_PATH}"
+          if ! git diff --quiet --exit-code data/products.json; then
+            git config user.name  "square-sync[bot]"
+            git config user.email "square-sync[bot]@users.noreply.github.com"
+            git add data/products.json
+            git commit -m "Square sync: refresh catalog JSON"
+            git push
           else
-            echo "Detected changes in ${OUTPUT_PATH}"
-            git --no-pager diff -- "${OUTPUT_PATH}" | tail -n +1 | sed -n '1,120p'
+            echo "No changes."
           fi
-
-      - name: Commit & push changes (unless dry run)
-        if: ${{ inputs.dry_run != 'true' }}
-        uses: stefanzweifel/git-auto-commit-action@v6
-        with:
-          commit_message: "chore(square): sync items from Square API"
-          branch: ${{ github.ref_name }}
-          file_pattern: ${{ env.OUTPUT_PATH }}
-
-      - name: Dry run note
-        if: ${{ inputs.dry_run == 'true' }}
-        run: echo "Dry run selected — not committing changes."
