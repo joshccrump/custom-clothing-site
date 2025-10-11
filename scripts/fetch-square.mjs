@@ -54,10 +54,17 @@ const envValue =
     : (EnvEnum.Production ?? EnvEnum.PRODUCTION ?? EnvEnum.production ?? "production");
 
 // Build Square client (works for both legacy/new constructors)
-const client = new Client({
-  accessToken: ACCESS_TOKEN,
-  environment: envValue,
-});
+let client;
+try {
+  // New SDKs (v41+): SquareClient({ token, environment })
+  client = new Client({ token: ACCESS_TOKEN, environment: envValue });
+} catch {
+  // Legacy SDKs (v40 and earlier): Client({ bearerAuthCredentials, environment })
+  client = new Client({
+    bearerAuthCredentials: { accessToken: ACCESS_TOKEN },
+    environment: envValue,
+  });
+}
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname  = path.dirname(__filename);
@@ -70,10 +77,12 @@ function moneyToNumber(m) {
 async function fetchAllCatalog(types = ["ITEM", "ITEM_VARIATION", "IMAGE"]) {
   const out = [];
   let cursor;
+  const catalogApi = client.catalogApi ?? client.catalog; // tolerate both
   do {
-    const resp = await client.catalogApi.listCatalog({ cursor, types: types.join(",") });
-    if (resp.result?.objects) out.push(...resp.result.objects);
-    cursor = resp.result?.cursor;
+    const resp = await catalogApi.listCatalog({ cursor, types: types.join(",") });
+    const data = resp?.result ?? resp; // some SDKs wrap responses in { result }
+    if (data?.objects) out.push(...data.objects);
+    cursor = data?.cursor;
   } while (cursor);
   return out;
 }
