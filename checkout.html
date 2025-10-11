@@ -31,7 +31,18 @@
     .subtle{color:var(--muted)}
     .hero{background:#fff;border:1px solid var(--border);border-radius:14px;padding:24px}
   </style>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Checkout • Custom Clothing</title>
 
+  <!-- Important for GitHub Pages repo path -->
+  <base href="/custom-clothing-site/">
+
+  <!-- Your existing site stylesheet, if any -->
+  <link rel="stylesheet" href="assets/style.css">
+
+  <!-- Square Web Payments SDK (SANDBOX for testing) -->
+  <script src="https://sandbox.web.squarecdn.com/v1/square.js"></script>
 </head>
 <body>
   
@@ -44,16 +55,40 @@
     <a href="/custom-clothing-site/contact.html" data-nav="contact">Contact</a>
     <a href="/custom-clothing-site/cart.html" data-nav="cart">Cart</a>
   </nav>
+  <header>
+    <nav>
+      <a href="index.html">Home</a> ·
+      <a href="shop.html">Shop</a> ·
+      <a href="checkout.html" aria-current="page">Checkout</a>
+    </nav>
+  </header>
 
-  <main>
+  <main class="container" style="max-width: 720px; margin: 2rem auto; padding: 1rem;">
     <h1>Checkout</h1>
-    <div id="summary" class="subtle">Preparing payment…</div>
-    <div id="card-container" class="card" style="padding:16px;margin-top:10px"></div>
-    <button id="pay" class="btn btn--buy" style="margin-top:10px">Pay now</button>
-    <div id="error" style="color:#b91c1c;margin-top:10px"></div>
+    <p>Enter your card details below. This page uses Square's Web Payments SDK in Sandbox mode.</p>
+
+    <section id="summary" style="margin: 1rem 0;">
+      <!-- Replace this with your real cart summary -->
+      <h2>Order Summary</h2>
+      <ul>
+        <li>Sample Tee ×1 — $50.00</li>
+      </ul>
+      <p><strong>Total: $50.00</strong></p>
+    </section>
+
+    <!-- Square Card UI mounts here -->
+    <div id="card-container" style="margin: 1rem 0;"></div>
+    <button id="pay-btn" style="padding: 0.75rem 1rem; font-weight: 600;">Pay $50.00</button>
+    <p id="status" role="status" aria-live="polite" style="margin-top: 1rem;"></p>
   </main>
   <script src="assets/site-utils.js" defer></script>
   <script src="assets/checkout.js" defer></script>
   <script src="assets/nav-cart.js" defer></script>
+
+  <footer style="text-align:center; margin: 3rem 0 2rem; opacity: 0.7;">
+    <small>Sandbox test checkout • Replace credentials before going live.</small>
+  </footer>
+
+  <script src="assets/checkout.js" type="module"></script>
 </body>
 </html>

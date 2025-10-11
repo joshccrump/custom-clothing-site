@@ -11,7 +11,7 @@ on:
     - cron: "0 */6 * * *"  # every 6 hours
 
 permissions:
-  contents: write
+  contents: write   # needed to push updates back to the repo
 
 concurrency:
   group: square-sync-${{ github.ref }}
@@ -21,9 +21,11 @@ jobs:
   sync:
     runs-on: ubuntu-latest
     env:
+      # Required secrets/vars (set these in repo Settings → Secrets and variables → Actions)
       SQUARE_ACCESS_TOKEN: ${{ secrets.SQUARE_ACCESS_TOKEN }}
       SQUARE_ENVIRONMENT: ${{ vars.SQUARE_ENVIRONMENT || 'production' }}
       SQUARE_LOCATION_ID: ${{ vars.SQUARE_LOCATION_ID }}
+      # Optional: override output path
       OUTPUT_PATH: data/square-items.json
 
     steps:
@@ -38,43 +40,38 @@ jobs:
           node-version: 20
           cache: 'npm'
 
-      - name: Ensure Node project & install Square SDK
+      - name: Install deps
         run: |
-          # Create package.json if the repo doesn't have one
-          if [ ! -f package.json ]; then
-            npm init -y
-          fi
-          # Ensure ESM so .mjs / import works cleanly
-          npm pkg set type=module
-          # Install/upgrade Square SDK (works for both new and legacy imports via square/legacy)
-          npm install square@^40
-
-      - name: Install deps (if the repo already had a package.json/lock)
-        run: |
-          if [ -f package-lock.json ]; then
+          if [ -f package-lock.json ] || [ -f package.json ]; then
             npm ci || npm install
-          else
-            npm install
           fi
 
-      - name: Verify script and npm scripts
-        working-directory: ${{ steps.workdir.outputs.dir }}
+      - name: Ensure output folder exists
         run: |
-          test -f scripts/fetch-square.js || { echo "::error::Missing scripts/fetch-square.js"; exit 1; }
-          node --input-type=module -e "import { readFileSync } from 'fs'; const pkg = JSON.parse(readFileSync(new URL('./package.json', import.meta.url))); console.log('package name:', pkg.name); console.log('has script sync:square:', Boolean(pkg.scripts && pkg.scripts['sync:square']));"
+          mkdir -p "$(dirname "${OUTPUT_PATH}")"
 
-            - name: Run Square fetch script (REST)
-              run: | 
-              node scripts/fetch-square.mjs --out "${OUTPUT_PATH}"
-
+      - name: Run Square fetch script (ESM/CJS-compatible)
+        run: |
+          # If your script is CommonJS but repo has "type": "module", Node may error on require().
+          # We copy to .mjs and run as ESM to be safe.
+          if [ -f "fetch-square.js" ]; then
+            cp fetch-square.js fetch-square.mjs
+            node fetch-square.mjs --out "${OUTPUT_PATH}"
+          elif [ -f "scripts/fetch-square.js" ]; then
+            cp scripts/fetch-square.js scripts/fetch-square.mjs
+            node scripts/fetch-square.mjs --out "${OUTPUT_PATH}"
+          else
+            echo "Could not find fetch-square.js. Update the workflow to point to your script path." >&2
+            exit 1
+          fi
 
       - name: Show diff
         run: |
+          git status --porcelain
           if git diff --quiet -- "${OUTPUT_PATH}"; then
             echo "No changes in ${OUTPUT_PATH}"
           else
             echo "Detected changes in ${OUTPUT_PATH}"
-            git --no-pager diff -- "${OUTPUT_PATH}" | tail -n +1 | sed -n '1,120p'
           fi
 
       - name: Commit & push changes (unless dry run)

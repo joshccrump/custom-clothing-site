@@ -101,3 +101,27 @@ This workspace already has the `origin` remote pointing to
 PAT or SSH key before running `git push` from this environment (see
 `README-DEPLOY.md` for credential steps). Once pushed, GitHub Pages picks up
 changes to the `main` branch automatically.
+# custom-clothing-api (Vercel)
+
+Serverless backend for Square payments.
+
+## Environment Variables (Vercel → Project → Settings → Environment Variables)
+- `SQUARE_ACCESS_TOKEN` — use **Sandbox** token for testing, **Production** token for live
+- `SQUARE_ENVIRONMENT` — `sandbox` or `production`
+- `SQUARE_LOCATION_ID` — your Square Location ID
+- `ALLOWED_ORIGIN` — `https://joshccrump.github.io` (or your custom domain)
+
+## Endpoint
+- `POST /api/charge` with JSON:
+```json
+{
+  "sourceId": "TOKEN_FROM_WEB_PAYMENTS_SDK",
+  "amount": 5000,
+  "currency": "USD",
+  "idempotencyKey": "uuid"
+}
+```
+
+## Notes
+- Update `Square-Version` header over time to the latest stable.
+- Keep your Access Token on the server only (never ship to the browser).
