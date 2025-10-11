@@ -16,7 +16,7 @@ permissions:
   id-token: write
 
 # Required by actions/deploy-pages
-environment:
+env:
   name: github-pages
   url: ${{ steps.deployment.outputs.page_url }}
 
