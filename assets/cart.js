@@ -1,81 +1,184 @@
 (function(){
-  const BASE="/custom-clothing-site/";
-  async function fetchJSON(u){ const r=await fetch(u,{cache:'no-store'}); if(!r.ok) throw new Error('HTTP '+r.status+' '+u); return r.json(); }
-  function qs(n){ return new URLSearchParams(location.search).get(n); }
-  function fmt(n,c='USD'){ try{ return new Intl.NumberFormat(undefined,{style:'currency',currency:c}).format(n);}catch{ return '$'+Number(n||0).toFixed(2);} }
+  function qs(name){
+    return new URLSearchParams(window.location.search).get(name);
+  }
 
-  async function findFromStatic(variationId){
-    const tries=[BASE+'data/products.json','data/products.json','../data/products.json','/data/products.json',BASE+'web/data/products.json','web/data/products.json','../web/data/products.json','/web/data/products.json'];
-    let products=[]; for(const u of tries){ try{ products=await fetchJSON(u); break; }catch(_){} }
-    if(!Array.isArray(products)||!products.length) return null;
-    for(const p of products){
-      if(Array.isArray(p.variations)){ for(const v of p.variations){ const id=v.id||v.variation_id; if(id===variationId) return {product:p,variation:v,modifierLists:p.modifier_lists||p.modifiers||[]}; } }
+  function fmt(amount, currency){
+    try {
+      return new Intl.NumberFormat(undefined, { style: "currency", currency: currency || "USD" }).format(amount);
+    } catch (err) {
+      return `$${Number(amount || 0).toFixed(2)}`;
+    }
+  }
+
+  async function lookupStatic(variationId){
+    try {
+      const catalog = await window.Site.loadCatalog();
+      for (const product of catalog){
+        if (!Array.isArray(product.variations)) continue;
+        for (const variation of product.variations){
+          const id = variation.id || variation.variation_id || variation.variationId;
+          if (id === variationId){
+            return {
+              product,
+              variation,
+              modifierLists: product.modifier_lists || product.modifiers || []
+            };
+          }
+        }
+      }
+    } catch (err) {
+      console.warn("Static lookup failed", err);
     }
     return null;
   }
-  async function fetchCatalog(variationId){
-    const api=document.querySelector('meta[name=api-base]')?.content?.trim()||''; if(!api) throw new Error('API_BASE missing');
-    return await fetchJSON(api+'/api/catalog?variationId='+encodeURIComponent(variationId));
-  }
-  function renderModifiers(container, lists, onChange){
-    container.innerHTML='';
-    for(const list of(lists||[])){
-      const fs=document.createElement('fieldset'); const lg=document.createElement('legend'); lg.textContent=list.name||'Options'; fs.appendChild(lg);
-      const box=document.createElement('div'); box.className='mods';
-      const multi=list.selectionType==='MULTIPLE'||(list.maxSelected||0)>1;
-      for(const m of(list.options||[])){
-        const lbl=document.createElement('label'); const inp=document.createElement('input'); inp.type=multi?'checkbox':'radio'; inp.name='mod_'+(list.id||lg.textContent); inp.value=m.id;
-        inp.dataset.price = String(m.priceMoney?.amount||0); inp.dataset.currency = m.priceMoney?.currency||'USD';
-        const span=document.createElement('span'); span.textContent=(m.name||'Option') + (m.priceMoney?.amount?(' + '+ (m.priceMoney.amount/100).toLocaleString(undefined,{style:'currency',currency:m.priceMoney.currency})):''); 
-        lbl.appendChild(inp); lbl.appendChild(span); box.appendChild(lbl);
-      }
-      fs.appendChild(box); container.appendChild(fs);
+
+  async function fetchCatalogDetails(variationId){
+    const path = `/api/catalog?variationId=${encodeURIComponent(variationId)}`;
+    const fetcher = window.Site?.apiFetch;
+    if (typeof fetcher === "function"){
+      const response = await fetcher(path, { cache: "no-store" });
+      if (!response.ok) throw new Error(`API ${response.status}`);
+      return response.json();
     }
-    container.addEventListener('change',()=>{
-      const checked=container.querySelectorAll('input:checked'); let add=0,curr='USD'; checked.forEach(inp=>{const a=Number(inp.dataset.price||'0'); if(a){ add+=a; curr=inp.dataset.currency||curr; }});
-      onChange(add,curr);
+
+    const metaBase = document.querySelector('meta[name="api-base"]')?.content?.trim() || window.API_BASE;
+    if (!metaBase) throw new Error("Missing API base configuration");
+    const base = metaBase.replace(/\/+$/, "");
+    const response = await fetch(`${base}${path}`, { cache: "no-store" });
+    if (!response.ok) throw new Error(`API ${response.status}`);
+    return response.json();
+  }
+
+  function renderModifierLists(container, lists, onChange){
+    container.innerHTML = "";
+    for (const list of lists || []){
+      const fieldset = document.createElement("fieldset");
+      const legend = document.createElement("legend");
+      legend.textContent = list.name || "Options";
+      fieldset.appendChild(legend);
+
+      const box = document.createElement("div");
+      box.className = "mods";
+      const multi = list.selectionType === "MULTIPLE" || Number(list.maxSelected || 0) > 1;
+      for (const modifier of list.options || []){
+        const label = document.createElement("label");
+        const input = document.createElement("input");
+        input.type = multi ? "checkbox" : "radio";
+        input.name = `mod_${list.id || legend.textContent}`;
+        input.value = modifier.id;
+        const priceMoney = modifier.priceMoney || {};
+        input.dataset.price = String(priceMoney.amount || 0);
+        input.dataset.currency = priceMoney.currency || "USD";
+        const priceLabel = priceMoney.amount ? ` + ${fmt(priceMoney.amount / 100, priceMoney.currency)}` : "";
+        const span = document.createElement("span");
+        span.textContent = `${modifier.name || "Option"}${priceLabel}`;
+        label.appendChild(input);
+        label.appendChild(span);
+        box.appendChild(label);
+      }
+      fieldset.appendChild(box);
+      container.appendChild(fieldset);
+    }
+
+    container.addEventListener("change", () => {
+      const checked = container.querySelectorAll("input:checked");
+      let total = 0;
+      let currency = "USD";
+      checked.forEach((node) => {
+        const amount = Number(node.dataset.price || "0");
+        if (amount){
+          total += amount;
+          currency = node.dataset.currency || currency;
+        }
+      });
+      onChange(total, currency);
     });
   }
 
-  document.addEventListener('DOMContentLoaded', async function(){
-    const mount=document.getElementById('cart');
-    const variationId=qs('variationId'); const qty=Math.max(1,parseInt(qs('quantity')||'1',10));
-    if(!variationId){ mount.innerHTML='<div class="subtle">Your cart is empty. Visit the <a href="'+BASE+'shop.html">Shop</a>.</div>'; return; }
+  document.addEventListener("DOMContentLoaded", async () => {
+    const mount = document.getElementById("cart");
+    if (!mount) return;
 
-    let data=await findFromStatic(variationId);
-    if(!data){ try{ data=await fetchCatalog(variationId); }catch(e){ mount.innerHTML='<div class="subtle">Could not load item details. Set your API base in cart.html and deploy /api/catalog.</div>'; return; } }
+    const variationId = qs("variationId");
+    const quantity = Math.max(1, parseInt(qs("quantity") || "1", 10));
+    if (!variationId){
+      mount.innerHTML = `<div class="subtle">Your cart is empty. Visit the <a data-nav-link="shop">Shop</a>.</div>`;
+      window.Site?.rewriteAnchors(mount);
+      return;
+    }
 
-    const p=data.product||{}, v=data.variation||{}, lists=data.modifierLists||[];
-    const title=p.title||p.name||'Selected Item', currency=p.currency||'USD', thumb=p.thumbnail||(BASE+'images/placeholder.png');
-    const vname=v.name||'Variation', unitPrice=typeof v.price==='number'?v.price:(typeof p.price==='number'?p.price:0);
-    let modsCents=0, curr=currency;
+    let details = await lookupStatic(variationId);
+    if (!details){
+      try {
+        details = await fetchCatalogDetails(variationId);
+      } catch (err) {
+        console.error(err);
+        mount.innerHTML = `<div class="subtle">Could not load item details. Ensure your API base points to the deployed Vercel project.</div>`;
+        return;
+      }
+    }
 
-    mount.innerHTML=`
+    const product = details.product || {};
+    const variation = details.variation || {};
+    const lists = details.modifierLists || [];
+    const currency = product.currency || variation.currency || "USD";
+    const unitPrice = typeof variation.price === "number"
+      ? variation.price
+      : (typeof product.price === "number" ? product.price : 0);
+
+    mount.innerHTML = `
       <div class="card" style="padding:16px">
         <div class="row">
-          <img class="thumb" alt="Item" src="${thumb}">
+          <img class="thumb" alt="Item" src="${window.Site?.resolveImage(product.thumbnail)}">
           <div class="meta">
-            <h2 class="title">${title}</h2>
-            <div class="subtle">${vname}</div>
+            <h2 class="title">${product.title || product.name || "Selected Item"}</h2>
+            <div class="subtle">${variation.name || "Variation"}</div>
             <div id="mod-lists"></div>
-            <div class="qty" style="margin-top:10px"><label>Quantity</label> <input id="qty" type="number" min="1" value="${qty}"></div>
-            <div class="totals"><div class="subtle">Unit price: <span id="unit">${fmt(unitPrice,currency)}</span></div><div><strong>Subtotal: <span id="subtotal">${fmt(unitPrice*qty,currency)}</span></strong></div></div>
-            <div style="margin-top:12px"><a class="btn" href="${BASE}shop.html">← Continue shopping</a> <a class="btn btn--buy" id="pay">Continue to payment</a></div>
+            <div class="qty" style="margin-top:10px"><label>Quantity</label> <input id="qty" type="number" min="1" value="${quantity}"></div>
+            <div class="totals"><div class="subtle">Unit price: <span id="unit">${fmt(unitPrice, currency)}</span></div><div><strong>Subtotal: <span id="subtotal">${fmt(unitPrice * quantity, currency)}</span></strong></div></div>
+            <div style="margin-top:12px"><a class="btn" data-nav-link="shop">← Continue shopping</a> <a class="btn btn--buy" id="pay">Continue to payment</a></div>
           </div>
         </div>
-      </div>`;
+      </div>
+    `;
 
-    const modBox=document.getElementById('mod-lists'), qtyEl=document.getElementById('qty'), subEl=document.getElementById('subtotal'), payEl=document.getElementById('pay');
+    window.Site?.rewriteAnchors(mount);
 
-    function updateTotals(){ const q=Math.max(1,parseInt(qtyEl.value||'1',10)); const total=(unitPrice*100+modsCents)*q/100; subEl.textContent=fmt(total,curr||currency); }
-    function selectedMods(){ return Array.from(modBox.querySelectorAll('input:checked')).map(i=>i.value); }
+    const modifiersBox = document.getElementById("mod-lists");
+    const quantityInput = document.getElementById("qty");
+    const subtotalNode = document.getElementById("subtotal");
+    const payButton = document.getElementById("pay");
 
-    renderModifiers(modBox,lists,(add,c)=>{ modsCents=add; curr=c; updateTotals(); }); updateTotals();
+    let modifierCents = 0;
+    let modifierCurrency = currency;
 
-    payEl.addEventListener('click',()=>{
-      const q=Math.max(1,parseInt(qtyEl.value||'1',10)); const mods=selectedMods();
-      const url=new URL(BASE+'checkout.html',location.origin); url.searchParams.set('variationId',variationId); url.searchParams.set('quantity',String(q));
-      if(mods.length) url.searchParams.set('mods',mods.join(',')); location.href=url.toString();
+    function updateSubtotal(){
+      const q = Math.max(1, parseInt(quantityInput.value || "1", 10));
+      const subtotal = (unitPrice * 100 + modifierCents) * q / 100;
+      subtotalNode.textContent = fmt(subtotal, modifierCurrency || currency);
+    }
+
+    function selectedModifiers(){
+      return Array.from(modifiersBox.querySelectorAll("input:checked")).map((node) => node.value);
+    }
+
+    renderModifierLists(modifiersBox, lists, (addedCents, curr) => {
+      modifierCents = addedCents;
+      modifierCurrency = curr || currency;
+      updateSubtotal();
+    });
+
+    updateSubtotal();
+
+    payButton.addEventListener("click", () => {
+      const q = Math.max(1, parseInt(quantityInput.value || "1", 10));
+      const mods = selectedModifiers();
+      const url = new URL(window.Site?.join("checkout.html"), window.location.origin);
+      url.searchParams.set("variationId", variationId);
+      url.searchParams.set("quantity", String(q));
+      if (mods.length) url.searchParams.set("mods", mods.join(","));
+      window.location.href = url.toString();
     });
   });
 })();

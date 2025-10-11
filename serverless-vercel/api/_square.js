@@ -1,9 +1,9 @@
-// api/_square.js  (CommonJS)
-const Square = require("square");
-const { Client } = Square;
-const Environment = Square.Environment || { Production: "production", Sandbox: "sandbox" };
+// api/_square.js  (shared Square client helper)
+import { Client, Environment as SquareEnvironment } from "square";
 
-function makeClient() {
+const Environment = SquareEnvironment ?? { Production: "production", Sandbox: "sandbox" };
+
+export function makeClient() {
   const envName = (process.env.SQUARE_ENV || "production").toLowerCase();
   const environment = envName === "production" ? Environment.Production : Environment.Sandbox;
 
@@ -15,5 +15,3 @@ function makeClient() {
     environment,
   });
 }
-
-module.exports = { makeClient };
