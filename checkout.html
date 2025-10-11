@@ -1,6 +1,36 @@
 <!doctype html>
 <html lang="en">
 <head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Checkout</title>
+  <script>
+    window.SQUARE_APPLICATION_ID = "sq0idp-dcSCzq-77WsFTjHDRARpEQ";
+    window.SQUARE_LOCATION_ID    = "L116Z8RBA1RJ4";
+    window.API_BASE              = "https://custom-clothing-site.vercel.app";
+  </script>
+  <script src="https://web.squarecdn.com/v1/square.js"></script>
+  
+  <style>
+    :root { --fg:#111; --muted:#666; --card:#fff; --border:#e5e7eb; --bg:#f8fafc; }
+    *{box-sizing:border-box}
+    body{margin:0;font-family:system-ui,-apple-system,Segoe UI,Roboto,Arial,sans-serif;color:var(--fg);background:var(--bg)}
+    .site-nav{display:flex;gap:16px;align-items:center;padding:14px 18px;border-bottom:1px solid var(--border);background:#fff;position:sticky;top:0;z-index:10}
+    .site-nav a{color:#111;text-decoration:none;padding:8px 10px;border-radius:10px;border:1px solid transparent;font-weight:600}
+    .site-nav a:hover{background:#111;color:#fff}
+    main{max-width:1100px;margin:24px auto;padding:0 16px}
+    .grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(220px,1fr));gap:16px}
+    .card{background:#fff;border:1px solid var(--border);border-radius:14px;overflow:hidden;display:flex;flex-direction:column}
+    .card__media{aspect-ratio:1/1;background:#f1f5f9;display:flex;align-items:center;justify-content:center}
+    .card__img{width:100%;height:100%;object-fit:cover}
+    .card__body{padding:12px 12px 14px}
+    .title{margin:0 0 6px}
+    .price{color:#111;font-weight:700;margin-bottom:8px}
+    .btn{display:inline-flex;align-items:center;justify-content:center;padding:10px 14px;border-radius:8px;text-decoration:none;cursor:pointer;border:1px solid var(--border);background:#fff}
+    .btn--buy{background:#111;color:#fff;border-color:#111}
+    .subtle{color:var(--muted)}
+    .hero{background:#fff;border:1px solid var(--border);border-radius:14px;padding:24px}
+  </style>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>Checkout • Custom Clothing</title>
@@ -15,6 +45,16 @@
   <script src="https://sandbox.web.squarecdn.com/v1/square.js"></script>
 </head>
 <body>
+  
+  <nav class="site-nav" data-site-nav>
+    <a href="/custom-clothing-site/" data-nav="home">Home</a>
+    <a href="/custom-clothing-site/shop.html" data-nav="shop">Shop</a>
+    <a href="/custom-clothing-site/gallery/" data-nav="gallery">Gallery</a>
+    <a href="/custom-clothing-site/clients/" data-nav="clients">Client Portals</a>
+    <a href="/custom-clothing-site/about.html" data-nav="about">About</a>
+    <a href="/custom-clothing-site/contact.html" data-nav="contact">Contact</a>
+    <a href="/custom-clothing-site/cart.html" data-nav="cart">Cart</a>
+  </nav>
   <header>
     <nav>
       <a href="index.html">Home</a> ·
@@ -41,6 +81,9 @@
     <button id="pay-btn" style="padding: 0.75rem 1rem; font-weight: 600;">Pay $50.00</button>
     <p id="status" role="status" aria-live="polite" style="margin-top: 1rem;"></p>
   </main>
+  <script src="assets/site-utils.js" defer></script>
+  <script src="assets/checkout.js" defer></script>
+  <script src="assets/nav-cart.js" defer></script>
 
   <footer style="text-align:center; margin: 3rem 0 2rem; opacity: 0.7;">
     <small>Sandbox test checkout • Replace credentials before going live.</small>

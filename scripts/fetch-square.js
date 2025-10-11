@@ -1,3 +1,9 @@
+// scripts/fetch-square.js
+import fs from "fs";
+import path from "path";
+import { Client, Environment as SquareEnvironment } from "square";
+
+const Environment = SquareEnvironment || { Production: "production", Sandbox: "sandbox" };
 // scripts/fetch-square.js (ESM)
 // Generates data/products.json from your Square Catalog
 // Requires env: SQUARE_ACCESS_TOKEN, SQUARE_ENV (production|sandbox)
@@ -20,6 +26,20 @@ function makeClient() {
   });
 }
 
+function moneyToNumber(m) {
+  if (!m || typeof m.amount !== "number") return null;
+  const scale = typeof m.decimalPlaces === "number" ? Math.pow(10, m.decimalPlaces) : 100;
+  return m.amount / scale;
+}
+
+(async () => {
+  const client = makeClient();
+  let cursor = undefined;
+  const types = "ITEM,MODIFIER_LIST,IMAGE,ITEM_OPTION,CATEGORY";
+  const images = new Map();
+  const modLists = new Map();
+  const categories = new Map();
+  const items = [];
 function moneyToCents(m) {
   return (m && typeof m.amount === "number") ? m.amount : null;
 }
@@ -33,6 +53,23 @@ const images = new Map();
 const modLists = new Map();
 const items = [];
 
+    for (const o of objects) {
+      switch (o.type) {
+        case "IMAGE":
+          images.set(o.id, o);
+          break;
+        case "MODIFIER_LIST":
+          modLists.set(o.id, o);
+          break;
+        case "ITEM":
+          items.push(o);
+          break;
+        case "CATEGORY":
+          categories.set(o.id, o);
+          break;
+        default:
+          break;
+      }
 do {
   const resp = await client.catalogApi.listCatalog(cursor, types);
   cursor = resp?.result?.cursor;
@@ -68,6 +105,23 @@ for (const it of items) {
     thumbnail = img?.imageData?.url || null;
   }
 
+    const variations = [];
+    let priceMin = null;
+    let priceMax = null;
+    if (Array.isArray(data.variations)) {
+      for (const v of data.variations) {
+        const vd = v.itemVariationData || {};
+        const price = moneyToNumber(vd.priceMoney);
+        if (typeof price === "number") {
+          priceMin = priceMin == null ? price : Math.min(priceMin, price);
+          priceMax = priceMax == null ? price : Math.max(priceMax, price);
+        }
+        variations.push({
+          id: v.id,
+          name: vd.name || "Variation",
+          price: typeof price === "number" ? price : null,
+          currency: vd.priceMoney?.currency || "USD",
+        });
   // Variations
   const variations = [];
   let priceMin = null;
@@ -110,6 +164,23 @@ for (const it of items) {
         options
       });
     }
+
+    const description = data.descriptionHtml || data.description || "";
+    const categoryId = data.categoryId;
+    const categoryName = categoryId ? categories.get(categoryId)?.categoryData?.name : undefined;
+
+    out.push({
+      id: it.id,
+      title: data.name || "Untitled",
+      description,
+      thumbnail,
+      currency: variations[0]?.currency || "USD",
+      variations,
+      price_min: priceMin,
+      price_max: priceMax,
+      modifier_lists,
+      category: categoryName || null
+    });
   }
 
   out.push({

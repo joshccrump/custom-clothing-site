@@ -1,1 +1,64 @@
-[]
+[
+  {
+    "id": "SAMPLE-HOODIE",
+    "title": "Varsity Script Hoodie",
+    "description": "Midweight fleece hoodie with custom tackle twill lettering for teams and fan clubs.",
+    "thumbnail": "images/ph1.svg",
+    "currency": "USD",
+    "price_min": 55,
+    "price_max": 65,
+    "variations": [
+      { "id": "SAMPLE-HOODIE-S", "name": "Small", "price": 55, "currency": "USD" },
+      { "id": "SAMPLE-HOODIE-M", "name": "Medium", "price": 57, "currency": "USD" },
+      { "id": "SAMPLE-HOODIE-L", "name": "Large", "price": 60, "currency": "USD" },
+      { "id": "SAMPLE-HOODIE-XL", "name": "XL", "price": 65, "currency": "USD" }
+    ],
+    "modifier_lists": [
+      {
+        "id": "SAMPLE-NAME",
+        "name": "Player Personalization",
+        "selectionType": "SINGLE",
+        "minSelected": 0,
+        "maxSelected": 1,
+        "options": [
+          { "id": "SAMPLE-NAME-YES", "name": "Add Name & Number", "priceMoney": { "amount": 1500, "currency": "USD" } },
+          { "id": "SAMPLE-NAME-NO", "name": "No Personalization", "priceMoney": { "amount": 0, "currency": "USD" } }
+        ]
+      }
+    ],
+    "sizes": ["S", "M", "L", "XL"],
+    "stock": 24,
+    "tags": ["best-seller"],
+    "category": "Hoodies"
+  },
+  {
+    "id": "SAMPLE-TEE",
+    "title": "Sideline Performance Tee",
+    "description": "Lightweight moisture-wicking tee with custom mascot print and optional sleeve patch.",
+    "thumbnail": "images/ph2.svg",
+    "currency": "USD",
+    "price_min": 32,
+    "price_max": 36,
+    "variations": [
+      { "id": "SAMPLE-TEE-S", "name": "Small", "price": 32, "currency": "USD" },
+      { "id": "SAMPLE-TEE-M", "name": "Medium", "price": 34, "currency": "USD" },
+      { "id": "SAMPLE-TEE-L", "name": "Large", "price": 36, "currency": "USD" }
+    ],
+    "modifier_lists": [
+      {
+        "id": "SAMPLE-PATCH",
+        "name": "Sleeve Patch",
+        "selectionType": "SINGLE",
+        "minSelected": 0,
+        "maxSelected": 1,
+        "options": [
+          { "id": "SAMPLE-PATCH-YES", "name": "Add Patch", "priceMoney": { "amount": 800, "currency": "USD" } },
+          { "id": "SAMPLE-PATCH-NO", "name": "No Patch", "priceMoney": { "amount": 0, "currency": "USD" } }
+        ]
+      }
+    ],
+    "sizes": ["S", "M", "L"],
+    "stock": 40,
+    "category": "T-Shirts"
+  }
+]
