@@ -1,43 +1,97 @@
 (function(){
-  async function fetchJSON(u){ const r=await fetch(u,{cache:'no-store'}); if(!r.ok) throw new Error('HTTP '+r.status+' '+u); return r.json(); }
-  const BASE = "/custom-clothing-site/";
-  async function loadProducts(){
-    const tries=[
-      BASE+'data/products.json','data/products.json','../data/products.json','/data/products.json',
-      BASE+'web/data/products.json','web/data/products.json','../web/data/products.json','/web/data/products.json'
-    ];
-    for(const u of tries){ try{ return await fetchJSON(u); } catch(_){} }
-    throw new Error('Could not find products.json');
-  }
-  function firstVarId(p){ if(Array.isArray(p.variations)&&p.variations.length) return p.variations[0].id||p.variations[0].variation_id; return p.default_variation_id||p.variation_id||p.variationId||p.square_variation_id||null; }
-  function fmt(n,c='USD'){ try{ return new Intl.NumberFormat(undefined,{style:'currency',currency:c}).format(n);}catch{ return '$'+Number(n||0).toFixed(2);} }
-  function renderGrid(el, items){
-    el.innerHTML='';
-    const BASE="/custom-clothing-site/";
-    for(const p of items){
-      const cur=p.currency||'USD', hasVars=Array.isArray(p.variations)&&p.variations.length>0;
-      const price=hasVars?((p.price_min===p.price_max)?fmt(p.price_min,cur):`${fmt(p.price_min,cur)} – ${fmt(p.price_max,cur)}`):(typeof p.price==='number'?fmt(p.price,cur):'');
-      const card=document.createElement('article'); card.className='card';
-      card.innerHTML=`<div class='card__media'><img class='card__img' alt='${p.title||'Product'}' src='${p.thumbnail||BASE+'images/placeholder.png'}'></div>
-      <div class='card__body'><h3 class='title'>${p.title||'Untitled'}</h3><div class='price'>${price}</div><div class='card__actions'></div></div>`;
-      const actions=card.querySelector('.card__actions'); let select;
-      if(hasVars){
-        select=document.createElement('select'); select.setAttribute('data-variation-select',''); select.style.marginRight='8px';
-        for(const v of p.variations){
-          const o=document.createElement('option'); o.value=v.id||v.variation_id; const vp=(typeof v.price==='number')?` — ${fmt(v.price,cur)}`:'';
-          o.textContent=(v.name||'Variation')+vp; select.appendChild(o);
-        }
-        actions.appendChild(select);
-      }
-      const vid=firstVarId(p); const btn=document.createElement('a'); btn.className='btn btn--buy'; btn.textContent=vid?'Buy':'View';
-      function hrefFor(id){ return `${BASE}cart.html?variationId=${encodeURIComponent(id)}&quantity=1`; }
-      btn.href = vid ? hrefFor(vid) : (BASE + 'product.html'); if(select) select.addEventListener('change',()=>{ btn.href=hrefFor(select.value);});
-      actions.appendChild(btn); el.appendChild(card);
+  function fmt(amount, currency){
+    if (amount == null) return "";
+    try {
+      return new Intl.NumberFormat(undefined, { style: "currency", currency: currency || "USD" }).format(amount);
+    } catch (e) {
+      return `$${Number(amount || 0).toFixed(2)}`;
     }
   }
-  document.addEventListener('DOMContentLoaded', async function(){
-    const grid=document.getElementById('grid'); let ps=[];
-    try{ ps=await loadProducts(); }catch(e){ grid.innerHTML='<div class="subtle">Could not load products. Check data/products.json path.</div>'; return; }
-    renderGrid(grid, ps);
-  });
+
+  function firstVariationId(product){
+    if (Array.isArray(product?.variations) && product.variations.length) {
+      const first = product.variations[0];
+      return first.id || first.variation_id || first.variationId || null;
+    }
+    return product?.default_variation_id || product?.variation_id || product?.variationId || null;
+  }
+
+  function buildCard(product){
+    const currency = product.currency || product.variations?.[0]?.currency || "USD";
+    const hasVariations = Array.isArray(product.variations) && product.variations.length > 0;
+    const min = typeof product.price_min === "number" ? product.price_min : null;
+    const max = typeof product.price_max === "number" ? product.price_max : null;
+    const priceLabel = hasVariations
+      ? (min != null && max != null && min !== max
+          ? `${fmt(min, currency)} – ${fmt(max, currency)}`
+          : fmt(min ?? max, currency))
+      : fmt(product.price, currency);
+
+    const article = document.createElement("article");
+    article.className = "card";
+    const thumb = window.Site?.resolveImage(product.thumbnail);
+    article.innerHTML = `
+      <div class="card__media">
+        <img class="card__img" alt="${product.title || "Product"}" src="${thumb}">
+      </div>
+      <div class="card__body">
+        <h3 class="title">${product.title || "Untitled"}</h3>
+        <p class="subtle">${product.description || ""}</p>
+        <div class="price">${priceLabel || ""}</div>
+        <div class="card__actions"></div>
+      </div>
+    `;
+
+    const actions = article.querySelector(".card__actions");
+    let selector;
+    if (hasVariations) {
+      selector = document.createElement("select");
+      selector.setAttribute("data-variation-select", "");
+      selector.style.marginRight = "8px";
+      for (const variation of product.variations) {
+        const option = document.createElement("option");
+        option.value = variation.id || variation.variation_id;
+        const valuePrice = typeof variation.price === "number" ? ` — ${fmt(variation.price, variation.currency || currency)}` : "";
+        option.textContent = `${variation.name || "Variation"}${valuePrice}`;
+        selector.appendChild(option);
+      }
+      actions.appendChild(selector);
+    }
+
+    const variationId = firstVariationId(product);
+    const button = document.createElement("a");
+    button.className = "btn btn--buy";
+    button.textContent = variationId ? "Buy" : "View";
+
+    function hrefFor(id){
+      return window.Site?.join(`cart.html?variationId=${encodeURIComponent(id)}&quantity=1`);
+    }
+
+    button.href = variationId ? hrefFor(variationId) : window.Site?.join("product.html");
+    if (selector) {
+      selector.addEventListener("change", () => {
+        button.href = hrefFor(selector.value);
+      });
+    }
+
+    actions.appendChild(button);
+    return article;
+  }
+
+  async function render(){
+    const grid = document.getElementById("grid");
+    if (!grid) return;
+    try {
+      const products = await window.Site.loadCatalog();
+      grid.innerHTML = "";
+      for (const product of products) {
+        grid.appendChild(buildCard(product));
+      }
+    } catch (err) {
+      grid.innerHTML = `<div class="subtle">Could not load products. ${err?.message || "Missing data/products.json"}</div>`;
+      console.error(err);
+    }
+  }
+
+  document.addEventListener("DOMContentLoaded", render);
 })();
