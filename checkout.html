@@ -5,11 +5,11 @@
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>Checkout</title>
   <script>
-    window.SQUARE_APPLICATION_ID = "YOUR_APP_ID";
-    window.SQUARE_LOCATION_ID    = "YOUR_LOCATION_ID";
-    window.API_BASE              = "https://YOUR-VERCEL-APP.vercel.app";
+    window.SQUARE_APPLICATION_ID = "sq0idp-dcSCzq-77WsFTjHDRARpEQ";
+    window.SQUARE_LOCATION_ID    = "L116Z8RBA1RJ4";
+    window.API_BASE              = "https://custom-clothing-site.vercel.app";
   </script>
-  <script src="https://sandbox.web.squarecdn.com/v1/square.js"></script>
+  <script src="https://web.squarecdn.com/v1/square.js"></script>
   
   <style>
     :root { --fg:#111; --muted:#666; --card:#fff; --border:#e5e7eb; --bg:#f8fafc; }
@@ -36,13 +36,13 @@
 <body>
   
   <nav class="site-nav" data-site-nav>
-    <a href="/custom-clothing-site/">Home</a>
-    <a href="/custom-clothing-site/shop.html">Shop</a>
-    <a href="/custom-clothing-site/gallery/">Gallery</a>
-    <a href="/custom-clothing-site/clients/">Client Portals</a>
-    <a href="/custom-clothing-site/about.html">About</a>
-    <a href="/custom-clothing-site/contact.html">Contact</a>
-    <a href="/custom-clothing-site/cart.html">Cart</a>
+    <a href="/custom-clothing-site/" data-nav="home">Home</a>
+    <a href="/custom-clothing-site/shop.html" data-nav="shop">Shop</a>
+    <a href="/custom-clothing-site/gallery/" data-nav="gallery">Gallery</a>
+    <a href="/custom-clothing-site/clients/" data-nav="clients">Client Portals</a>
+    <a href="/custom-clothing-site/about.html" data-nav="about">About</a>
+    <a href="/custom-clothing-site/contact.html" data-nav="contact">Contact</a>
+    <a href="/custom-clothing-site/cart.html" data-nav="cart">Cart</a>
   </nav>
 
   <main>
@@ -52,28 +52,8 @@
     <button id="pay" class="btn btn--buy" style="margin-top:10px">Pay now</button>
     <div id="error" style="color:#b91c1c;margin-top:10px"></div>
   </main>
-  <script>
-    function qs(n){return new URLSearchParams(location.search).get(n)}
-    const variationId=qs('variationId');const quantity=Math.max(1,parseInt(qs('quantity')||'1',10));
-    const mods=(qs('mods')||'').split(',').map(s=>s.trim()).filter(Boolean);const note=qs('note')||'';
-    async function main(){
-      if(!window.Square){document.getElementById('error').textContent='Square SDK failed to load';return}
-      const payments = Square.payments(window.SQUARE_APPLICATION_ID, window.SQUARE_LOCATION_ID);
-      const card = await payments.card(); await card.attach('#card-container');
-      document.getElementById('summary').textContent='Enter your card to complete payment.';
-      document.getElementById('pay').addEventListener('click', async() => {
-        document.getElementById('pay').disabled=true; document.getElementById('error').textContent='';
-        try{
-          const t = await card.tokenize(); if(t.status!=='OK') throw new Error(t.errors?.[0]?.message||'Tokenize failed');
-          const body={ variationId, quantity, token:t.token, modifiers:mods.map(id=>({catalogObjectId:id})), note };
-          const r = await fetch((window.API_BASE||'') + '/api/checkout', { method:'POST', headers:{'Content-Type':'application/json'}, body: JSON.stringify(body) });
-          const j = await r.json(); if(!r.ok) throw new Error(j.error||'Payment failed');
-          location.href='/custom-clothing-site/thank-you.html';
-        }catch(e){ document.getElementById('error').textContent=e.message||'Error'; document.getElementById('pay').disabled=false; }
-      });
-    }
-    main();
-  </script>
-  <script src="/custom-clothing-site/assets/nav-cart.js" defer></script>
+  <script src="assets/site-utils.js" defer></script>
+  <script src="assets/checkout.js" defer></script>
+  <script src="assets/nav-cart.js" defer></script>
 </body>
 </html>

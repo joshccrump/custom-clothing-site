@@ -24,6 +24,16 @@ This bundle sets up a secure sync from your **Square catalog** to your static si
 
 5. **Verify**: `/gallery/` and `shop.html` show price ranges and sizes derived from variations.
 
+### Offline smoke test
+
+If you want to confirm the sync pipeline without calling the live Square API, use the bundled mock catalog:
+
+```bash
+npm run sync:square:mock
+```
+
+This reads `tests/fixtures/mock-square-catalog.json`, exercises the full parser, and writes `data/products.mock.json` so you can inspect the generated structure without overwriting your live catalog export.
+
 ### Product URLs
 Square’s Catalog API doesn’t expose Square Online product page URLs. Add a **catalog custom attribute** on the ITEM named `product_url` (or `external_url`) and paste the link; the script passes it through as `url`.
 

@@ -4,7 +4,8 @@
   "private": true,
   "type": "module",
   "scripts": {
-    "sync:square": "node scripts/fetch-square.js"
+    "sync:square": "node scripts/fetch-square.js",
+    "sync:square:mock": "SQUARE_MOCK_CATALOG=tests/fixtures/mock-square-catalog.json node scripts/fetch-square.js --out data/products.mock.json"
   },
   "dependencies": {
     "square": "^43.1.0"

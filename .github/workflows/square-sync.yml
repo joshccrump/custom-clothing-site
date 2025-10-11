@@ -86,8 +86,11 @@ jobs:
       - name: Verify script and npm scripts
         working-directory: ${{ steps.workdir.outputs.dir }}
         run: |
-          test -f scripts/fetch-square.js || { echo "::error::Missing scripts/fetch-square.js"; exit 1; }
-          node -e "try{const pj=require('./package.json'); console.log('package name:', pj.name); console.log('has script sync:square:', Boolean(pj.scripts && pj.scripts['sync:square']));}catch(e){console.error(e); process.exit(1)}"
+          if [ ! -f scripts/fetch-square.js ] && [ ! -f scripts/fetch-square.mjs ] && [ ! -f scripts/fetch-square.cjs ]; then
+            echo "::error::Missing Square sync script (scripts/fetch-square.js|mjs|cjs)"
+            exit 1
+          fi
+          node --input-type=module -e "import { readFileSync } from 'fs'; const pkg = JSON.parse(readFileSync(new URL('./package.json', import.meta.url))); if (!pkg?.scripts?.['sync:square']) { console.error('::error::package.json is missing a \\'sync:square\\' npm script'); process.exit(1); } console.log('package name:', pkg.name); console.log('has script sync:square:', true);"
 
       - name: Run sync
         working-directory: ${{ steps.workdir.outputs.dir }}
