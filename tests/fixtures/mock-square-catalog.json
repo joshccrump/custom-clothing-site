@@ -1,0 +1,89 @@
+[
+  {
+    "type": "IMAGE",
+    "id": "IMG-ALPHA",
+    "imageData": {
+      "url": "https://example.com/mock-alpha.jpg"
+    }
+  },
+  {
+    "type": "MODIFIER_LIST",
+    "id": "MOD-COLOR",
+    "modifierListData": {
+      "name": "Ink Color",
+      "selectionType": "SINGLE",
+      "modifiers": [
+        {
+          "id": "MOD-COLOR-BLACK",
+          "modifierData": {
+            "name": "Black",
+            "priceMoney": { "amount": 0, "currency": "USD" }
+          }
+        },
+        {
+          "id": "MOD-COLOR-GOLD",
+          "modifierData": {
+            "name": "Metallic Gold",
+            "priceMoney": { "amount": 500, "currency": "USD" }
+          }
+        }
+      ]
+    }
+  },
+  {
+    "type": "CATEGORY",
+    "id": "CAT-SPIRIT",
+    "categoryData": {
+      "name": "Spirit Wear"
+    }
+  },
+  {
+    "type": "ITEM",
+    "id": "ITEM-VARSITY-TEE",
+    "itemData": {
+      "name": "Varsity Block Tee",
+      "description": "Tri-blend tee with block lettering and optional metallic ink upgrade.",
+      "imageIds": ["IMG-ALPHA"],
+      "categoryId": "CAT-SPIRIT",
+      "variations": [
+        {
+          "id": "ITEM-VARSITY-TEE-S",
+          "itemVariationData": {
+            "name": "Small",
+            "priceMoney": { "amount": 2800, "currency": "USD" }
+          }
+        },
+        {
+          "id": "ITEM-VARSITY-TEE-XL",
+          "itemVariationData": {
+            "name": "XL",
+            "priceMoney": { "amount": 3200, "currency": "USD" }
+          }
+        }
+      ],
+      "modifierListInfo": [
+        { "modifierListId": "MOD-COLOR" }
+      ]
+    }
+  },
+  {
+    "type": "ITEM",
+    "id": "ITEM-CHENILLE-HOODIE",
+    "itemData": {
+      "name": "Chenille Crest Hoodie",
+      "descriptionHtml": "<p>Heavyweight fleece hoodie with chenille crest applique.</p>",
+      "imageIds": [],
+      "categoryId": "CAT-SPIRIT",
+      "variations": [
+        {
+          "id": "ITEM-CHENILLE-HOODIE-OS",
+          "itemVariationData": {
+            "name": "One Size",
+            "priceMoney": { "amount": 6500, "currency": "USD" }
+          }
+        }
+      ],
+      "modifierListInfo": []
+    }
+  }
+]

@@ -18,7 +18,12 @@ const Environment = Square?.Environment ?? { Production: "production", Sandbox: 
 function makeClient() {
   const environment = resolveEnvironment();
   const token = process.env.SQUARE_ACCESS_TOKEN;
+  const mockPath = resolveMockPath(token);
+  if (mockPath) {
+    return createMockClient(mockPath);
+  }
   if (!token) throw new Error("SQUARE_ACCESS_TOKEN not set");
+  const environment = resolveEnvironment();
   return new Client({
     bearerAuthCredentials: { accessToken: token },
     environment
