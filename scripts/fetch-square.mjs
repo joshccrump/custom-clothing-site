@@ -1,108 +1,126 @@
 // scripts/fetch-square.mjs
-// Fetch all Square Catalog items via REST and write to a JSON file.
-// Usage: node scripts/fetch-square.mjs --out data/square-items.json [--types ITEM,ITEM_VARIATION]
-// Env required: SQUARE_ACCESS_TOKEN (secret). Optional: SQUARE_ENVIRONMENT=production|sandbox
-// Optional: SQUARE_LOCATION_ID (not needed for listing catalog).
+// Node 20+ / pure ESM. Pulls Square Catalog → writes data/products.json
 
-import { writeFile, mkdir } from 'node:fs/promises';
-import { dirname } from 'node:path';
+import fs from "node:fs/promises";
+import path from "node:path";
+import { fileURLToPath } from "node:url";
+import { Client, Environment } from "square";
 
-function parseArgs(argv) {
-  const args = {};
-  for (let i = 2; i < argv.length; i++) {
-    const a = argv[i];
-    if (a.startsWith('--')) {
-      const [k, v] = a.split('=');
-      if (v !== undefined) args[k.slice(2)] = v;
-      else if (i + 1 < argv.length && !argv[i + 1].startsWith('--')) {
-        args[k.slice(2)] = argv[++i];
-      } else {
-        args[k.slice(2)] = true;
-      }
-    }
-  }
-  return args;
+// --- Config from env ---
+const ACCESS_TOKEN = process.env.SQUARE_ACCESS_TOKEN;
+const LOCATION_ID  = process.env.SQUARE_LOCATION_ID;
+const ENV          = (process.env.SQUARE_ENV || "production").toLowerCase();
+
+if (!ACCESS_TOKEN || !LOCATION_ID) {
+  console.error("Missing SQUARE_ACCESS_TOKEN or SQUARE_LOCATION_ID env vars.");
+  process.exit(1);
 }
 
-const args = parseArgs(process.argv);
-const outPath = args.out || 'data/square-items.json';
-const types = args.types || 'ITEM,ITEM_VARIATION,IMAGE,MODIFIER,MODIFIER_LIST,CATEGORY';
+const envMap = { production: Environment.Production, sandbox: Environment.Sandbox };
+const client = new Client({
+  accessToken: ACCESS_TOKEN,
+  environment: envMap[ENV] ?? Environment.Production,
+});
 
-const env = (process.env.SQUARE_ENVIRONMENT || 'production').toLowerCase();
-const baseUrl = env === 'sandbox' ? 'https://connect.squareupsandbox.com' : 'https://connect.squareup.com';
-const token = process.env.SQUARE_ACCESS_TOKEN;
+const __filename = fileURLToPath(import.meta.url);
+const __dirname  = path.dirname(__filename);
+const OUT_FILE   = path.resolve(__dirname, "..", "data", "products.json");
 
-if (!token) {
-  console.error('Missing SQUARE_ACCESS_TOKEN env var.');
-  process.exit(2);
+function moneyToNumber(m) {
+  if (!m) return null;
+  // Square returns in the smallest unit (cents). Be safe across locales.
+  return typeof m.amount === "number" ? m.amount / 100 : null;
 }
 
-async function sleep(ms) { return new Promise(r => setTimeout(r, ms)); }
+async function fetchAllCatalog(types = ["ITEM", "ITEM_VARIATION", "IMAGE"]) {
+  const out = [];
+  let cursor;
+  do {
+    const resp = await client.catalogApi.listCatalog({ cursor, types: types.join(",") });
+    if (resp.result?.objects) out.push(...resp.result.objects);
+    cursor = resp.result?.cursor;
+  } while (cursor);
+  return out;
+}
 
-async function listAllCatalog() {
-  let cursor = undefined;
-  const objects = [];
-  let page = 0;
+function indexById(objects) {
+  const map = new Map();
+  for (const o of objects) map.set(o.id, o);
+  return map;
+}
 
-  while (true) {
-    const url = new URL('/v2/catalog/list', baseUrl);
-    url.searchParams.set('types', types);
-    if (cursor) url.searchParams.set('cursor', cursor);
+function buildProducts(objects) {
+  const byId = indexById(objects);
+  const items = objects.filter((o) => o.type === "ITEM");
 
-    const res = await fetch(url, {
-      method: 'GET',
-      headers: {
-        'Authorization': `Bearer ${token}`,
-        'Accept': 'application/json',
-        'Square-Version': '2025-03-19'
-      }
-    });
+  const products = items.map((item) => {
+    const data = item.itemData || {};
+    // Images: Square links via imageIds on item and variations
+    const imageIds = new Set([...(data.imageIds || [])]);
 
-    if (res.status === 429) { // rate limited
-      const retry = Number(res.headers.get('retry-after') || 2) * 1000;
-      console.warn(`Rate limited; retrying after ${retry}ms...`);
-      await sleep(retry);
-      continue;
-    }
+    const variations = (data.variations || [])
+      .map((v) => {
+        const vd = v.itemVariationData || {};
+        if (vd.imageIds) vd.imageIds.forEach((id) => imageIds.add(id));
+        return {
+          id: v.id,
+          name: vd.name || "Default",
+          sku: vd.sku || null,
+          price: moneyToNumber(vd.priceMoney),
+          // You can extend inventory/availability via your Inventory API route later
+          inventory: null,
+        };
+      })
+      .sort((a, b) => String(a.name).localeCompare(String(b.name)));
 
-    if (!res.ok) {
-      const text = await res.text();
-      throw new Error(`Square API error ${res.status}: ${text}`);
-    }
+    // Resolve image URLs (Square stores IMAGE objects with URLs in imageData.url)
+    const images = [...imageIds]
+      .map((id) => byId.get(id))
+      .filter(Boolean)
+      .map((img) => img.imageData?.url)
+      .filter(Boolean);
 
-    const data = await res.json();
-    if (Array.isArray(data.objects)) {
-      objects.push(...data.objects);
-    }
-    cursor = data.cursor;
-    page++;
-    if (!cursor) break;
-    await sleep(150); // gentle pacing
+    // Modifiers / options: optional — keep structure light for the static site
+    const modifiers = (data.modifierListInfo || []).map((m) => ({
+      id: m.modifierListId,
+      enabled: m.enabled ?? true,
+    }));
+
+    return {
+      id: item.id,
+      name: data.name,
+      description: data.descriptionPlaintext || data.description || "",
+      category: data.categoryId || null,
+      images,
+      variations,
+      modifiers,
+      // Primary price = lowest variation price (handy for grids)
+      priceFrom: variations.reduce((min, v) => (v.price != null && v.price < min ? v.price : min), Infinity),
+      // Link back to Square Online if you want to deep-link (optional):
+      squareUrl: null,
+      updatedAt: item.updatedAt,
+    };
+  });
+
+  // Clean up Infinity for products that had no priced variations
+  for (const p of products) {
+    if (!isFinite(p.priceFrom)) p.priceFrom = null;
   }
-
-  return objects;
+  return products;
 }
 
 async function main() {
-  console.log(`Environment: ${env} • Types: ${types}`);
-  const objects = await listAllCatalog();
+  console.log("Fetching Square catalog…");
+  const objects = await fetchAllCatalog();
+  const products = buildProducts(objects);
 
-  // Ensure output directory exists
-  await mkdir(dirname(outPath), { recursive: true });
-
-  const payload = {
-    fetched_at: new Date().toISOString(),
-    environment: env,
-    count: objects.length,
-    types_requested: types.split(','),
-    objects
-  };
-
-  await writeFile(outPath, JSON.stringify(payload, null, 2), 'utf8');
-  console.log(`Wrote ${objects.length} objects to ${outPath}`);
+  await fs.mkdir(path.dirname(OUT_FILE), { recursive: true });
+  const json = JSON.stringify({ locationId: LOCATION_ID, env: ENV, products }, null, 2);
+  await fs.writeFile(OUT_FILE, json);
+  console.log(`Wrote ${products.length} products → ${path.relative(process.cwd(), OUT_FILE)}`);
 }
 
-main().catch(err => {
-  console.error(err);
+main().catch((err) => {
+  console.error("Sync failed:", err);
   process.exit(1);
 });
