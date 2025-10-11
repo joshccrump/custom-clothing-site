@@ -4,3 +4,11 @@
   "type": "module",
   "dependencies": {}
 }
+
+{
+  "type": "module",
+  "scripts": {
+    "sync:square": "node scripts/fetch-square.mjs"
+  },
+  "engines": { "node": ">=20 <23" }
+}
