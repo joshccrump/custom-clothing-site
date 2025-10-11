@@ -1,7 +1,5 @@
-import Square from "square";
-const { Client } = Square;
-const Environment = Square?.Environment ?? { Production: "production", Sandbox: "sandbox" };
 import crypto from "node:crypto";
+import { makeClient } from "./_square.js";
 
 function cors(res){
   res.setHeader("Access-Control-Allow-Origin", "*");
@@ -18,19 +16,15 @@ export default async function handler(req, res){
     const { variationId, quantity = 1, token, modifiers = [], note = "" } = req.body || {};
     if (!variationId || !token) return res.status(400).json({ error: "variationId and token required" });
 
-    const env = (process.env.SQUARE_ENV || "production").toLowerCase() === "production"
-      ? Environment.Production : Environment.Sandbox;
-
-    const client = new Client({
-      bearerAuthCredentials: { accessToken: process.env.SQUARE_ACCESS_TOKEN },
-      environment: env,
-    });
+    const client = makeClient();
+    const locationId = process.env.SQUARE_LOCATION_ID;
+    if (!locationId) throw new Error("SQUARE_LOCATION_ID not set");
 
     // Optional stock check
     if ((process.env.BACKORDER_OK || "true").toLowerCase() !== "true") {
       const inv = await client.inventoryApi.batchRetrieveInventoryCounts({
         catalogObjectIds: [variationId],
-        locationIds: [process.env.SQUARE_LOCATION_ID],
+        locationIds: [locationId],
       });
       const qty = Number(inv.result.counts?.[0]?.quantity ?? 0);
       if (qty < Number(quantity)) {
@@ -48,7 +42,7 @@ export default async function handler(req, res){
     };
 
     const orderDraft = {
-      locationId: process.env.SQUARE_LOCATION_ID,
+      locationId,
       lineItems: [line],
       pricingOptions: { autoApplyTaxes: true, autoApplyDiscounts: true },
       note: note || undefined,
@@ -71,7 +65,7 @@ export default async function handler(req, res){
     const pay = await client.paymentsApi.createPayment({
       idempotencyKey: crypto.randomUUID(),
       sourceId: token,
-      locationId: process.env.SQUARE_LOCATION_ID,
+      locationId,
       orderId,
       amountMoney: totalMoney
     });
