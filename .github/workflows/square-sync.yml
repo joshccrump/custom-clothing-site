@@ -2,7 +2,7 @@ name: Square Catalog Sync
 on:
   workflow_dispatch:
   schedule:
-    - cron: '0 9 * * *' # 9:00 UTC daily
+    - cron: '0 9 * * *' # 9:00 UTC daily (adjust if needed)
 
 jobs:
   sync:
@@ -16,7 +16,7 @@ jobs:
         with:
           node-version: '20'
 
-      # ✅ Always ensure dependencies are installed, including the Square SDK
+      # Ensure deps are present (including the Square SDK), even if your lockfile doesn't list it yet
       - name: Install deps (ensure square is present)
         run: |
           npm ci || true
