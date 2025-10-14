@@ -1,17 +1,14 @@
 // scripts/fetch-square.mjs
-// Fix: import default from 'square' for CommonJS compatibility
 import fs from "node:fs/promises";
 import path from "node:path";
-import square from "square";
+import { loadSquare } from "./square-sdk-shim.mjs";
 import { getSquareEnv } from "./square-env.mjs";
-
-const { Client, Environment } = square;
-const toEnv = (n) => n === "production" ? Environment.Production : Environment.Sandbox;
 
 async function main(){
   const outPath = process.env.OUTPUT_PATH || "data/products.json";
   const { envName, accessToken } = getSquareEnv(true);
-  const client = new Client({ accessToken, environment: toEnv(envName) });
+  const { Client, Environment } = await loadSquare();
+  const client = new Client({ accessToken, environment: envName === "production" ? Environment.Production : Environment.Sandbox });
 
   const { result } = await client.catalogApi.listCatalog(undefined, "ITEM");
   const items = (result?.objects ?? []).map(o => ({

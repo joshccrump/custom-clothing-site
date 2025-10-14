@@ -11,6 +11,5 @@ export function getSquareEnv(fromProcess = true) {
 
   const locationId = (fromProcess ? process.env.SQUARE_LOCATION_ID : undefined) || null;
   const appId = (fromProcess ? process.env.SQUARE_APP_ID : undefined) || null;
-
   return { envName, accessToken: accessToken.trim(), locationId, appId };
 }

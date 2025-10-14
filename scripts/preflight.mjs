@@ -1,10 +1,7 @@
 // scripts/preflight.mjs
-// Fix: import default from 'square' for CommonJS compatibility
-import square from "square";
+import { loadSquare } from "./square-sdk-shim.mjs";
 import { getSquareEnv } from "./square-env.mjs";
 
-const { Client, Environment } = square;
-const toEnv = (n) => n === "production" ? Environment.Production : Environment.Sandbox;
 const redact = (t) => !t ? "<empty>" : t.slice(0,6) + "…" + t.slice(-4) + ` (len=${t.length})`;
 
 async function run(){
@@ -15,7 +12,8 @@ async function run(){
   if (appId) console.log("Application ID:", appId);
   if (locationId) console.log("Location ID:", locationId);
 
-  const client = new Client({ accessToken, environment: toEnv(envName) });
+  const { Client, Environment } = await loadSquare();
+  const client = new Client({ accessToken, environment: envName === "production" ? Environment.Production : Environment.Sandbox });
 
   try {
     const { result } = await client.locationsApi.listLocations();
