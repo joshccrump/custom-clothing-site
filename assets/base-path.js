@@ -1,4 +1,4 @@
-/* assets/base-path.js (idempotent) */
+/* assets/base-path.js */
 (function () {
   window.Site = window.Site || {};
   if (!window.Site.basePath) {

@@ -1,117 +1,82 @@
-/* assets/render-catalog.js
-   Drop-in renderer for Shop + Gallery pages.
-   - Fetches from window.Site.catalogUrl() (falls back to 'data/products.json' if missing)
-   - Accepts two shapes:
-       A) { items: [ { id, name, description, variations:[{price,currency,name,sku}], ... } ] }
-       B) Square raw: { objects: [ { type:'ITEM', itemData:{ name, description, variations:[{ itemVariationData:{ priceMoney, name, sku } }] } } ] }
-   - Renders into any element with [data-products], defaulting to #catalog-grid if present.
-*/
+/* assets/render-catalog.js */
 (function(){
-  function $(sel){ return document.querySelector(sel); }
-  function $all(sel){ return Array.prototype.slice.call(document.querySelectorAll(sel)); }
   function money(cents, currency){
     if (typeof cents !== 'number') return '';
-    var v = (cents/100).toFixed(2);
-    return (currency || 'USD') + ' ' + v;
+    return (currency || 'USD') + ' ' + (cents/100).toFixed(2);
   }
-  function mapFromSquare(objects){
-    var items = [];
-    (objects||[]).forEach(function(o){
-      if (o && o.type === 'ITEM' && o.itemData){
-        var mapped = {
-          id: o.id,
-          name: o.itemData.name || '(unnamed)',
-          description: o.itemData.description || '',
-          variations: (o.itemData.variations||[]).map(function(v){
-            var d = v.itemVariationData || {};
-            var m = d.priceMoney || {};
-            return { id: v.id, name: d.name||'', price: typeof m.amount==='number'? m.amount : null, currency: m.currency||'USD', sku: d.sku||null };
-          })
-        };
-        items.push(mapped);
-      }
+  function esc(s){ return String(s).replace(/[&<>"]/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c])); }
+
+  function fromSquare(objects){
+    const items = [];
+    (objects||[]).forEach(o=>{
+      if(!o || o.type!=='ITEM' || !o.itemData) return;
+      items.push({
+        id:o.id,
+        name:o.itemData.name || '(unnamed)',
+        description:o.itemData.description || '',
+        variations:(o.itemData.variations||[]).map(v=>{
+          const d=v.itemVariationData||{}, m=d.priceMoney||{};
+          return { id:v.id, name:d.name||'', price: (typeof m.amount==='number'? m.amount:null), currency:m.currency||'USD', sku:d.sku||null };
+        })
+      });
     });
-    return { items: items, count: items.length };
+    return { items, count: items.length };
   }
+
   function normalize(json){
-    if (json && Array.isArray(json.items)) {
-      return { items: json.items, count: json.items.length };
-    }
-    if (json && Array.isArray(json.objects)) {
-      return mapFromSquare(json.objects);
-    }
-    // Unknown shape → return empty
+    if (json && Array.isArray(json.items)) return { items: json.items, count: json.items.length };
+    if (json && Array.isArray(json.objects)) return fromSquare(json.objects);
     return { items: [], count: 0 };
   }
-  function cardHTML(item){
-    var price = '';
-    if (item.variations && item.variations.length){
-      var v0 = item.variations[0];
-      if (typeof v0.price === 'number') price = money(v0.price, v0.currency);
-    }
-    var desc = item.description ? ('<p class="small text-muted">'+escapeHTML(item.description)+'</p>') : '';
-    return (
-      '<div class="col">'+
-        '<div class="card h-100">'+
-          '<div class="card-body">'+
-            '<h5 class="card-title">'+escapeHTML(item.name)+'</h5>'+
-             desc +
-            (price ? '<div class="fw-semibold">'+price+'</div>' : '')+
-          '</div>'+
-        '</div>'+
-      '</div>'
-    );
-  }
-  function escapeHTML(s){ return String(s).replace(/[&<>"]/g, function(c){ return ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]); }); }
 
   function ensureContainer(){
-    // Prefer explicit data-products container
-    var el = document.querySelector('[data-products]');
+    let el = document.querySelector('[data-products]') || document.getElementById('catalog-grid');
     if (el) return el;
-    // Fallback to #catalog-grid if exists
-    el = document.getElementById('catalog-grid');
-    if (el) return el;
-    // Create a simple container in main content
-    var host = document.querySelector('main, .container, body');
-    var div = document.createElement('div');
-    div.id = 'catalog-grid';
-    div.setAttribute('data-products','');
-    div.className = 'row row-cols-1 row-cols-sm-2 row-cols-md-3 g-4';
-    host.appendChild(div);
-    return div;
+    const host = document.querySelector('main, .container, body');
+    el = document.createElement('div');
+    el.id = 'catalog-grid';
+    el.setAttribute('data-products','');
+    el.className = 'row row-cols-1 row-cols-sm-2 row-cols-md-3 g-4';
+    host.appendChild(el);
+    return el;
   }
 
-  function render(data){
-    var into = ensureContainer();
-    if (!data.items || !data.items.length){
-      into.innerHTML = '<div class="alert alert-warning">No products found in <code>data/products.json</code>.</div>';
-      return;
+  function cardHTML(item){
+    let price = '';
+    if (item.variations && item.variations.length){
+      const v0 = item.variations[0];
+      if (typeof v0.price === 'number') price = money(v0.price, v0.currency);
     }
-    into.innerHTML = data.items.map(cardHTML).join('');
+    const desc = item.description ? '<p class="small text-muted">'+esc(item.description)+'</p>' : '';
+    return '<div class="col"><div class="card h-100"><div class="card-body">'
+      + '<h5 class="card-title">'+esc(item.name)+'</h5>'
+      + desc
+      + (price ? '<div class="fw-semibold">'+price+'</div>' : '')
+      + '</div></div></div>';
   }
 
-  function fetchUrl(){
-    try {
-      if (window.Site && typeof window.Site.catalogUrl === 'function') return window.Site.catalogUrl();
-    } catch(e){}
-    return 'data/products.json';
-  }
-
-  // Kick off
-  (async function(){
-    var url = fetchUrl();
-    try {
-      var res = await fetch(url, { cache: 'no-store' });
-      var txt = await res.text();
-      var json; try { json = JSON.parse(txt); } catch(e){ json = {}; }
-      var data = normalize(json);
-      render(data);
-      // Expose for debugging
+  async function run(){
+    const url = (window.Site && typeof window.Site.catalogUrl==='function') ? window.Site.catalogUrl() : 'data/products.json';
+    const into = ensureContainer();
+    try{
+      const res = await fetch(url, { cache:'no-store' });
+      const txt = await res.text();
+      let json; try{ json = JSON.parse(txt); } catch{ json = {}; }
+      const data = normalize(json);
+      if (!data.items.length){
+        into.innerHTML = '<div class="alert alert-warning">No products found in <code>'+url+'</code>.</div>';
+      } else {
+        into.innerHTML = data.items.map(cardHTML).join('');
+      }
       window.__CATALOG_DEBUG__ = { url, status: res.status, data };
-      console.log('[render-catalog] url=', url, 'status=', res.status, data);
-    } catch (e){
-      console.error('[render-catalog] fetch failed', e);
-      ensureContainer().innerHTML = '<div class="alert alert-danger">Failed to load products: '+(e.message||e)+'</div>';
+      console.log('[render-catalog]', window.__CATALOG_DEBUG__);
+    }catch(e){
+      into.innerHTML = '<div class="alert alert-danger">Failed to load products: '+(e && e.message ? e.message : e)+'</div>';
+      console.error(e);
     }
-  })();
+  }
+
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', run);
+  } else { run(); }
 })();
