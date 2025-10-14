@@ -1,34 +1,52 @@
 // scripts/preflight.mjs
-import { loadSquare } from "./square-sdk-shim.mjs";
-import { getSquareEnv } from "./square-env.mjs";
+// Node 18+ (uses global fetch). No SDK required.
+// Verifies token+environment by calling /v2/locations (read-only).
 
-const redact = (t) => !t ? "<empty>" : t.slice(0,6) + "…" + t.slice(-4) + ` (len=${t.length})`;
+const ENV = (process.env.SQUARE_ENVIRONMENT || "sandbox").toLowerCase();
+const TOKEN = process.env.SQUARE_ACCESS_TOKEN?.trim();
 
-async function run(){
-  console.log("=== Square preflight ===");
-  const { envName, accessToken, locationId, appId } = getSquareEnv(true);
-  console.log("Environment:", envName);
-  console.log("Access token:", redact(accessToken));
-  if (appId) console.log("Application ID:", appId);
-  if (locationId) console.log("Location ID:", locationId);
-
-  const { Client, Environment } = await loadSquare();
-  const client = new Client({ accessToken, environment: envName === "production" ? Environment.Production : Environment.Sandbox });
-
-  try {
-    const { result } = await client.locationsApi.listLocations();
-    console.log("✅ Auth OK. Location IDs:", (result.locations||[]).map(l=>l.id).join(", ")||"(none)");
-  } catch(e){
-    console.error("❌ Locations failed:", e?.response?.statusCode, e?.response?.body || e);
-    process.exit(1);
-  }
-
-  try {
-    const { result } = await client.catalogApi.listCatalog(undefined, "ITEM");
-    console.log("✅ Catalog reachable. Items:", (result.objects||[]).length);
-  } catch(e){
-    console.warn("⚠️ Catalog check failed:", e?.response?.statusCode, e?.response?.body || e);
-  }
+if (!TOKEN) {
+  console.error("❌ Missing SQUARE_ACCESS_TOKEN");
+  process.exit(1);
 }
 
-run().catch(e=>{ console.error(e); process.exit(1); });
+const BASE =
+  ENV === "production"
+    ? "https://connect.squareup.com"
+    : "https://connect.squareupsandbox.com";
+
+const headers = {
+  Authorization: `Bearer ${TOKEN}`,
+  Accept: "application/json",
+  "Square-Version": "2025-09-18",
+};
+
+function redact(t) {
+  return t ? `${t.slice(0, 6)}…${t.slice(-4)} (len=${t.length})` : "<empty>";
+}
+
+async function main() {
+  console.log("=== Square preflight (no-SDK) ===");
+  console.log("Environment:", ENV);
+  console.log("Access token:", redact(TOKEN));
+
+  const res = await fetch(`${BASE}/v2/locations`, { headers });
+  const text = await res.text();
+  let body;
+  try { body = JSON.parse(text); } catch { body = text; }
+
+  if (res.ok) {
+    const ids = (body.locations || []).map(l => l.id);
+    console.log("✅ Auth OK. Locations:", ids.join(", ") || "(none)");
+    return;
+  }
+
+  console.error(`❌ Locations failed: ${res.status}`);
+  console.error(body);
+  process.exit(1);
+}
+
+main().catch((e) => {
+  console.error("Preflight threw:", e);
+  process.exit(1);
+});
