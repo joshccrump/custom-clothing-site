@@ -1,7 +1,4 @@
 // scripts/fetch-square.mjs
-// Node 18+ (uses global fetch). No SDK required.
-// Reads Catalog (ITEM) and writes data/products.json (or OUTPUT_PATH).
-
 import fs from "node:fs/promises";
 import path from "node:path";
 

@@ -1,7 +1,4 @@
 // scripts/preflight.mjs
-// Node 18+ (uses global fetch). No SDK required.
-// Verifies token+environment by calling /v2/locations (read-only).
-
 const ENV = (process.env.SQUARE_ENVIRONMENT || "sandbox").toLowerCase();
 const TOKEN = process.env.SQUARE_ACCESS_TOKEN?.trim();
 
