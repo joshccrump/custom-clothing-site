@@ -1,9 +1,11 @@
 // scripts/fetch-square.mjs
+// Fix: import default from 'square' for CommonJS compatibility
 import fs from "node:fs/promises";
 import path from "node:path";
-import { Client, Environment } from "square";
+import square from "square";
 import { getSquareEnv } from "./square-env.mjs";
 
+const { Client, Environment } = square;
 const toEnv = (n) => n === "production" ? Environment.Production : Environment.Sandbox;
 
 async function main(){

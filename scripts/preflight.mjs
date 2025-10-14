@@ -1,7 +1,9 @@
 // scripts/preflight.mjs
-import { Client, Environment } from "square";
+// Fix: import default from 'square' for CommonJS compatibility
+import square from "square";
 import { getSquareEnv } from "./square-env.mjs";
 
+const { Client, Environment } = square;
 const toEnv = (n) => n === "production" ? Environment.Production : Environment.Sandbox;
 const redact = (t) => !t ? "<empty>" : t.slice(0,6) + "…" + t.slice(-4) + ` (len=${t.length})`;
 
