@@ -1,9 +1,8 @@
-name: Square → Catalog JSON
-
+name: Square Catalog Sync
 on:
-  workflow_dispatch: {}
+  workflow_dispatch:
   schedule:
-    - cron: "0 */6 * * *"
+    - cron: '0 9 * * *' # 9:00 UTC daily
 
 jobs:
   sync:
@@ -15,34 +14,33 @@ jobs:
 
       - uses: actions/setup-node@v4
         with:
-          node-version: "20"
+          node-version: '20'
 
-      - name: Install deps
+      # ✅ Always ensure dependencies are installed, including the Square SDK
+      - name: Install deps (ensure square is present)
         run: |
-          if npm ci; then
-            echo "npm ci OK"
-          else
-            echo "npm ci failed; refreshing lockfile once"
-            npm install --no-audit --no-fund
-            npm ci
-          fi
-          
-      - name: Run Square sync
-        run: npm run sync:square
+          npm ci || true
+          npm ls square || npm i square@^41
+
+      - name: Preflight (auth & URLs)
         env:
+          SQUARE_ENVIRONMENT: ${{ vars.SQUARE_ENVIRONMENT }}
           SQUARE_ACCESS_TOKEN: ${{ secrets.SQUARE_ACCESS_TOKEN }}
-          SQUARE_LOCATION_ID:  ${{ secrets.SQUARE_LOCATION_ID }}
-          SQUARE_ENVIRONMENT:  ${{ vars.SQUARE_ENVIRONMENT }}
-          OUTPUT_PATH:         data/products.json
+          SQUARE_LOCATION_ID: ${{ vars.SQUARE_LOCATION_ID }}
+          SQUARE_APP_ID: ${{ vars.SQUARE_APP_ID }}
+        run: node scripts/preflight.mjs
 
-      - name: Commit & push if changed
+      - name: Fetch Catalog -> data/products.json
+        env:
+          SQUARE_ENVIRONMENT: ${{ vars.SQUARE_ENVIRONMENT }}
+          SQUARE_ACCESS_TOKEN: ${{ secrets.SQUARE_ACCESS_TOKEN }}
+          OUTPUT_PATH: data/products.json
+        run: node scripts/fetch-square.mjs
+
+      - name: Commit & push catalog
         run: |
-          if ! git diff --quiet --exit-code data/products.json package-lock.json; then
-            git config user.name  "square-sync[bot]"
-            git config user.email "square-sync[bot]@users.noreply.github.com"
-            git add data/products.json package-lock.json
-            git commit -m "Square sync: refresh catalog JSON"
-            git push
-          else
-            echo "No changes."
-          fi
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add data/products.json
+          git commit -m "chore: update Square catalog [skip ci]" || echo "No changes"
+          git push
