@@ -10,6 +10,11 @@ The repo also contains scripts and workflow notes for syncing your live Square
 catalog into the static JSON file so the GitHub Pages build always reflects your
 current inventory.
 
+> **Node.js version:** Vercel now defaults new projects to Node 22, but the
+> pinned serverless runtime requires Node 20. Use Node `20.x` locally (via
+> `nvm use 20` or similar) and set the Vercel project’s “General → Node.js
+> Version” to `20.x` to avoid build failures.
+
 ## Key Pieces
 
 | File / Directory | Purpose |
