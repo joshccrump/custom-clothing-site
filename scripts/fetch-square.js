@@ -5,7 +5,7 @@ import process from 'node:process';
 
 const ENV_NAME = (process.env.SQUARE_ENV || process.env.SQUARE_ENVIRONMENT || 'production').toLowerCase();
 const ACCESS_TOKEN = (process.env.SQUARE_ACCESS_TOKEN || '').trim();
-const LOCATION_ID = (process.env.SQUARE_LOCATION_ID || '').trim() || null;
+const LOCATION_ID = (process.env.SQUARE_LOCATION_ID || 'L116Z8RBA1RJ4').trim() || null;
 const OUTPUT_PATH = path.resolve(process.cwd(), process.env.OUTPUT_PATH || 'data/products.json');
 const SQUARE_VERSION = process.env.SQUARE_VERSION || '2024-06-12';
 const MOCK_PATH = resolveMockPath();
