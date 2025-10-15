@@ -1,7 +1,7 @@
 // scripts/preflight.mjs
 const ENV = (process.env.SQUARE_ENVIRONMENT || "production").toLowerCase();
-const TOKEN = process.env.SQUARE_ACCESS_TOKEN || "";
-const LOC   = process.env.SQUARE_LOCATION_ID || "";
+const TOKEN = process.env.SQUARE_ACCESS_TOKEN || "EAAAlwzEGCko2MdB4hdyZ-nipmm7NE4w73IIWt5Qum3eOjrkhJ2a_TmoUbHsjxwm";
+const LOC   = process.env.SQUARE_LOCATION_ID || "L116Z8RBA1RJ4";
 
 function red(s){ return `\x1b[31m${s}\x1b[0m`; }
 function green(s){ return `\x1b[32m${s}\x1b[0m`; }
