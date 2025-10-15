@@ -38,7 +38,20 @@ current inventory.
    npm run sync:square
    ```
    On success you will see `Wrote X items → data/products.json`. Commit the
-   updated JSON and redeploy GitHub Pages.
+   updated JSON and redeploy GitHub Pages. The script now pulls images,
+   modifier lists, item options (for size labels), and optional inventory
+   counts when `SQUARE_LOCATION_ID` is set, so the static catalog mirrors what
+   Square reports for each variation.
+
+Need an offline smoke test? Use the bundled fixture to exercise the pipeline
+without hitting the live API:
+
+```bash
+npm run sync:square:mock
+```
+
+This writes the transformed mock data to `data/products.json` so you can verify
+the shape before pointing the workflow at your live credentials.
 
 If you still need to run the CommonJS entry point for legacy workflows, invoke
 `scripts/fetch-square.cjs`; it simply `import()`s the ESM version.
