@@ -1,0 +1,7 @@
+{
+  "type": "module",
+  "scripts": {
+    "preflight:square": "node scripts/preflight.mjs",
+    "sync:square": "node scripts/fetch-square.mjs"
+  }
+}
