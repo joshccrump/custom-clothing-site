@@ -4,9 +4,7 @@
    the project settings (or a checked-in `vercel.json`), pin your default
    Function runtime to `@vercel/node@3.1.4` so Vercel uses the current Node 20
    builders without raising the legacy "Function Runtimes must have a valid
-   version" error. Also set **Project Settings → General → Node.js Version** to
-   `20.x`; Vercel defaults to `22.x` for new projects, which will make the build
-   fail before the runtime builder is installed.
+   version" error.
 2) Add Environment Variables:
    - SQUARE_ACCESS_TOKEN = your Production access token
    - SQUARE_ENV = production
