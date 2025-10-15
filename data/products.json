@@ -1,336 +1,335 @@
-[
-  {
-    "id": "ITEM-VARSITY-TEE",
-    "title": "Varsity Block Tee",
-    "description": "Tri-blend tee with bold varsity block lettering and optional metallic ink upgrade.",
-    "thumbnail": "https://images.squarespace-cdn.com/content/v1/mock-square/varsity-block-tee.jpg",
-    "currency": "USD",
-    "price_min": 28,
-    "price_max": 32,
-    "variations": [
-      {
-        "id": "ITEM-VARSITY-TEE-S",
-        "name": "Small",
-        "sku": "VB-TEE-S",
-        "price": 28,
-        "currency": "USD"
-      },
-      {
-        "id": "ITEM-VARSITY-TEE-M",
-        "name": "Medium",
-        "sku": "VB-TEE-M",
-        "price": 30,
-        "currency": "USD"
-      },
-      {
-        "id": "ITEM-VARSITY-TEE-L",
-        "name": "Large",
-        "sku": "VB-TEE-L",
-        "price": 32,
-        "currency": "USD"
-      }
-    ],
-    "modifier_lists": [
-      {
-        "id": "MOD-COLOR",
-        "name": "Ink Color",
-        "selectionType": "SINGLE",
-        "minSelected": 0,
-        "maxSelected": 1,
-        "options": [
-          {
-            "id": "MOD-COLOR-BLACK",
-            "name": "Classic Black",
-            "priceMoney": {
-              "amount": 0,
-              "currency": "USD"
-            }
-          },
-          {
-            "id": "MOD-COLOR-GOLD",
-            "name": "Metallic Gold",
-            "priceMoney": {
-              "amount": 5,
-              "currency": "USD"
-            }
-          }
-        ]
-      }
-    ],
-    "sizes": [
-      "S",
-      "M",
-      "L"
-    ],
-    "category": "Spirit Wear",
-    "tags": [
-      "apparel",
-      "featured"
-    ],
-    "stock": 0,
-    "url": null
-  },
-  {
-    "id": "ITEM-CHENILLE-HOODIE",
-    "title": "Chenille Crest Hoodie",
-    "description": "Heavyweight fleece hoodie with chenille crest applique and kanga pocket.",
-    "thumbnail": "https://images.squarespace-cdn.com/content/v1/mock-square/chenille-crest-hoodie.jpg",
-    "currency": "USD",
-    "price_min": 65,
-    "price_max": 65,
-    "variations": [
-      {
-        "id": "ITEM-CHENILLE-HOODIE-OS",
-        "name": "One Size",
-        "sku": "CH-HOOD-OS",
-        "price": 65,
-        "currency": "USD"
-      }
-    ],
-    "modifier_lists": [],
-    "sizes": [
-      "OS"
-    ],
-    "category": "Outerwear",
-    "tags": [
-      "apparel"
-    ],
-    "stock": 0,
-    "url": null
-  },
-  {
-    "id": "ITEM-HERITAGE-CREW",
-    "title": "Heritage Crewneck",
-    "description": "Brushed fleece crewneck with retro tackle-twill lettering and contrast piping.",
-    "thumbnail": "https://images.squarespace-cdn.com/content/v1/mock-square/heritage-crewneck.jpg",
-    "currency": "USD",
-    "price_min": 58,
-    "price_max": 62,
-    "variations": [
-      {
-        "id": "ITEM-HERITAGE-CREW-S",
-        "name": "Small",
-        "sku": "HC-CREW-S",
-        "price": 58,
-        "currency": "USD"
-      },
-      {
-        "id": "ITEM-HERITAGE-CREW-M",
-        "name": "Medium",
-        "sku": "HC-CREW-M",
-        "price": 60,
-        "currency": "USD"
-      },
-      {
-        "id": "ITEM-HERITAGE-CREW-L",
-        "name": "Large",
-        "sku": "HC-CREW-L",
-        "price": 62,
-        "currency": "USD"
-      }
-    ],
-    "modifier_lists": [],
-    "sizes": [
-      "S",
-      "M",
-      "L"
-    ],
-    "category": "Outerwear",
-    "tags": [
-      "apparel",
-      "new"
-    ],
-    "stock": 0,
-    "url": null
-  },
-  {
-    "id": "ITEM-STADIUM-BEANIE",
-    "title": "Stadium Pom Beanie",
-    "description": "Chunky knit beanie with stadium stripes and removable faux-fur pom.",
-    "thumbnail": "https://images.squarespace-cdn.com/content/v1/mock-square/stadium-pom-beanie.jpg",
-    "currency": "USD",
-    "price_min": 24,
-    "price_max": 26,
-    "variations": [
-      {
-        "id": "ITEM-STADIUM-BEANIE-ADULT",
-        "name": "Adult",
-        "sku": "SP-BEAN-A",
-        "price": 26,
-        "currency": "USD"
-      },
-      {
-        "id": "ITEM-STADIUM-BEANIE-YOUTH",
-        "name": "Youth",
-        "sku": "SP-BEAN-Y",
-        "price": 24,
-        "currency": "USD"
-      }
-    ],
-    "modifier_lists": [],
-    "sizes": [
-      "Adult",
-      "Youth"
-    ],
-    "category": "Accessories",
-    "tags": [
-      "winter",
-      "apparel"
-    ],
-    "stock": 0,
-    "url": null
-  },
-  {
-    "id": "ITEM-EMBROIDERED-HAT",
-    "title": "Embroidered Dad Hat",
-    "description": "Relaxed cotton hat with adjustable strap and raised 3D embroidery.",
-    "thumbnail": "https://images.squarespace-cdn.com/content/v1/mock-square/embroidered-dad-hat.jpg",
-    "currency": "USD",
-    "price_min": 28,
-    "price_max": 28,
-    "variations": [
-      {
-        "id": "ITEM-EMBROIDERED-HAT-ADJ",
-        "name": "Adjustable",
-        "sku": "ED-HAT-ADJ",
-        "price": 28,
-        "currency": "USD"
-      }
-    ],
-    "modifier_lists": [],
-    "sizes": [
-      "Adjustable"
-    ],
-    "category": "Accessories",
-    "tags": [
-      "headwear"
-    ],
-    "stock": 0,
-    "url": null
-  },
-  {
-    "id": "ITEM-PERFORMANCE-JOGGER",
-    "title": "Performance Joggers",
-    "description": "Moisture-wicking joggers with tapered leg and heat-sealed crest.",
-    "thumbnail": "https://images.squarespace-cdn.com/content/v1/mock-square/performance-joggers.jpg",
-    "currency": "USD",
-    "price_min": 48,
-    "price_max": 54,
-    "variations": [
-      {
-        "id": "ITEM-PERFORMANCE-JOGGER-S",
-        "name": "Small",
-        "sku": "PJ-JOG-S",
-        "price": 48,
-        "currency": "USD"
-      },
-      {
-        "id": "ITEM-PERFORMANCE-JOGGER-M",
-        "name": "Medium",
-        "sku": "PJ-JOG-M",
-        "price": 51,
-        "currency": "USD"
-      },
-      {
-        "id": "ITEM-PERFORMANCE-JOGGER-L",
-        "name": "Large",
-        "sku": "PJ-JOG-L",
-        "price": 54,
-        "currency": "USD"
-      }
-    ],
-    "modifier_lists": [],
-    "sizes": [
-      "S",
-      "M",
-      "L"
-    ],
-    "category": "Bottoms",
-    "tags": [
-      "apparel",
-      "athletic"
-    ],
-    "stock": 0,
-    "url": null
-  },
-  {
-    "id": "ITEM-TRAVEL-DUFFEL",
-    "title": "Travel Duffel",
-    "description": "600D poly duffel with waterproof base, padded strap, and embroidered crest.",
-    "thumbnail": "https://images.squarespace-cdn.com/content/v1/mock-square/travel-duffel.jpg",
-    "currency": "USD",
-    "price_min": 72,
-    "price_max": 76,
-    "variations": [
-      {
-        "id": "ITEM-TRAVEL-DUFFEL-REG",
-        "name": "Standard",
-        "sku": "TD-DUF-REG",
-        "price": 72,
-        "currency": "USD"
-      },
-      {
-        "id": "ITEM-TRAVEL-DUFFEL-XL",
-        "name": "XL",
-        "sku": "TD-DUF-XL",
-        "price": 76,
-        "currency": "USD"
-      }
-    ],
-    "modifier_lists": [],
-    "sizes": [
-      "Standard",
-      "XL"
-    ],
-    "category": "Bags",
-    "tags": [
-      "gear"
-    ],
-    "stock": 0,
-    "url": null
-  },
-  {
-    "id": "ITEM-SIDELINE-BANNER",
-    "title": "Sideline Spirit Banner",
-    "description": "Weatherproof vinyl banner with full-color imprint and grommets.",
-    "thumbnail": "https://images.squarespace-cdn.com/content/v1/mock-square/sideline-banner.jpg",
-    "currency": "USD",
-    "price_min": 95,
-    "price_max": 125,
-    "variations": [
-      {
-        "id": "ITEM-SIDELINE-BANNER-6FT",
-        "name": "6 ft",
-        "sku": "SB-BAN-6",
-        "price": 95,
-        "currency": "USD"
-      },
-      {
-        "id": "ITEM-SIDELINE-BANNER-8FT",
-        "name": "8 ft",
-        "sku": "SB-BAN-8",
-        "price": 110,
-        "currency": "USD"
-      },
-      {
-        "id": "ITEM-SIDELINE-BANNER-10FT",
-        "name": "10 ft",
-        "sku": "SB-BAN-10",
-        "price": 125,
-        "currency": "USD"
-      }
-    ],
-    "modifier_lists": [],
-    "sizes": [
-      "6 ft",
-      "8 ft",
-      "10 ft"
-    ],
-    "category": "Banners",
-    "tags": [
-      "print"
-    ],
-    "stock": 0,
-    "url": null
-  }
-]
+{
+  "generatedAt": "2025-10-15T09:22:27.744Z",
+  "count": 47,
+  "items": [
+    {
+      "id": "EWSMEHSMA4P7NHPED72WISB4",
+      "type": "ITEM",
+      "name": "(unnamed)",
+      "description": "",
+      "variations": []
+    },
+    {
+      "id": "JK4PY35VVYISWO7IVKYVLBUK",
+      "type": "ITEM",
+      "name": "(unnamed)",
+      "description": "",
+      "variations": []
+    },
+    {
+      "id": "C3TXQ22X4W5P662KVJ6F5HUD",
+      "type": "ITEM",
+      "name": "(unnamed)",
+      "description": "",
+      "variations": []
+    },
+    {
+      "id": "GSRMF62EIQ3YSEQ6VDQWGRRL",
+      "type": "ITEM",
+      "name": "(unnamed)",
+      "description": "",
+      "variations": []
+    },
+    {
+      "id": "7UIGAKGBRYO5WPBP7WZ5ADYP",
+      "type": "ITEM",
+      "name": "(unnamed)",
+      "description": "",
+      "variations": []
+    },
+    {
+      "id": "MIQHZ3QENFLS6HFQTKFKGXH7",
+      "type": "ITEM",
+      "name": "(unnamed)",
+      "description": "",
+      "variations": []
+    },
+    {
+      "id": "EH46TUQIDV2SHGBONTS435QN",
+      "type": "ITEM",
+      "name": "(unnamed)",
+      "description": "",
+      "variations": []
+    },
+    {
+      "id": "LBQI2ZCQ5RKME3XDOHM4YQTS",
+      "type": "ITEM",
+      "name": "(unnamed)",
+      "description": "",
+      "variations": []
+    },
+    {
+      "id": "YDY6E6Y5QS6CVNOI3QU2GWAU",
+      "type": "ITEM",
+      "name": "(unnamed)",
+      "description": "",
+      "variations": []
+    },
+    {
+      "id": "MXDWUJLHBMNJEZIUADB5W3LU",
+      "type": "ITEM",
+      "name": "(unnamed)",
+      "description": "",
+      "variations": []
+    },
+    {
+      "id": "SZHEVMDDPTLSD5ABHWJYS47P",
+      "type": "ITEM",
+      "name": "(unnamed)",
+      "description": "",
+      "variations": []
+    },
+    {
+      "id": "6TZ67TLXZZWG3IQ7GYJ4PO2N",
+      "type": "ITEM",
+      "name": "(unnamed)",
+      "description": "",
+      "variations": []
+    },
+    {
+      "id": "ZUUMTZCVXOTME37K7LRCT6EE",
+      "type": "ITEM",
+      "name": "(unnamed)",
+      "description": "",
+      "variations": []
+    },
+    {
+      "id": "GBDKIHHVK74PUOSPBN42PWZV",
+      "type": "ITEM",
+      "name": "(unnamed)",
+      "description": "",
+      "variations": []
+    },
+    {
+      "id": "LC5BITJDMB2LUVM5HAS5KEPN",
+      "type": "ITEM",
+      "name": "(unnamed)",
+      "description": "",
+      "variations": []
+    },
+    {
+      "id": "XPXQRCUG3REZ62UEWJBHYR22",
+      "type": "ITEM",
+      "name": "(unnamed)",
+      "description": "",
+      "variations": []
+    },
+    {
+      "id": "BCWIPZS6EOAG24F64G3AUNPR",
+      "type": "ITEM",
+      "name": "(unnamed)",
+      "description": "",
+      "variations": []
+    },
+    {
+      "id": "7HNP2X2UVUSNWW6BEFGHNVGB",
+      "type": "ITEM",
+      "name": "(unnamed)",
+      "description": "",
+      "variations": []
+    },
+    {
+      "id": "IUIVRB3WBB7WYOAM3RLIW575",
+      "type": "ITEM",
+      "name": "(unnamed)",
+      "description": "",
+      "variations": []
+    },
+    {
+      "id": "KASU6MWPTTCLUYAD5CCVDS5P",
+      "type": "ITEM",
+      "name": "(unnamed)",
+      "description": "",
+      "variations": []
+    },
+    {
+      "id": "H2NA7YXHH7QIQ4BAJ5M4B7SP",
+      "type": "ITEM",
+      "name": "(unnamed)",
+      "description": "",
+      "variations": []
+    },
+    {
+      "id": "JYX373ZUUJENQSQOCXRA2QPP",
+      "type": "ITEM",
+      "name": "(unnamed)",
+      "description": "",
+      "variations": []
+    },
+    {
+      "id": "AX45XN2F42I2Y3H24MQFNB4X",
+      "type": "ITEM",
+      "name": "(unnamed)",
+      "description": "",
+      "variations": []
+    },
+    {
+      "id": "FGTIM5RK2DRIMTWAUSTOLFBX",
+      "type": "ITEM",
+      "name": "(unnamed)",
+      "description": "",
+      "variations": []
+    },
+    {
+      "id": "DUQL5FIIMHH3OYUL4ITMKH6R",
+      "type": "ITEM",
+      "name": "(unnamed)",
+      "description": "",
+      "variations": []
+    },
+    {
+      "id": "TEV7XODYGBCQGVFKHGWWLYO2",
+      "type": "ITEM",
+      "name": "(unnamed)",
+      "description": "",
+      "variations": []
+    },
+    {
+      "id": "KEIQBQA63AZV357AFRYRRU5G",
+      "type": "ITEM",
+      "name": "(unnamed)",
+      "description": "",
+      "variations": []
+    },
+    {
+      "id": "LEOKTXQITFBHTRVNSC5B43AX",
+      "type": "ITEM",
+      "name": "(unnamed)",
+      "description": "",
+      "variations": []
+    },
+    {
+      "id": "A5GBWNOTVKXS6JCRXF4DW472",
+      "type": "ITEM",
+      "name": "(unnamed)",
+      "description": "",
+      "variations": []
+    },
+    {
+      "id": "S4EDK46WRZSZGY7GPNQXMSHX",
+      "type": "ITEM",
+      "name": "(unnamed)",
+      "description": "",
+      "variations": []
+    },
+    {
+      "id": "5NGN7D46BZ74MJPO43QRFTDX",
+      "type": "ITEM",
+      "name": "(unnamed)",
+      "description": "",
+      "variations": []
+    },
+    {
+      "id": "TQAGEP4VCOJJ7TB2KT6L22UU",
+      "type": "ITEM",
+      "name": "(unnamed)",
+      "description": "",
+      "variations": []
+    },
+    {
+      "id": "XKVZUNJIOQPUD2UTTVSK573X",
+      "type": "ITEM",
+      "name": "(unnamed)",
+      "description": "",
+      "variations": []
+    },
+    {
+      "id": "PZKJ4REGAGR6JW5U6R6FY5U4",
+      "type": "ITEM",
+      "name": "(unnamed)",
+      "description": "",
+      "variations": []
+    },
+    {
+      "id": "C5ILEGKVMVHJHQSI7ZN4EGD2",
+      "type": "ITEM",
+      "name": "(unnamed)",
+      "description": "",
+      "variations": []
+    },
+    {
+      "id": "FTE5VY7SZY4PH2ZUY4PMFHYD",
+      "type": "ITEM",
+      "name": "(unnamed)",
+      "description": "",
+      "variations": []
+    },
+    {
+      "id": "UJGSUGDA32UAKFFRMAWZS5FH",
+      "type": "ITEM",
+      "name": "(unnamed)",
+      "description": "",
+      "variations": []
+    },
+    {
+      "id": "W4CXJICAIJFHAXP6L22IBFQR",
+      "type": "ITEM",
+      "name": "(unnamed)",
+      "description": "",
+      "variations": []
+    },
+    {
+      "id": "XTA3MXQZ7MJOLRYHV5HMXLMG",
+      "type": "ITEM",
+      "name": "(unnamed)",
+      "description": "",
+      "variations": []
+    },
+    {
+      "id": "5XNTWWRLNIDNNTOX454M7PUS",
+      "type": "ITEM",
+      "name": "(unnamed)",
+      "description": "",
+      "variations": []
+    },
+    {
+      "id": "B5WV4CTRXZ6YTT7SKH7T2CUN",
+      "type": "ITEM",
+      "name": "(unnamed)",
+      "description": "",
+      "variations": []
+    },
+    {
+      "id": "SGJQ4FNAONXS5IU6A2UOTMQH",
+      "type": "ITEM",
+      "name": "(unnamed)",
+      "description": "",
+      "variations": []
+    },
+    {
+      "id": "PIDD4FK5TNWMITIVSK5ZTAH4",
+      "type": "ITEM",
+      "name": "(unnamed)",
+      "description": "",
+      "variations": []
+    },
+    {
+      "id": "E5GVUTD2U4AHNGGX4QKRK7V5",
+      "type": "ITEM",
+      "name": "(unnamed)",
+      "description": "",
+      "variations": []
+    },
+    {
+      "id": "CYGNDUCPV6W3EAABE24ENPDO",
+      "type": "ITEM",
+      "name": "(unnamed)",
+      "description": "",
+      "variations": []
+    },
+    {
+      "id": "ZPVXNVZSWCBOFBKHQ3IWBYXF",
+      "type": "ITEM",
+      "name": "(unnamed)",
+      "description": "",
+      "variations": []
+    },
+    {
+      "id": "BC7KXWQEO4RKYWVBDNFD7CSC",
+      "type": "ITEM",
+      "name": "(unnamed)",
+      "description": "",
+      "variations": []
+    }
+  ]
+}
