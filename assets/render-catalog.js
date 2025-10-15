@@ -2,7 +2,7 @@
    Self-contained renderer for Shop & Gallery.
    - Fetches from window.Site.catalogUrl() (falls back to 'data/products.json')
    - Supports either { items: [...] } or Square raw { objects: [...] } shapes
-   - Renders Bootstrap cards into #catalog-grid or [data-products]
+   - Renders Bootstrap-like cards into #catalog-grid or [data-products]
 */
 (function(){
   function money(cents, currency){
@@ -73,6 +73,7 @@
       } else {
         into.innerHTML = data.items.map(cardHTML).join('');
       }
+      // quick debug handle (check in DevTools Console)
       window.__CATALOG_DEBUG__ = { url, status: res.status, data };
       console.log('[render-catalog]', window.__CATALOG_DEBUG__);
     }catch(e){
