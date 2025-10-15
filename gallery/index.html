@@ -4,22 +4,20 @@
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>Gallery</title>
+  <link rel="stylesheet" href="../assets/themes/base.css">
+  <script defer src="../assets/theme-loader.js" data-theme="crump-square"></script>
+  <link rel="stylesheet" href="../assets/consistent-nav.css">
   <style>
     :root { --fg:#111; --muted:#666; --card:#fff; --border:#e5e7eb; --bg:#f8fafc; }
     *{box-sizing:border-box}
-    body{margin:0;font-family:system-ui,-apple-system,Segoe UI,Roboto,Arial,sans-serif;color:var(--fg);background:var(--bg)}
-    .site-nav{display:flex;gap:16px;align-items:center;padding:14px 18px;border-bottom:1px solid var(--border);background:#fff;position:sticky;top:0;z-index:10}
-    .site-nav a{color:#111;text-decoration:none;padding:8px 10px;border-radius:10px;border:1px solid transparent;font-weight:600}
-    .site-nav a:hover,
-    .site-nav a[aria-current="page"]{background:#111;color:#fff}
-    main{max-width:1100px;margin:24px auto;padding:0 16px 48px;display:flex;flex-direction:column;gap:24px}
-    .page-header{background:#fff;border:1px solid var(--border);border-radius:14px;padding:24px}
-    .page-header h1{margin:0 0 8px;font-size:clamp(1.9rem,3vw,2.4rem)}
+    body{margin:0;color:var(--fg);background:var(--bg)}
+    main{padding:32px 0 64px}
+    .page-header{background:#fff;border:1px solid var(--border);border-radius:14px;padding:32px 24px;margin-bottom:32px;box-shadow:var(--shadow-1)}
+    .page-header h1{margin:0 0 12px;font-size:clamp(1.9rem,3vw,2.4rem)}
     .page-header p{margin:0;color:var(--muted);font-size:1rem}
-    .row{display:grid;grid-template-columns:repeat(auto-fill,minmax(220px,1fr));gap:18px;padding:0;margin:0}
-    .col{display:flex}
-    .card{background:var(--card);border:1px solid var(--border);border-radius:14px;overflow:hidden;display:flex;flex-direction:column;flex:1}
-    .h-100{height:100%}
+    .catalog{display:grid;grid-template-columns:repeat(auto-fill,minmax(220px,1fr));gap:18px;margin:0;padding:0}
+    .card{background:var(--card);border:1px solid var(--border);border-radius:14px;overflow:hidden;display:flex;flex-direction:column;height:100%}
+    .card-img-top{width:100%;height:220px;object-fit:cover;background:#f1f5f9}
     .card-body{padding:16px;display:flex;flex-direction:column;gap:10px}
     .card-title{margin:0;font-size:1.05rem}
     .small{font-size:.9rem}
@@ -29,47 +27,29 @@
     .alert-warning{background:#fff9e6;border-color:#ffe08a;color:#8a6d1d}
     .alert-danger{background:#ffeaea;border-color:#ffb3b3;color:#a61b1b}
     @media (max-width:600px){
-      .site-nav{flex-wrap:wrap;justify-content:center}
-      .site-nav a{font-size:.95rem}
+      .page-header{padding:24px 20px}
     }
   </style>
 </head>
-<body data-page="gallery">
-  <nav class="site-nav" data-site-nav>
-    <a href="/custom-clothing-site/" data-nav="home">Home</a>
-    <a href="/custom-clothing-site/shop.html" data-nav="shop">Shop</a>
-    <a href="/custom-clothing-site/gallery/" data-nav="gallery">Gallery</a>
-    <a href="/custom-clothing-site/clients/" data-nav="clients">Client Portals</a>
-    <a href="/custom-clothing-site/about.html" data-nav="about">About</a>
-    <a href="/custom-clothing-site/contact.html" data-nav="contact">Contact</a>
-    <a href="/custom-clothing-site/cart.html" data-nav="cart">Cart</a>
-  </nav>
-
+<body>
   <main>
-    <header class="page-header">
-      <h1>Gallery</h1>
-      <p>Browse recent commissions and inspiration from our workshop.</p>
-    </header>
+    <div class="container">
+      <header class="page-header">
+        <h1>Gallery</h1>
+        <p>Browse recent commissions and inspiration from our workshop.</p>
+      </header>
 
-    <div id="catalog-grid"
-         data-products
-         class="row row-cols-1 row-cols-sm-2 row-cols-md-3 g-4"></div>
+      <div id="catalog-grid"
+           data-products
+           class="catalog row row-cols-1 row-cols-sm-2 row-cols-md-3 g-4"></div>
 
-    <noscript>
-      <p class="alert alert-warning">Please enable JavaScript to view the gallery.</p>
-    </noscript>
+      <noscript>
+        <p class="alert alert-warning">Please enable JavaScript to view the gallery.</p>
+      </noscript>
+    </div>
   </main>
 
-  <script>
-    document.addEventListener('DOMContentLoaded', function(){
-      var body = document.body || {};
-      var dataset = body.dataset || {};
-      var key = dataset.page;
-      if (!key) return;
-      var active = document.querySelector('.site-nav [data-nav="' + key + '"]');
-      if (active) active.setAttribute('aria-current', 'page');
-    });
-  </script>
+  <script defer src="../assets/consistent-nav.js" data-brand="Created By Crump"></script>
   <script src="../assets/site-utils.js" defer></script>
   <script src="../assets/nav-cart.js" defer></script>
   <script src="../assets/base-path.js" defer></script>
