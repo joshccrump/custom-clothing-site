@@ -5,7 +5,9 @@
   "type": "module",
   "engines": { "node": ">=20 <23" },
   "scripts": {
-    "sync:square": "node scripts/fetch-square.mjs"
+    "sync:square": "node scripts/fetch-square.js",
+    "sync:square:mock": "node scripts/fetch-square.js --mock tests/fixtures/mock-square-catalog.json",
+    "verify:catalog": "node tools/verify-catalog.mjs"
   },
   "dependencies": {
     "square": "^43.1.0"
