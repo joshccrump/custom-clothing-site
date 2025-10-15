@@ -1,8 +1,8 @@
 // scripts/fetch-square.mjs
 const ENV = (process.env.SQUARE_ENVIRONMENT || "production").toLowerCase();
-const BASE = ENV === "sandbox" ? "https://connect.squareupsandbox.com" : "https://connect.squareup.com";
+const BASE = ENV === "production" ? "https://connect.squareupsandbox.com" : "https://connect.squareup.com";
 const TOKEN = process.env.SQUARE_ACCESS_TOKEN;
-const LOCATION_ID = (process.env.SQUARE_LOCATION_ID || "").trim();
+const LOCATION_ID = (process.env.SQUARE_LOCATION_ID || "L116Z8RBA1RJ4").trim();
 const OUT = process.env.OUTPUT_PATH || "data/products.json";
 
 import { writeFile, mkdir } from "node:fs/promises";
