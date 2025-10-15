@@ -2,57 +2,27 @@
 <html lang="en">
 <head>
   <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>Gallery</title>
-  <link rel="stylesheet" href="../assets/themes/base.css">
-  <script defer src="../assets/theme-loader.js" data-theme="crump-square"></script>
-  <link rel="stylesheet" href="../assets/consistent-nav.css">
-  <style>
-    :root { --fg:#111; --muted:#666; --card:#fff; --border:#e5e7eb; --bg:#f8fafc; }
-    *{box-sizing:border-box}
-    body{margin:0;color:var(--fg);background:var(--bg)}
-    main{padding:32px 0 64px}
-    .page-header{background:#fff;border:1px solid var(--border);border-radius:14px;padding:32px 24px;margin-bottom:32px;box-shadow:var(--shadow-1)}
-    .page-header h1{margin:0 0 12px;font-size:clamp(1.9rem,3vw,2.4rem)}
-    .page-header p{margin:0;color:var(--muted);font-size:1rem}
-    .catalog{display:grid;grid-template-columns:repeat(auto-fill,minmax(220px,1fr));gap:18px;margin:0;padding:0}
-    .card{background:var(--card);border:1px solid var(--border);border-radius:14px;overflow:hidden;display:flex;flex-direction:column;height:100%}
-    .card-img-top{width:100%;height:220px;object-fit:cover;background:#f1f5f9}
-    .card-body{padding:16px;display:flex;flex-direction:column;gap:10px}
-    .card-title{margin:0;font-size:1.05rem}
-    .small{font-size:.9rem}
-    .text-muted{color:var(--muted)}
-    .fw-semibold{font-weight:600}
-    .alert{padding:14px 16px;border-radius:12px;background:#fff;border:1px solid var(--border);color:var(--muted)}
-    .alert-warning{background:#fff9e6;border-color:#ffe08a;color:#8a6d1d}
-    .alert-danger{background:#ffeaea;border-color:#ffb3b3;color:#a61b1b}
-    @media (max-width:600px){
-      .page-header{padding:24px 20px}
-    }
-  </style>
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
 </head>
 <body>
-  <main>
-    <div class="container">
-      <header class="page-header">
-        <h1>Gallery</h1>
-        <p>Browse recent commissions and inspiration from our workshop.</p>
-      </header>
+  <header>
+    <nav>
+      <a href="../">Home</a>
+      <a href="../shop.html">Shop</a>
+      <a href="./" aria-current="page">Gallery</a>
+      <a href="../cart.html">Cart</a>
+    </nav>
+  </header>
 
-      <div id="catalog-grid"
-           data-products
-           class="catalog row row-cols-1 row-cols-sm-2 row-cols-md-3 g-4"></div>
-
-      <noscript>
-        <p class="alert alert-warning">Please enable JavaScript to view the gallery.</p>
-      </noscript>
-    </div>
+  <main class="container">
+    <h1>Gallery</h1>
+    <p id="gallery-status" aria-live="polite">Loading…</p>
+    <div id="gallery-grid"></div>
+    <noscript>Please enable JavaScript to view the gallery.</noscript>
   </main>
 
-  <script defer src="../assets/consistent-nav.js" data-brand="Created By Crump"></script>
-  <script src="../assets/site-utils.js" defer></script>
-  <script src="../assets/nav-cart.js" defer></script>
-  <script src="../assets/base-path.js" defer></script>
-  <script src="../assets/render-catalog.js" defer></script>
+  <script type="module" src="../assets/js/catalog.js"></script>
+  <script type="module" src="../assets/js/gallery-page.js"></script>
 </body>
 </html>
