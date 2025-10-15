@@ -10,6 +10,11 @@ The repo also contains scripts and workflow notes for syncing your live Square
 catalog into the static JSON file so the GitHub Pages build always reflects your
 current inventory.
 
+> **Node.js version:** Vercel now defaults new projects to Node 22, but the
+> pinned serverless runtime requires Node 20. Use Node `20.x` locally (via
+> `nvm use 20` or similar) and set the Vercel project’s “General → Node.js
+> Version” to `20.x` to avoid build failures.
+
 ## Key Pieces
 
 | File / Directory | Purpose |
@@ -38,7 +43,20 @@ current inventory.
    npm run sync:square
    ```
    On success you will see `Wrote X items → data/products.json`. Commit the
-   updated JSON and redeploy GitHub Pages.
+   updated JSON and redeploy GitHub Pages. The script now pulls images,
+   modifier lists, item options (for size labels), and optional inventory
+   counts when `SQUARE_LOCATION_ID` is set, so the static catalog mirrors what
+   Square reports for each variation.
+
+Need an offline smoke test? Use the bundled fixture to exercise the pipeline
+without hitting the live API:
+
+```bash
+npm run sync:square:mock
+```
+
+This writes the transformed mock data to `data/products.json` so you can verify
+the shape before pointing the workflow at your live credentials.
 
 If you still need to run the CommonJS entry point for legacy workflows, invoke
 `scripts/fetch-square.cjs`; it simply `import()`s the ESM version.

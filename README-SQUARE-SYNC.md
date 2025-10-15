@@ -4,7 +4,7 @@
 This bundle sets up a secure sync from your **Square catalog** to your static site’s `data/products.json`. It preserves **variations**, **inventory**, **images**, and **custom attributes**.
 
 ### Files
-- `scripts/fetch-square.js` — Node script that pulls your Square catalog and writes `data/products.json`.
+- `scripts/fetch-square.js` — Node script that pulls your Square catalog (items, images, modifiers, options, inventory) and writes `data/products.json`.
 - `.github/workflows/square-sync.yml` — GitHub Action that runs on a schedule or on-demand.
 - `assets/gallery.js` — Drop-in frontend update (price ranges + size chips).
 - `package.json` — Declares the `square` SDK and a `sync:square` script.
@@ -32,7 +32,7 @@ If you want to confirm the sync pipeline without calling the live Square API, us
 npm run sync:square:mock
 ```
 
-This reads `tests/fixtures/mock-square-catalog.json`, exercises the full parser, and writes `data/products.mock.json` so you can inspect the generated structure without overwriting your live catalog export.
+This reads `tests/fixtures/mock-square-catalog.json`, runs it through the same transformer the live job uses, and writes `data/products.json` so you can inspect the generated structure without hitting the API.
 
 ### Product URLs
 Square’s Catalog API doesn’t expose Square Online product page URLs. Add a **catalog custom attribute** on the ITEM named `product_url` (or `external_url`) and paste the link; the script passes it through as `url`.
