@@ -1,4 +1,9 @@
-/* assets/render-catalog.js */
+/* assets/render-catalog.js
+   Self-contained renderer for Shop & Gallery.
+   - Fetches from window.Site.catalogUrl() (falls back to 'data/products.json')
+   - Supports either { items: [...] } or Square raw { objects: [...] } shapes
+   - Renders Bootstrap cards into #catalog-grid or [data-products]
+*/
 (function(){
   function money(cents, currency){
     if (typeof cents !== 'number') return '';

@@ -1,4 +1,7 @@
-/* assets/base-path.js */
+/* assets/base-path.js
+   Computes a stable base path for GitHub Pages project sites
+   so every page (including /gallery/) fetches the same JSON.
+*/
 (function () {
   window.Site = window.Site || {};
   if (!window.Site.basePath) {
