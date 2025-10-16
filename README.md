@@ -32,11 +32,13 @@ current inventory.
    ```bash
    npm install
    ```
-2. Export your Square credentials (use Production values for the live site):
+2. Provide your Square credentials (use Production values for the live site).
+   Either export them in your shell *or* drop them into `.env.local` using
+   the `.env.example` template in the repo root:
    ```bash
    export SQUARE_ACCESS_TOKEN="sq0atp-..."
    export SQUARE_LOCATION_ID="L123456789"
-   export SQUARE_ENV="production"   # or sandbox
+   export SQUARE_ENVIRONMENT="production"   # or sandbox
    ```
 3. Run the sync script:
    ```bash
@@ -71,7 +73,7 @@ following endpoints are available under your project domain:
 - `POST /api/checkout` – creates an order and charge using the Square Payments API
 
 These handlers all call the shared `makeClient()` helper in `_square.js`, which
-validates `SQUARE_ACCESS_TOKEN`, `SQUARE_LOCATION_ID`, and `SQUARE_ENV`. Missing
+validates `SQUARE_ACCESS_TOKEN`, `SQUARE_LOCATION_ID`, and `SQUARE_ENVIRONMENT`. Missing
 credentials now produce a clear 500 response instead of throwing `require`
 errors in the Node 20 runtime.
 
