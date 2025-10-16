@@ -1,17 +1,22 @@
-// scripts/fetch-square.mjs
-// Filtered writer: honors env filters (see catalog-dryrun.mjs header for all options).
-// Refuses to write if nothing passes filters.
-// Node 18+ required.
-
-import { readFile } from "node:fs/promises";
-import { writeFile, mkdir } from "node:fs/promises";
-import { dirname } from "node:path";
+// scripts/catalog-dryrun.mjs
+// Dry-run Square Catalog fetch with filters (no file writes).
+// Node 18+ (global fetch).
+// Env controls (all optional):
+//   SQUARE_ENVIRONMENT=production|sandbox
+//   SQUARE_ACCESS_TOKEN=EAAA...
+//   SQUARE_LOCATION_ID=L... (recommended for presence/inventory)
+//   FILTER_ONLY_PRESENT_AT_LOCATION=true|false
+//   FILTER_ONLY_WITH_PRICE=true|false
+//   FILTER_ONLY_IN_STOCK=true|false
+//   FILTER_ONLY_WITH_IMAGE=true|false
+//   FILTER_CATEGORY_ALLOWLIST="Hats,Shirts"    (comma-separated names)
+//   FILTER_CATEGORY_BLOCKLIST="Gift Card"      (comma-separated names)
+//   FILTER_CUSTOM_ATTR_KEY="channel" + FILTER_CUSTOM_ATTR_VALUE="online" (match on item custom attrs)
 
 const ENV  = (process.env.SQUARE_ENVIRONMENT || "production").toLowerCase();
 const BASE = ENV === "sandbox" ? "https://connect.squareupsandbox.com" : "https://connect.squareup.com";
 const TOKEN = process.env.SQUARE_ACCESS_TOKEN || "";
 const LOC   = (process.env.SQUARE_LOCATION_ID || "").trim();
-const OUT   = process.env.OUTPUT_PATH || "data/products.json";
 
 const OPT = {
   onlyPresentAtLocation: /^true$/i.test(process.env.FILTER_ONLY_PRESENT_AT_LOCATION || ""),
@@ -26,6 +31,7 @@ const OPT = {
 
 function fail(msg, extra){ console.error(`❌ ${msg}`); if (extra) console.error(extra); process.exit(1); }
 function ok(msg){ console.log(`✅ ${msg}`); }
+function info(msg){ console.log(`ℹ️  ${msg}`); }
 
 if (!TOKEN) fail("Missing SQUARE_ACCESS_TOKEN.");
 
@@ -108,6 +114,7 @@ function passesFilters(item, variations, catById, inventoryCounts) {
     if (!anyInStock) return false;
   }
 
+  // Custom attribute filter on the ITEM (not variation)
   if (OPT.customAttrKey) {
     const ca = (d.customAttributeValues || {});
     const val = ca[OPT.customAttrKey]?.stringValue || ca[OPT.customAttrKey]?.numberValue || ca[OPT.customAttrKey]?.selectionUidValues?.[0] || "";
@@ -141,34 +148,11 @@ async function fetchInventoryCounts(locId, variationIds) {
   return out;
 }
 
-function toSiteItem(item, variations) {
-  const d = item.itemData || {};
-  const firstVar = variations.find(v => typeof v.itemVariationData?.priceMoney?.amount === "number") || variations[0];
-  const price = firstVar?.itemVariationData?.priceMoney?.amount ?? null;
-  const currency = firstVar?.itemVariationData?.priceMoney?.currency ?? "USD";
-  return {
-    id: item.id,
-    type: "ITEM",
-    name: d.name || "(unnamed)",
-    description: d.description || "",
-    imageUrl: item._imageUrl || null,
-    variations: variations.map(v => {
-      const vd = v.itemVariationData || {};
-      const pm = vd.priceMoney || {};
-      return { id: v.id, name: vd.name || "", price: typeof pm.amount === "number" ? pm.amount : null, currency: pm.currency || "USD", sku: vd.sku || null };
-    }),
-    price,
-    currency,
-  };
-}
-
 (async function main(){
-  console.log("=== Filtered Catalog Sync ===");
+  console.log("=== Catalog Dry Run (env filters) ===");
   console.log("ENV:", ENV);
   console.log("LOC:", LOC || "(none)");
-  console.log("Filters:", OPT);
 
-  // Load catalog
   const all = await fetchAllCatalog();
   const items = all.filter(o => o.type === "ITEM");
   const vars  = all.filter(o => o.type === "ITEM_VARIATION");
@@ -176,7 +160,9 @@ function toSiteItem(item, variations) {
   const cats  = all.filter(o => o.type === "CATEGORY");
   const catById = indexById(cats);
 
-  // group variations by item & attach images
+  attachImages(items, imgs);
+
+  // group variations by item
   const itemIdForVar = new Map();
   for (const it of items) {
     const d = it.itemData || {};
@@ -190,26 +176,27 @@ function toSiteItem(item, variations) {
     if (!varsByItem.has(parent)) varsByItem.set(parent, []);
     varsByItem.get(parent).push(v);
   }
-  attachImages(items, imgs);
 
   const invCounts = await fetchInventoryCounts(LOC, vars.map(v => v.id));
 
-  // Apply filters
   const passing = [];
   for (const it of items) {
     const vlist = varsByItem.get(it.id) || [];
     if (passesFilters(it, vlist, catById, invCounts)) {
-      passing.push(toSiteItem(it, vlist));
+      passing.push(it);
     }
   }
 
-  if (!passing.length) fail("No items passed filters. Nothing written.");
+  console.log(`Total ITEM objects: ${items.length}`);
+  console.log(`Passing filters: ${passing.length}`);
+  console.log("Filters:", OPT);
 
-  // Write
-  await (async () => {
-    await mkdir(dirname(OUT), { recursive: true });
-    await writeFile(OUT, JSON.stringify({ generatedAt: new Date().toISOString(), count: passing.length, items: passing }, null, 2), "utf8");
-  })();
+  console.log("\nSample (up to 10):");
+  for (const it of passing.slice(0,10)) {
+    const d = it.itemData || {};
+    const cat = d.categoryId ? (catById.get(d.categoryId)?.categoryData?.name || "") : "";
+    console.log(`- ${d.name || "(unnamed)"}  [${cat}]  image=${Boolean(it._imageUrl)}`);
+  }
 
-  ok(`Wrote ${passing.length} filtered items → ${OUT}`);
+  ok("Dry run finished.");
 })().catch(e=>fail("Unexpected error", e));
