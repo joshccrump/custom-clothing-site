@@ -78,11 +78,18 @@
     return [];
   }
 
+  const PLACEHOLDER_NAME_RE = /^(?:product\s+\d+|untitled|\(unnamed\))$/i;
+
   function firstString(...values){
     for (const value of values){
-      if (typeof value === 'string' && value.trim()) return value;
+      if (typeof value === 'string' && value.trim()) return value.trim();
     }
     return '';
+  }
+
+  function isRealName(name){
+    if (!name) return false;
+    return !PLACEHOLDER_NAME_RE.test(name.trim());
   }
 
   function normalizeVariation(variation, fallbackCurrency){
@@ -104,6 +111,8 @@
       fallbackCurrency ||
       'USD';
 
+    if (price == null || !Number.isFinite(price)) return null;
+
     return {
       id: variation.id || data.id || null,
       name: variation.name || data.name || 'Variation',
@@ -122,7 +131,9 @@
   function normalizeItem(raw){
     if (!raw || typeof raw !== 'object') return null;
 
-    const name = firstString(raw.title, raw.name, raw.itemData?.name, '(unnamed)');
+    const name = firstString(raw.title, raw.name, raw.itemData?.name);
+    if (!isRealName(name)) return null;
+
     const variations = extractVariations(raw);
 
     let priceMin = typeof raw.price_min === 'number' ? raw.price_min : null;
@@ -142,6 +153,11 @@
     const descriptionSource = firstString(raw.description_html, raw.descriptionHtml, raw.description);
     const descriptionHtml = raw.description_html || raw.descriptionHtml || (HTML_REGEX.test(descriptionSource) ? descriptionSource : '');
     const descriptionText = descriptionHtml ? '' : descriptionSource;
+
+    const hasPrice = (typeof priceMin === 'number' && Number.isFinite(priceMin)) ||
+      (typeof priceMax === 'number' && Number.isFinite(priceMax));
+
+    if (!hasPrice) return null;
 
     return {
       id: raw.id || null,
@@ -260,7 +276,7 @@
       let json; try{ json = JSON.parse(txt); } catch{ json = {}; }
       const data = normalize(json);
       if (!data.items.length){
-        into.innerHTML = '<div class="alert alert-warning">No products found in <code>'+url+'</code>.</div>';
+        into.innerHTML = '<div class="alert alert-warning">Our catalog is being updated. Please check back soon for available products.</div>';
       } else {
         into.innerHTML = '';
         const frag = document.createDocumentFragment();

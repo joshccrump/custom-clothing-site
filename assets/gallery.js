@@ -30,9 +30,10 @@
     const article = document.createElement("article");
     article.className = "card";
     const thumb = window.Site?.resolveImage(product.thumbnail);
+    const media = thumb ? `<img class="card__img" alt="${product.title || "Product"}" src="${thumb}">` : "";
     article.innerHTML = `
       <div class="card__media">
-        <img class="card__img" alt="${product.title || "Product"}" src="${thumb}">
+        ${media}
       </div>
       <div class="card__body">
         <h3 class="title">${product.title || "Untitled"}</h3>

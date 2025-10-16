@@ -1,4 +1,6 @@
 // scripts/build-products-json.mjs
+import "./load-env.mjs";
+
 const OUT = process.env.OUTPUT_PATH || "data/products.json";
 const ENV = (process.env.SQUARE_ENVIRONMENT || "production").toLowerCase();
 const BASE = ENV === "sandbox"

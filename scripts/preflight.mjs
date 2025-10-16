@@ -1,4 +1,6 @@
 // scripts/preflight.mjs (STRICT)
+import "./load-env.mjs";
+
 const ENV = (process.env.SQUARE_ENVIRONMENT || "production").toLowerCase();
 const TOKEN = process.env.SQUARE_ACCESS_TOKEN || "";
 const LOC   = (process.env.SQUARE_LOCATION_ID || "").trim();

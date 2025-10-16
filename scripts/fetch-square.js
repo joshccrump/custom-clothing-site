@@ -2,6 +2,7 @@
 import fs from 'node:fs/promises';
 import path from 'node:path';
 import process from 'node:process';
+import './load-env.mjs';
 
 const ENV_NAME = (process.env.SQUARE_ENV || process.env.SQUARE_ENVIRONMENT || 'production').toLowerCase();
 const ACCESS_TOKEN = (process.env.SQUARE_ACCESS_TOKEN || '').trim();

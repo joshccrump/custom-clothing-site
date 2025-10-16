@@ -1,4 +1,6 @@
 // scripts/fetch-square.mjs (STRICT)
+import "./load-env.mjs";
+
 const ENV = (process.env.SQUARE_ENVIRONMENT || "production").toLowerCase();
 const BASE = ENV === "sandbox" ? "https://connect.squareupsandbox.com" : "https://connect.squareup.com";
 const TOKEN = process.env.SQUARE_ACCESS_TOKEN || "";

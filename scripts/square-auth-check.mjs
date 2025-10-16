@@ -1,4 +1,6 @@
 // scripts/square-auth-check.mjs
+import "./load-env.mjs";
+
 const TOKEN = process.env.SQUARE_ACCESS_TOKEN || "";
 const ENV   = (process.env.SQUARE_ENVIRONMENT || process.env.SQUARE_ENV || "production").toLowerCase();
 const LOC   = (process.env.SQUARE_LOCATION_ID || "").trim();

@@ -1,4 +1,5 @@
 // scripts/square-env.mjs
+import "./load-env.mjs";
 export function getSquareEnv(fromProcess = true) {
   const envNameRaw = (fromProcess ? process.env.SQUARE_ENVIRONMENT : undefined) || "sandbox";
   const envName = String(envNameRaw).toLowerCase().trim();
