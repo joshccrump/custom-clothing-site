@@ -3,26 +3,68 @@
 <head>
   <meta charset="utf-8" />
   <title>Shop</title>
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <link rel="stylesheet" href="assets/themes/base.css">
+  <script defer src="assets/theme-loader.js" data-theme="crump-square"></script>
+  <link rel="stylesheet" href="assets/consistent-nav.css">
+  <style>
+    :root {
+      color-scheme: light;
+    }
+    * { box-sizing: border-box; }
+    body { margin: 0; background: var(--bg); color: var(--text); }
+    main { padding: 32px 0 72px; display: flex; flex-direction: column; gap: 32px; }
+    .section { padding-inline: 20px; }
+    .section .container { display: flex; flex-direction: column; gap: 12px; }
+    .page-header { background: var(--card); border: 1px solid var(--border); border-radius: var(--radius-lg); padding: 32px; box-shadow: var(--shadow-1); }
+    .page-header h1 { margin: 0 0 12px; font-size: clamp(1.9rem, 3vw, 2.5rem); }
+    .page-header p { margin: 0; color: var(--muted); }
+    .catalog-shell .container { gap: 24px; }
+    .catalog-grid { display: grid; gap: 20px; grid-template-columns: repeat(auto-fill, minmax(240px, 1fr)); margin: 0; padding: 0; list-style: none; }
+    .catalog-grid .col { display: flex; }
+    .card { background: var(--card); border: 1px solid var(--border); border-radius: var(--radius-lg); overflow: hidden; display: flex; flex-direction: column; flex: 1; box-shadow: var(--shadow-1); }
+    .card-img-top { width: 100%; height: 240px; object-fit: cover; background: #f1f5f9; }
+    .card-body { padding: 18px; display: flex; flex-direction: column; gap: 12px; }
+    .card-title { margin: 0; font-size: 1.1rem; }
+    .card-title a { color: inherit; text-decoration: none; }
+    .card-title a:hover { text-decoration: underline; }
+    .small { font-size: 0.95rem; }
+    .text-muted { color: var(--muted); }
+    .fw-semibold { font-weight: 600; }
+    .alert { padding: 16px 18px; border-radius: var(--radius); border: 1px solid var(--border); background: var(--card); color: var(--muted); }
+    .alert-warning { background: #fff7e5; border-color: #facc15; color: #854d0e; }
+    .alert-danger { background: #fee2e2; border-color: #f87171; color: #991b1b; }
+    @media (max-width: 640px) {
+      .page-header { padding: 24px; }
+      .card-img-top { height: 200px; }
+      main { padding-bottom: 56px; }
+    }
+  </style>
 </head>
 <body>
-  <header>
-    <nav>
-      <a href="./">Home</a>
-      <a href="./shop.html" aria-current="page">Shop</a>
-      <a href="./gallery/">Gallery</a>
-      <a href="./cart.html">Cart</a>
-    </nav>
-  </header>
+  <main>
+    <section class="section">
+      <div class="container">
+        <header class="page-header">
+          <h1>Shop</h1>
+          <p>Explore current releases and made-to-order pieces crafted in our studio.</p>
+        </header>
+      </div>
+    </section>
 
-  <main class="container">
-    <h1>Shop</h1>
-    <p id="catalog-status" aria-live="polite">Loading…</p>
-    <div id="catalog-grid" class="grid"></div>
-    <noscript>Please enable JavaScript to view products.</noscript>
+    <section class="section catalog-shell">
+      <div class="container">
+        <div id="catalog-grid" data-products class="catalog-grid"></div>
+        <noscript>
+          <p class="alert alert-warning">Enable JavaScript to browse available products.</p>
+        </noscript>
+      </div>
+    </section>
   </main>
 
-  <script type="module" src="./assets/js/catalog.js"></script>
-  <script type="module" src="./assets/js/shop-page.js"></script>
+  <script defer src="assets/consistent-nav.js" data-brand="Created By Crump"></script>
+  <script src="assets/site-utils.js" defer></script>
+  <script src="assets/nav-cart.js" defer></script>
+  <script src="assets/base-path.js" defer></script>
+  <script src="assets/render-catalog.js" defer></script>
 </body>
 </html>
