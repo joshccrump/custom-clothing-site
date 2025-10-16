@@ -94,7 +94,7 @@
   }
 
   function resolveImage(src){
-    if (!src) return join("images/ph1.svg");
+    if (!src) return null;
     if (/^https?:/i.test(src)) return src;
     if (src.startsWith("/")) return src;
     return join(src);

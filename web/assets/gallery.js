@@ -10,7 +10,7 @@
   }
   const BASE = detectBase();
   function resolveImage(src){
-    if (!src) return BASE+'images/ph1.svg';
+    if (!src) return null;
     if (/^https?:/i.test(src)) return src;
     if (src.startsWith('/')) return src;
     return BASE + src.replace(/^\/+/, '');
@@ -45,7 +45,8 @@
       const price=hasVars?((p.price_min===p.price_max)?fmt(p.price_min,cur):`${fmt(p.price_min,cur)} – ${fmt(p.price_max,cur)}`):(typeof p.price==='number'?fmt(p.price,cur):'');
       const card=document.createElement('article'); card.className='card';
       const thumb=resolveImage(p.thumbnail);
-      card.innerHTML=`<div class='card__media'><img class='card__img' alt='${p.title||'Product'}' src='${thumb}'></div>
+      const media = thumb ? `<img class='card__img' alt='${p.title||'Product'}' src='${thumb}'>` : '';
+      card.innerHTML=`<div class='card__media'>${media}</div>
       <div class='card__body'><h3 class='title'>${p.title||'Untitled'}</h3><div class='price'>${price}</div><div class='card__actions'></div></div>`;
       const actions=card.querySelector('.card__actions'); let select;
       if(hasVars){

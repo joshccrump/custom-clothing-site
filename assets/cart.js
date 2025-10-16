@@ -127,10 +127,13 @@
       ? variation.price
       : (typeof product.price === "number" ? product.price : 0);
 
+    const thumbSrc = window.Site?.resolveImage(product.thumbnail);
+    const imageMarkup = thumbSrc ? `<img class="thumb" alt="Item" src="${thumbSrc}">` : '';
+
     mount.innerHTML = `
       <div class="card" style="padding:16px">
         <div class="row">
-          <img class="thumb" alt="Item" src="${window.Site?.resolveImage(product.thumbnail)}">
+          ${imageMarkup}
           <div class="meta">
             <h2 class="title">${product.title || product.name || "Selected Item"}</h2>
             <div class="subtle">${variation.name || "Variation"}</div>
