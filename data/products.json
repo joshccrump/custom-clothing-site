@@ -1,6 +1,6 @@
 {
-  "generatedAt": "2025-10-21T09:23:07.176Z",
-  "count": 49,
+  "generatedAt": "2025-10-22T09:23:46.426Z",
+  "count": 50,
   "items": [
     {
       "id": "EWSMEHSMA4P7NHPED72WISB4",
@@ -484,6 +484,16 @@
     },
     {
       "id": "DI5VYXA7ZZRQRO6WZPMQC6XR",
+      "type": "ITEM",
+      "name": "(unnamed)",
+      "description": "",
+      "imageUrl": null,
+      "variations": [],
+      "price": null,
+      "currency": "USD"
+    },
+    {
+      "id": "J5VULYJUJR7SW7352J2YRG5T",
       "type": "ITEM",
       "name": "(unnamed)",
       "description": "",
