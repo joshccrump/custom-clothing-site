@@ -1,6 +1,6 @@
 {
-  "generatedAt": "2026-03-02T09:52:52.145Z",
-  "count": 82,
+  "generatedAt": "2026-03-03T09:43:37.193Z",
+  "count": 84,
   "items": [
     {
       "id": "EWSMEHSMA4P7NHPED72WISB4",
@@ -814,6 +814,26 @@
     },
     {
       "id": "CEWPUG63RNYE3FAW25SH3G2R",
+      "type": "ITEM",
+      "name": "(unnamed)",
+      "description": "",
+      "imageUrl": null,
+      "variations": [],
+      "price": null,
+      "currency": "USD"
+    },
+    {
+      "id": "7GT4BBDAPVNQ6YXGSKSGPFBA",
+      "type": "ITEM",
+      "name": "(unnamed)",
+      "description": "",
+      "imageUrl": null,
+      "variations": [],
+      "price": null,
+      "currency": "USD"
+    },
+    {
+      "id": "72WM7PKMAQEXZVH3GOZAWPI4",
       "type": "ITEM",
       "name": "(unnamed)",
       "description": "",
