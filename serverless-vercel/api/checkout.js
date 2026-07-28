@@ -1,83 +1,87 @@
+// serverless-vercel/api/checkout.js
+// POST /api/checkout -> creates a Square order and charges the card token.
+// Rewritten to use Square's REST API (snake_case) via squareFetch.
 import crypto from "node:crypto";
-import { makeClient } from "./_square.js";
+import { squareFetch, squareEnv } from "./_square.js";
 
-function cors(res){
+function cors(res) {
   res.setHeader("Access-Control-Allow-Origin", "*");
   res.setHeader("Access-Control-Allow-Methods", "POST, OPTIONS");
   res.setHeader("Access-Control-Allow-Headers", "Content-Type");
 }
 
-export default async function handler(req, res){
+export default async function handler(req, res) {
   cors(res);
   if (req.method === "OPTIONS") return res.status(200).end();
   if (req.method !== "POST") return res.status(405).json({ error: "Use POST" });
 
-  try{
+  try {
     const { variationId, quantity = 1, token, modifiers = [], note = "" } = req.body || {};
     if (!variationId || !token) return res.status(400).json({ error: "variationId and token required" });
 
-    const client = makeClient();
-    const locationId = process.env.SQUARE_LOCATION_ID;
-    if (!locationId) throw new Error("SQUARE_LOCATION_ID not set");
+    const { locationId } = squareEnv();
 
     // Optional stock check
     if ((process.env.BACKORDER_OK || "true").toLowerCase() !== "true") {
-      const inv = await client.inventoryApi.batchRetrieveInventoryCounts({
-        catalogObjectIds: [variationId],
-        locationIds: [locationId],
+      const inv = await squareFetch("/v2/inventory/batch-retrieve-counts", {
+        method: "POST",
+        body: { catalog_object_ids: [variationId], location_ids: [locationId] },
       });
-      const qty = Number(inv.result.counts?.[0]?.quantity ?? 0);
+      const qty = Number(inv.counts?.[0]?.quantity ?? 0);
       if (qty < Number(quantity)) {
         return res.status(409).json({ error: "Insufficient stock" });
       }
     }
 
-    const line = {
-      quantity: String(quantity),
-      catalogObjectId: variationId,
-      modifiers: (modifiers || []).map(m => ({
-        catalogObjectId: m.catalogObjectId || m.id || m
-      })),
+    const order = {
+      location_id: locationId,
+      line_items: [
+        {
+          quantity: String(quantity),
+          catalog_object_id: variationId,
+          modifiers: (modifiers || []).map((m) => ({
+            catalog_object_id: m.catalog_object_id || m.catalogObjectId || m.id || m,
+          })),
+          note: note || undefined,
+        },
+      ],
+      pricing_options: { auto_apply_taxes: true, auto_apply_discounts: true },
       note: note || undefined,
     };
 
-    const orderDraft = {
-      locationId,
-      lineItems: [line],
-      pricingOptions: { autoApplyTaxes: true, autoApplyDiscounts: true },
-      note: note || undefined,
-    };
-
-    // Calculate to get totalMoney
-    const calc = await client.ordersApi.calculateOrder({ order: orderDraft });
-    const totalMoney = calc.result.order?.totalMoney;
+    // Calculate to get total_money
+    const calc = await squareFetch("/v2/orders/calculate", { method: "POST", body: { order } });
+    const totalMoney = calc.order?.total_money;
     if (!totalMoney) throw new Error("Could not calculate order total.");
 
     // Create order
-    const created = await client.ordersApi.createOrder({
-      idempotencyKey: crypto.randomUUID(),
-      order: orderDraft
+    const created = await squareFetch("/v2/orders", {
+      method: "POST",
+      body: { idempotency_key: crypto.randomUUID(), order },
     });
-    const orderId = created.result.order?.id;
+    const orderId = created.order?.id;
     if (!orderId) throw new Error("Order creation failed.");
 
     // Take payment
-    const pay = await client.paymentsApi.createPayment({
-      idempotencyKey: crypto.randomUUID(),
-      sourceId: token,
-      locationId,
-      orderId,
-      amountMoney: totalMoney
+    const pay = await squareFetch("/v2/payments", {
+      method: "POST",
+      body: {
+        idempotency_key: crypto.randomUUID(),
+        source_id: token,
+        location_id: locationId,
+        order_id: orderId,
+        amount_money: totalMoney,
+      },
     });
 
     res.status(200).json({
-      paymentId: pay.result.payment?.id,
+      paymentId: pay.payment?.id,
       orderId,
-      status: pay.result.payment?.status
+      status: pay.payment?.status,
     });
-  }catch(e){
+  } catch (e) {
     console.error("checkout error", e);
-    const msg = e?.errors?.[0]?.detail || e?.message || "Unknown error";
-    res.status(500).json({ error: msg });
+    const msg = e?.body?.errors?.[0]?.detail || e?.message || "Unknown error";
+    res.status(e?.status || 500).json({ error: msg });
   }
 }

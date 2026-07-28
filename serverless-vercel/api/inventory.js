@@ -1,5 +1,7 @@
 // serverless-vercel/api/inventory.js
-import { makeClient } from "./_square.js";
+// GET /api/inventory?ids=ID1,ID2 -> { variationId: qty } on-hand counts.
+// Rewritten to use Square's REST API (snake_case) via squareFetch.
+import { squareFetch, squareEnv } from "./_square.js";
 
 export default async function handler(req, res) {
   res.setHeader("Access-Control-Allow-Origin", "*");
@@ -15,25 +17,23 @@ export default async function handler(req, res) {
       .map((s) => s.trim())
       .filter(Boolean);
 
-    if (!ids.length) {
-      return res.status(400).json({ error: "ids required" });
-    }
+    if (!ids.length) return res.status(400).json({ error: "ids required" });
 
-    const client = makeClient();
+    const { locationId } = squareEnv();
 
-    const { result } = await client.inventoryApi.batchRetrieveInventoryCounts({
-      catalogObjectIds: ids,
-      locationIds: [process.env.SQUARE_LOCATION_ID],
+    const json = await squareFetch("/v2/inventory/batch-retrieve-counts", {
+      method: "POST",
+      body: { catalog_object_ids: ids, location_ids: [locationId] },
     });
 
     const qty = {};
-    for (const c of result.counts || []) {
-      qty[c.catalogObjectId] = Number(c.quantity || 0);
+    for (const c of json.counts || []) {
+      qty[c.catalog_object_id] = Number(c.quantity || 0);
     }
 
     return res.status(200).json(qty);
   } catch (e) {
     console.error("inventory error", e);
-    return res.status(500).json({ error: e?.message || "Unknown error" });
+    return res.status(e?.status || 500).json({ error: e?.message || "Unknown error" });
   }
 }
