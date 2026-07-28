@@ -2,6 +2,11 @@
 // Filtered writer: honors env filters (see catalog-dryrun.mjs header for all options).
 // Refuses to write if nothing passes filters.
 // Node 18+ required.
+//
+// FIX (2026-07): Square's REST API returns snake_case fields (item_data,
+// price_money, image_ids, ...). This script previously read camelCase
+// (itemData, priceMoney, imageIds), so every item exported empty
+// ("(unnamed)", no price, no variations). Field access corrected to snake_case.
 
 import { readFile } from "node:fs/promises";
 import { writeFile, mkdir } from "node:fs/promises";
@@ -64,38 +69,40 @@ async function fetchAllCatalog() {
 function attachImages(items, images) {
   const img = indexById(images);
   for (const it of items) {
-    const d = it.itemData || {};
-    const url = d.imageIds?.length ? img.get(d.imageIds[0])?.imageData?.url : null;
+    const d = it.item_data || {};
+    const url = d.image_ids?.length ? img.get(d.image_ids[0])?.image_data?.url : null;
     it._imageUrl = url || null;
   }
 }
 
 function categoryName(catId, catById) {
   const c = catById.get(catId);
-  return c?.categoryData?.name || null;
+  return c?.category_data?.name || null;
 }
 
 function itemCategoryName(item, catById) {
-  const d = item.itemData || {};
-  return categoryName(d.categoryId, catById);
+  const d = item.item_data || {};
+  // Square is migrating from item_data.category_id to item_data.categories[].
+  const catId = d.category_id || d.categories?.[0]?.id || null;
+  return catId ? categoryName(catId, catById) : null;
 }
 
 function passesFilters(item, variations, catById, inventoryCounts) {
-  const d = item.itemData || {};
+  const d = item.item_data || {};
   const catName = itemCategoryName(item, catById);
 
   if (OPT.categoryAllowlist.length && (!catName || !OPT.categoryAllowlist.includes(catName))) return false;
   if (OPT.categoryBlocklist.length && (catName && OPT.categoryBlocklist.includes(catName))) return false;
 
   if (OPT.onlyPresentAtLocation && LOC) {
-    const present = d.presentAtAllLocations || (d.presentAtLocationIds || []).includes(LOC);
+    const present = d.present_at_all_locations || (d.present_at_location_ids || []).includes(LOC);
     if (!present) return false;
   }
 
   if (OPT.onlyWithImage && !item._imageUrl) return false;
 
   let pricedVars = variations.filter(v => {
-    const pm = v.itemVariationData?.priceMoney;
+    const pm = v.item_variation_data?.price_money;
     return pm && typeof pm.amount === "number";
   });
   if (OPT.onlyWithPrice && pricedVars.length === 0) return false;
@@ -109,8 +116,8 @@ function passesFilters(item, variations, catById, inventoryCounts) {
   }
 
   if (OPT.customAttrKey) {
-    const ca = (d.customAttributeValues || {});
-    const val = ca[OPT.customAttrKey]?.stringValue || ca[OPT.customAttrKey]?.numberValue || ca[OPT.customAttrKey]?.selectionUidValues?.[0] || "";
+    const ca = (d.custom_attribute_values || {});
+    const val = ca[OPT.customAttrKey]?.string_value || ca[OPT.customAttrKey]?.number_value || ca[OPT.customAttrKey]?.selection_uid_values?.[0] || "";
     if (OPT.customAttrValue && String(val).toLowerCase() !== OPT.customAttrValue.toLowerCase()) return false;
     if (!OPT.customAttrValue && (val === "" || val == null)) return false;
   }
@@ -142,10 +149,10 @@ async function fetchInventoryCounts(locId, variationIds) {
 }
 
 function toSiteItem(item, variations) {
-  const d = item.itemData || {};
-  const firstVar = variations.find(v => typeof v.itemVariationData?.priceMoney?.amount === "number") || variations[0];
-  const price = firstVar?.itemVariationData?.priceMoney?.amount ?? null;
-  const currency = firstVar?.itemVariationData?.priceMoney?.currency ?? "USD";
+  const d = item.item_data || {};
+  const firstVar = variations.find(v => typeof v.item_variation_data?.price_money?.amount === "number") || variations[0];
+  const price = firstVar?.item_variation_data?.price_money?.amount ?? null;
+  const currency = firstVar?.item_variation_data?.price_money?.currency ?? "USD";
   return {
     id: item.id,
     type: "ITEM",
@@ -153,8 +160,8 @@ function toSiteItem(item, variations) {
     description: d.description || "",
     imageUrl: item._imageUrl || null,
     variations: variations.map(v => {
-      const vd = v.itemVariationData || {};
-      const pm = vd.priceMoney || {};
+      const vd = v.item_variation_data || {};
+      const pm = vd.price_money || {};
       return { id: v.id, name: vd.name || "", price: typeof pm.amount === "number" ? pm.amount : null, currency: pm.currency || "USD", sku: vd.sku || null };
     }),
     price,
@@ -179,13 +186,13 @@ function toSiteItem(item, variations) {
   // group variations by item & attach images
   const itemIdForVar = new Map();
   for (const it of items) {
-    const d = it.itemData || {};
+    const d = it.item_data || {};
     for (const v of d.variations || []) itemIdForVar.set(v.id, it.id);
   }
   const varsByItem = new Map();
   for (const v of vars) {
-    const vd = v.itemVariationData || {};
-    const parent = vd.itemId || itemIdForVar.get(v.id);
+    const vd = v.item_variation_data || {};
+    const parent = vd.item_id || itemIdForVar.get(v.id);
     if (!parent) continue;
     if (!varsByItem.has(parent)) varsByItem.set(parent, []);
     varsByItem.get(parent).push(v);
