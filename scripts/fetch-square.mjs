@@ -162,9 +162,21 @@ function toSiteItem(item, variations) {
     variations: variations.map(v => {
       const vd = v.item_variation_data || {};
       const pm = vd.price_money || {};
-      return { id: v.id, name: vd.name || "", price: typeof pm.amount === "number" ? pm.amount : null, currency: pm.currency || "USD", sku: vd.sku || null };
+      const amount = typeof pm.amount === "number" ? pm.amount : null;
+      return {
+        id: v.id,
+        name: vd.name || "",
+        // Square amounts are in MINOR units (cents). priceMoney matches Square's
+        // native shape; the storefront's moneyFromSquare() divides amount by 100.
+        // Without this the display renders 100x too high (e.g. $15.00 -> $1,500.00).
+        priceMoney: amount != null ? { amount, currency: pm.currency || "USD" } : null,
+        price: amount,            // raw Square amount in minor units (cents)
+        currency: pm.currency || "USD",
+        sku: vd.sku || null,
+      };
     }),
-    price,
+    priceMoney: price != null ? { amount: price, currency } : null,
+    price,                        // raw Square amount in minor units (cents)
     currency,
   };
 }
