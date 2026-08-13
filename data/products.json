@@ -1,6 +1,6 @@
 {
-  "generatedAt": "2026-08-12T10:05:52.104Z",
-  "count": 85,
+  "generatedAt": "2026-08-13T10:06:57.089Z",
+  "count": 86,
   "items": [
     {
       "id": "EWSMEHSMA4P7NHPED72WISB4",
@@ -22420,6 +22420,263 @@
         {
           "id": "TZURI7C2QNAJSENYHSM4URTV",
           "name": "3T, Black",
+          "priceMoney": {
+            "amount": 2100,
+            "currency": "USD"
+          },
+          "price": 2100,
+          "currency": "USD",
+          "sku": null
+        }
+      ],
+      "priceMoney": {
+        "amount": 2100,
+        "currency": "USD"
+      },
+      "price": 2100,
+      "currency": "USD"
+    },
+    {
+      "id": "52QI6GCETBHRNQCZDO2NYZKV",
+      "type": "ITEM",
+      "name": "Nessi Strong Tee",
+      "description": "",
+      "imageUrl": "https://items-images-production.s3.us-west-2.amazonaws.com/files/2a71836c4d7f80a3a8f004a59fddb3e255fdf3b4/original.png",
+      "variations": [
+        {
+          "id": "KTOSSORSUXQWYMEIQV5S5ESC",
+          "name": "2T",
+          "priceMoney": {
+            "amount": 2100,
+            "currency": "USD"
+          },
+          "price": 2100,
+          "currency": "USD",
+          "sku": null
+        },
+        {
+          "id": "3TYQOLJLJKSWMJPQYUAE4PCL",
+          "name": "NB (0-3)",
+          "priceMoney": {
+            "amount": 1900,
+            "currency": "USD"
+          },
+          "price": 1900,
+          "currency": "USD",
+          "sku": null
+        },
+        {
+          "id": "I42E5I5VUQPDC4JZ37GBJ4IJ",
+          "name": "XL",
+          "priceMoney": {
+            "amount": 2100,
+            "currency": "USD"
+          },
+          "price": 2100,
+          "currency": "USD",
+          "sku": null
+        },
+        {
+          "id": "LOZZTSW3MBBTF46A7UOEXY4T",
+          "name": "5XL",
+          "priceMoney": {
+            "amount": 2100,
+            "currency": "USD"
+          },
+          "price": 2100,
+          "currency": "USD",
+          "sku": null
+        },
+        {
+          "id": "K3DWYSAEOU67O3EUV6HNMW5P",
+          "name": "3T",
+          "priceMoney": {
+            "amount": 2100,
+            "currency": "USD"
+          },
+          "price": 2100,
+          "currency": "USD",
+          "sku": null
+        },
+        {
+          "id": "OTNYFHL4SSB4CJEGYIOZAZ7C",
+          "name": "L",
+          "priceMoney": {
+            "amount": 2100,
+            "currency": "USD"
+          },
+          "price": 2100,
+          "currency": "USD",
+          "sku": null
+        },
+        {
+          "id": "JFYR2YXOGRX4UR436DPRYFXV",
+          "name": "YM",
+          "priceMoney": {
+            "amount": 2100,
+            "currency": "USD"
+          },
+          "price": 2100,
+          "currency": "USD",
+          "sku": null
+        },
+        {
+          "id": "QXSCKMBC3A4SRQCGKXKSQ4TP",
+          "name": "12M (6-12)",
+          "priceMoney": {
+            "amount": 1900,
+            "currency": "USD"
+          },
+          "price": 1900,
+          "currency": "USD",
+          "sku": null
+        },
+        {
+          "id": "FXMLY3ONTNFBKXWBLYZCUC3N",
+          "name": "4T",
+          "priceMoney": {
+            "amount": 2100,
+            "currency": "USD"
+          },
+          "price": 2100,
+          "currency": "USD",
+          "sku": null
+        },
+        {
+          "id": "ROTHZFPGWWZRBOLEIZWQVO3K",
+          "name": "YS",
+          "priceMoney": {
+            "amount": 2100,
+            "currency": "USD"
+          },
+          "price": 2100,
+          "currency": "USD",
+          "sku": null
+        },
+        {
+          "id": "PWJNSJJOO477E3CPUR3CWYSE",
+          "name": "S",
+          "priceMoney": {
+            "amount": 2100,
+            "currency": "USD"
+          },
+          "price": 2100,
+          "currency": "USD",
+          "sku": null
+        },
+        {
+          "id": "TYNFZ5TJVX5OV36CX2XIFT3D",
+          "name": "24M (18-24)",
+          "priceMoney": {
+            "amount": 1900,
+            "currency": "USD"
+          },
+          "price": 1900,
+          "currency": "USD",
+          "sku": null
+        },
+        {
+          "id": "VSHJXVUFRF6RJLQGYWHO44RJ",
+          "name": "2XL",
+          "priceMoney": {
+            "amount": 2100,
+            "currency": "USD"
+          },
+          "price": 2100,
+          "currency": "USD",
+          "sku": null
+        },
+        {
+          "id": "E7SL4PYYVUMG2YPOXFN4RCZM",
+          "name": "18M (12-18)",
+          "priceMoney": {
+            "amount": 1900,
+            "currency": "USD"
+          },
+          "price": 1900,
+          "currency": "USD",
+          "sku": null
+        },
+        {
+          "id": "TI4CAYBMKZUXPUE7CESLGLNJ",
+          "name": "YXS",
+          "priceMoney": {
+            "amount": 2100,
+            "currency": "USD"
+          },
+          "price": 2100,
+          "currency": "USD",
+          "sku": null
+        },
+        {
+          "id": "APE43CZ43HZPCUHEOOZPFBT2",
+          "name": "4XL",
+          "priceMoney": {
+            "amount": 2100,
+            "currency": "USD"
+          },
+          "price": 2100,
+          "currency": "USD",
+          "sku": null
+        },
+        {
+          "id": "3EVWMRGMFWOIOUF6N5VMLKSR",
+          "name": "YXL",
+          "priceMoney": {
+            "amount": 2100,
+            "currency": "USD"
+          },
+          "price": 2100,
+          "currency": "USD",
+          "sku": null
+        },
+        {
+          "id": "73E6RUGYAKCH27QLDCTW3KAK",
+          "name": "XS",
+          "priceMoney": {
+            "amount": 2100,
+            "currency": "USD"
+          },
+          "price": 2100,
+          "currency": "USD",
+          "sku": null
+        },
+        {
+          "id": "BY73YDF6HADIFY6GATNV2YTK",
+          "name": "3XL",
+          "priceMoney": {
+            "amount": 2100,
+            "currency": "USD"
+          },
+          "price": 2100,
+          "currency": "USD",
+          "sku": null
+        },
+        {
+          "id": "O4XXFBJ3SDPRC73SSTLR42P5",
+          "name": "6M (3-6)",
+          "priceMoney": {
+            "amount": 1900,
+            "currency": "USD"
+          },
+          "price": 1900,
+          "currency": "USD",
+          "sku": null
+        },
+        {
+          "id": "2LGJ2E332KLNMRO5R6XGX2UT",
+          "name": "YL",
+          "priceMoney": {
+            "amount": 2100,
+            "currency": "USD"
+          },
+          "price": 2100,
+          "currency": "USD",
+          "sku": null
+        },
+        {
+          "id": "MSG7KVOCINUONKU6H7SBYQLG",
+          "name": "M",
           "priceMoney": {
             "amount": 2100,
             "currency": "USD"
