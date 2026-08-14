@@ -1,6 +1,6 @@
 {
-  "generatedAt": "2026-08-13T10:06:57.089Z",
-  "count": 86,
+  "generatedAt": "2026-08-14T10:02:50.926Z",
+  "count": 87,
   "items": [
     {
       "id": "EWSMEHSMA4P7NHPED72WISB4",
@@ -22691,6 +22691,153 @@
         "currency": "USD"
       },
       "price": 2100,
+      "currency": "USD"
+    },
+    {
+      "id": "PWZISVXYOFP3CNVHJTTYSCOS",
+      "type": "ITEM",
+      "name": "Feeding Frenzy 26'",
+      "description": "Makos 12th Annual Feeding Frenzy Tee \nItems will be ready for pick up prior to start of FF meet at OFPC YMCA \nColor: Neon Yellow(Safety Green) \n Fit: Unisex Material: Cotton",
+      "imageUrl": "https://items-images-production.s3.us-west-2.amazonaws.com/files/f9a1e8393f35747ad4cadddd5da57448c8aaf931/original.png",
+      "variations": [
+        {
+          "id": "NIR7H66CYCBXDGF52NWYFEVW",
+          "name": "S",
+          "priceMoney": {
+            "amount": 1500,
+            "currency": "USD"
+          },
+          "price": 1500,
+          "currency": "USD",
+          "sku": null
+        },
+        {
+          "id": "3Y46FCEISIWKPVQMJFO2VYRY",
+          "name": "YM",
+          "priceMoney": {
+            "amount": 1500,
+            "currency": "USD"
+          },
+          "price": 1500,
+          "currency": "USD",
+          "sku": null
+        },
+        {
+          "id": "B6U4JVP5SSSNZXDXG5FLRIAP",
+          "name": "YXS",
+          "priceMoney": {
+            "amount": 1500,
+            "currency": "USD"
+          },
+          "price": 1500,
+          "currency": "USD",
+          "sku": null
+        },
+        {
+          "id": "VRWD3Z45C5WBFRTK5FXBMHL3",
+          "name": "5XL",
+          "priceMoney": {
+            "amount": 1700,
+            "currency": "USD"
+          },
+          "price": 1700,
+          "currency": "USD",
+          "sku": null
+        },
+        {
+          "id": "TRDEZRGBCLGL7FFXKNJPEUXK",
+          "name": "3XL",
+          "priceMoney": {
+            "amount": 1700,
+            "currency": "USD"
+          },
+          "price": 1700,
+          "currency": "USD",
+          "sku": null
+        },
+        {
+          "id": "EJKZGSEKBNOMXACG7AENTQHG",
+          "name": "XL",
+          "priceMoney": {
+            "amount": 1500,
+            "currency": "USD"
+          },
+          "price": 1500,
+          "currency": "USD",
+          "sku": null
+        },
+        {
+          "id": "QQPWMKGW2J2Z4XJXNSUYHZCS",
+          "name": "L",
+          "priceMoney": {
+            "amount": 1500,
+            "currency": "USD"
+          },
+          "price": 1500,
+          "currency": "USD",
+          "sku": null
+        },
+        {
+          "id": "2PITJKNTUOQXJZOTHGFWSQYE",
+          "name": "YS",
+          "priceMoney": {
+            "amount": 1500,
+            "currency": "USD"
+          },
+          "price": 1500,
+          "currency": "USD",
+          "sku": null
+        },
+        {
+          "id": "46B37ZPHGBQ4GGEFAZWDZDLK",
+          "name": "M",
+          "priceMoney": {
+            "amount": 1500,
+            "currency": "USD"
+          },
+          "price": 1500,
+          "currency": "USD",
+          "sku": null
+        },
+        {
+          "id": "2PZXEHZWPPEBIIZCTXYFIIN6",
+          "name": "YL",
+          "priceMoney": {
+            "amount": 1500,
+            "currency": "USD"
+          },
+          "price": 1500,
+          "currency": "USD",
+          "sku": null
+        },
+        {
+          "id": "BY22QGYFNS272J2THSMXZADZ",
+          "name": "4XL",
+          "priceMoney": {
+            "amount": 1700,
+            "currency": "USD"
+          },
+          "price": 1700,
+          "currency": "USD",
+          "sku": null
+        },
+        {
+          "id": "S77EW455RHE72MYF7BTD7LX6",
+          "name": "2XL",
+          "priceMoney": {
+            "amount": 1500,
+            "currency": "USD"
+          },
+          "price": 1500,
+          "currency": "USD",
+          "sku": null
+        }
+      ],
+      "priceMoney": {
+        "amount": 1500,
+        "currency": "USD"
+      },
+      "price": 1500,
       "currency": "USD"
     }
   ]
