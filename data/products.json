@@ -1,6 +1,6 @@
 {
-  "generatedAt": "2026-11-02T19:14:42.202Z",
-  "count": 89,
+  "generatedAt": "2026-11-03T16:51:38.935Z",
+  "count": 90,
   "items": [
     {
       "id": "EWSMEHSMA4P7NHPED72WISB4",
@@ -23783,6 +23783,241 @@
             "currency": "USD"
           },
           "price": 2800,
+          "currency": "USD",
+          "sku": null
+        }
+      ],
+      "priceMoney": {
+        "amount": 2500,
+        "currency": "USD"
+      },
+      "price": 2500,
+      "currency": "USD"
+    },
+    {
+      "id": "PRPLURGNWJVPN2X4OFCBP2U4",
+      "type": "ITEM",
+      "name": "TEST - Great Gobbler Games Tee",
+      "description": "Test item only - not for sale yet. Great Gobbler Games swim meet tee, clean lane hero design, DTF shaded version, SCCY YMCA below the banner, front print 12 inches wide. Presale pending customer approval.",
+      "imageUrl": "https://items-images-production.s3.us-west-2.amazonaws.com/files/92fff293c2fbd8b124fda9983145503cfb5e2378/original.jpeg",
+      "variations": [
+        {
+          "id": "QF75K6ALDX5KYTIIQVZ6QIZW",
+          "name": "Sand - M",
+          "priceMoney": {
+            "amount": 2500,
+            "currency": "USD"
+          },
+          "price": 2500,
+          "currency": "USD",
+          "sku": null
+        },
+        {
+          "id": "525J63ZGQC7GMEPRTS4SGQOW",
+          "name": "Sport Grey - 2XL",
+          "priceMoney": {
+            "amount": 2800,
+            "currency": "USD"
+          },
+          "price": 2800,
+          "currency": "USD",
+          "sku": null
+        },
+        {
+          "id": "TTZYU2SXS7YTV6N6MNCN27AU",
+          "name": "Sand - XL",
+          "priceMoney": {
+            "amount": 2500,
+            "currency": "USD"
+          },
+          "price": 2500,
+          "currency": "USD",
+          "sku": null
+        },
+        {
+          "id": "WS5HQDVUJLJM5T6SNV3D4OKN",
+          "name": "Maroon - 2XL",
+          "priceMoney": {
+            "amount": 2800,
+            "currency": "USD"
+          },
+          "price": 2800,
+          "currency": "USD",
+          "sku": null
+        },
+        {
+          "id": "B4N26UHLBZG3TVHFM5BIBTHQ",
+          "name": "Berry - XL",
+          "priceMoney": {
+            "amount": 2500,
+            "currency": "USD"
+          },
+          "price": 2500,
+          "currency": "USD",
+          "sku": null
+        },
+        {
+          "id": "ZB6RHKRC2I3T5JYDY35XGSYZ",
+          "name": "Maroon - M",
+          "priceMoney": {
+            "amount": 2500,
+            "currency": "USD"
+          },
+          "price": 2500,
+          "currency": "USD",
+          "sku": null
+        },
+        {
+          "id": "R6IUFB4IMQJMIQIMQY3UOK4O",
+          "name": "Maroon - L",
+          "priceMoney": {
+            "amount": 2500,
+            "currency": "USD"
+          },
+          "price": 2500,
+          "currency": "USD",
+          "sku": null
+        },
+        {
+          "id": "FMGWPPUGOT7TNPHDHCUYZDD3",
+          "name": "Berry - 2XL",
+          "priceMoney": {
+            "amount": 2800,
+            "currency": "USD"
+          },
+          "price": 2800,
+          "currency": "USD",
+          "sku": null
+        },
+        {
+          "id": "OK7D4HHCUSOCAZCFQVS2AJCH",
+          "name": "Sport Grey - XL",
+          "priceMoney": {
+            "amount": 2500,
+            "currency": "USD"
+          },
+          "price": 2500,
+          "currency": "USD",
+          "sku": null
+        },
+        {
+          "id": "P6T65TRG2V77ZW4DQVUQSOVS",
+          "name": "Maroon - S",
+          "priceMoney": {
+            "amount": 2500,
+            "currency": "USD"
+          },
+          "price": 2500,
+          "currency": "USD",
+          "sku": null
+        },
+        {
+          "id": "ORT3X5ECZ5IBY5G5DMPNLWEP",
+          "name": "Berry - M",
+          "priceMoney": {
+            "amount": 2500,
+            "currency": "USD"
+          },
+          "price": 2500,
+          "currency": "USD",
+          "sku": null
+        },
+        {
+          "id": "VXAIU3GVQKLLAU57B57ZPKOE",
+          "name": "Sand - L",
+          "priceMoney": {
+            "amount": 2500,
+            "currency": "USD"
+          },
+          "price": 2500,
+          "currency": "USD",
+          "sku": null
+        },
+        {
+          "id": "WDGL57YOFF2GX7MRKJDIR6BN",
+          "name": "Sand - 2XL",
+          "priceMoney": {
+            "amount": 2800,
+            "currency": "USD"
+          },
+          "price": 2800,
+          "currency": "USD",
+          "sku": null
+        },
+        {
+          "id": "HZKCVCPLXQHZYZUL6EZUZWEM",
+          "name": "Berry - S",
+          "priceMoney": {
+            "amount": 2500,
+            "currency": "USD"
+          },
+          "price": 2500,
+          "currency": "USD",
+          "sku": null
+        },
+        {
+          "id": "B2VJT7D4LRF64QOAEK2N26RH",
+          "name": "Sport Grey - L",
+          "priceMoney": {
+            "amount": 2500,
+            "currency": "USD"
+          },
+          "price": 2500,
+          "currency": "USD",
+          "sku": null
+        },
+        {
+          "id": "KUD63FVTUNHMGAN2IF7WNZC4",
+          "name": "Sport Grey - M",
+          "priceMoney": {
+            "amount": 2500,
+            "currency": "USD"
+          },
+          "price": 2500,
+          "currency": "USD",
+          "sku": null
+        },
+        {
+          "id": "MUBVYBRSTCIZGU5DHZETZPSB",
+          "name": "Berry - L",
+          "priceMoney": {
+            "amount": 2500,
+            "currency": "USD"
+          },
+          "price": 2500,
+          "currency": "USD",
+          "sku": null
+        },
+        {
+          "id": "EYP2BZWFPA5IDVI5URPKPS6S",
+          "name": "Sport Grey - S",
+          "priceMoney": {
+            "amount": 2500,
+            "currency": "USD"
+          },
+          "price": 2500,
+          "currency": "USD",
+          "sku": null
+        },
+        {
+          "id": "PHGFDV6K57MUR5C2GQEI7QE7",
+          "name": "Sand - S",
+          "priceMoney": {
+            "amount": 2500,
+            "currency": "USD"
+          },
+          "price": 2500,
+          "currency": "USD",
+          "sku": null
+        },
+        {
+          "id": "SDQAJ7OBEYC32YXZJKBZYN76",
+          "name": "Maroon - XL",
+          "priceMoney": {
+            "amount": 2500,
+            "currency": "USD"
+          },
+          "price": 2500,
           "currency": "USD",
           "sku": null
         }
