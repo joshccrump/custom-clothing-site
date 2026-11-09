@@ -1,6 +1,6 @@
 {
-  "generatedAt": "2026-11-08T15:49:27.830Z",
-  "count": 90,
+  "generatedAt": "2026-11-09T19:33:15.324Z",
+  "count": 94,
   "items": [
     {
       "id": "EWSMEHSMA4P7NHPED72WISB4",
@@ -24027,6 +24027,979 @@
         "currency": "USD"
       },
       "price": 2500,
+      "currency": "USD"
+    },
+    {
+      "id": "UKIXYTWANTGAPR3NLZZT53DH",
+      "type": "ITEM",
+      "name": "Presale — Great Gobbler Games Adult Tee",
+      "description": "Presale — pickup at the Great Gobbler Games, Nov 21–22. Pickup at the meet, St. Charles County YMCA, Nov 21–22, 2026. Presale ends Friday, Nov 13, 2026. Adult tee featuring the SCCY 2026 Gobbler Games turkey design. Colors: Burgundy, Berry, Teal, Sport Grey, Sand. Sizes: Adult S, M, L, XL, 2XL, 3XL. $25 for S–XL, $28 for 2XL–3XL.",
+      "imageUrl": "https://items-images-production.s3.us-west-2.amazonaws.com/files/a650e2bf2a3ade38f4057621414ef996b96ede03/original.jpeg",
+      "variations": [
+        {
+          "id": "6AE2SDERIOYT355OWY7QLXPT",
+          "name": "Burgundy, Adult XL",
+          "priceMoney": {
+            "amount": 2500,
+            "currency": "USD"
+          },
+          "price": 2500,
+          "currency": "USD",
+          "sku": null
+        },
+        {
+          "id": "2EYPBYDQHJPDZVRJIGMR4LHV",
+          "name": "Burgundy, Adult L",
+          "priceMoney": {
+            "amount": 2500,
+            "currency": "USD"
+          },
+          "price": 2500,
+          "currency": "USD",
+          "sku": null
+        },
+        {
+          "id": "QIJWQJEQM4SY5ZUMZNNVB7P6",
+          "name": "Burgundy, Adult 3XL",
+          "priceMoney": {
+            "amount": 2800,
+            "currency": "USD"
+          },
+          "price": 2800,
+          "currency": "USD",
+          "sku": null
+        },
+        {
+          "id": "S47XLV6XSG5K626NYJDPCKEJ",
+          "name": "Sport Grey, Adult 2XL",
+          "priceMoney": {
+            "amount": 2800,
+            "currency": "USD"
+          },
+          "price": 2800,
+          "currency": "USD",
+          "sku": null
+        },
+        {
+          "id": "ZYNJRCSNKWAXHBZAAQ4ZCQU5",
+          "name": "Sand, Adult M",
+          "priceMoney": {
+            "amount": 2500,
+            "currency": "USD"
+          },
+          "price": 2500,
+          "currency": "USD",
+          "sku": null
+        },
+        {
+          "id": "BHRP2P5CVCCRVUHG7BAGBQDC",
+          "name": "Sport Grey, Adult 3XL",
+          "priceMoney": {
+            "amount": 2800,
+            "currency": "USD"
+          },
+          "price": 2800,
+          "currency": "USD",
+          "sku": null
+        },
+        {
+          "id": "VJHVUXCALKFLZLH3D3V7KHFX",
+          "name": "Sand, Adult 3XL",
+          "priceMoney": {
+            "amount": 2800,
+            "currency": "USD"
+          },
+          "price": 2800,
+          "currency": "USD",
+          "sku": null
+        },
+        {
+          "id": "MUJYGJDMFD3PLXYKCSTT7SQY",
+          "name": "Berry, Adult XL",
+          "priceMoney": {
+            "amount": 2500,
+            "currency": "USD"
+          },
+          "price": 2500,
+          "currency": "USD",
+          "sku": null
+        },
+        {
+          "id": "KPNZA3R7KJE6HKSL532UXPUL",
+          "name": "Burgundy, Adult M",
+          "priceMoney": {
+            "amount": 2500,
+            "currency": "USD"
+          },
+          "price": 2500,
+          "currency": "USD",
+          "sku": null
+        },
+        {
+          "id": "2X7FYQO6OJYOTDE6F2JCSTCF",
+          "name": "Berry, Adult 3XL",
+          "priceMoney": {
+            "amount": 2800,
+            "currency": "USD"
+          },
+          "price": 2800,
+          "currency": "USD",
+          "sku": null
+        },
+        {
+          "id": "K2TOBGX5HB2FIMG3IDFYGH5T",
+          "name": "Sport Grey, Adult XL",
+          "priceMoney": {
+            "amount": 2500,
+            "currency": "USD"
+          },
+          "price": 2500,
+          "currency": "USD",
+          "sku": null
+        },
+        {
+          "id": "PSUWPSMPTAR2AAMNWMZPQEVW",
+          "name": "Sand, Adult S",
+          "priceMoney": {
+            "amount": 2500,
+            "currency": "USD"
+          },
+          "price": 2500,
+          "currency": "USD",
+          "sku": null
+        },
+        {
+          "id": "F4DUBHXOYYTH7XF62BEJVTA4",
+          "name": "Teal, Adult XL",
+          "priceMoney": {
+            "amount": 2500,
+            "currency": "USD"
+          },
+          "price": 2500,
+          "currency": "USD",
+          "sku": null
+        },
+        {
+          "id": "FOUGWG6LI2LOTDJCRX3A35PA",
+          "name": "Burgundy, Adult S",
+          "priceMoney": {
+            "amount": 2500,
+            "currency": "USD"
+          },
+          "price": 2500,
+          "currency": "USD",
+          "sku": null
+        },
+        {
+          "id": "G3AUULUDC42IDGUBSBXQVFX5",
+          "name": "Teal, Adult L",
+          "priceMoney": {
+            "amount": 2500,
+            "currency": "USD"
+          },
+          "price": 2500,
+          "currency": "USD",
+          "sku": null
+        },
+        {
+          "id": "EG3ZCOVRRU4LBP2QQJGRSJTW",
+          "name": "Teal, Adult M",
+          "priceMoney": {
+            "amount": 2500,
+            "currency": "USD"
+          },
+          "price": 2500,
+          "currency": "USD",
+          "sku": null
+        },
+        {
+          "id": "YTQS26QZQMILEQMNMSDS4GWZ",
+          "name": "Sand, Adult XL",
+          "priceMoney": {
+            "amount": 2500,
+            "currency": "USD"
+          },
+          "price": 2500,
+          "currency": "USD",
+          "sku": null
+        },
+        {
+          "id": "CJNY4SBHBAPTDBXDIF2KOJXH",
+          "name": "Sport Grey, Adult M",
+          "priceMoney": {
+            "amount": 2500,
+            "currency": "USD"
+          },
+          "price": 2500,
+          "currency": "USD",
+          "sku": null
+        },
+        {
+          "id": "CYD5EC2TFLM5PPMI7FKWVVTV",
+          "name": "Sand, Adult 2XL",
+          "priceMoney": {
+            "amount": 2800,
+            "currency": "USD"
+          },
+          "price": 2800,
+          "currency": "USD",
+          "sku": null
+        },
+        {
+          "id": "CZHO35XU7QAYCIJ6HC3MJQQU",
+          "name": "Teal, Adult S",
+          "priceMoney": {
+            "amount": 2500,
+            "currency": "USD"
+          },
+          "price": 2500,
+          "currency": "USD",
+          "sku": null
+        },
+        {
+          "id": "SY5SA6YWUGZHSHHCXZXIAWSL",
+          "name": "Sand, Adult L",
+          "priceMoney": {
+            "amount": 2500,
+            "currency": "USD"
+          },
+          "price": 2500,
+          "currency": "USD",
+          "sku": null
+        },
+        {
+          "id": "DPXHCT4MDCUWHMQTPISABZP5",
+          "name": "Teal, Adult 3XL",
+          "priceMoney": {
+            "amount": 2800,
+            "currency": "USD"
+          },
+          "price": 2800,
+          "currency": "USD",
+          "sku": null
+        },
+        {
+          "id": "VQPJQY4VLY2J5YUE3H5PPURE",
+          "name": "Berry, Adult L",
+          "priceMoney": {
+            "amount": 2500,
+            "currency": "USD"
+          },
+          "price": 2500,
+          "currency": "USD",
+          "sku": null
+        },
+        {
+          "id": "JABRX3Z4R3TU4NZUTGG4QXRO",
+          "name": "Burgundy, Adult 2XL",
+          "priceMoney": {
+            "amount": 2800,
+            "currency": "USD"
+          },
+          "price": 2800,
+          "currency": "USD",
+          "sku": null
+        },
+        {
+          "id": "4UYJGOKOWYJM2NXF3AUSQDVO",
+          "name": "Teal, Adult 2XL",
+          "priceMoney": {
+            "amount": 2800,
+            "currency": "USD"
+          },
+          "price": 2800,
+          "currency": "USD",
+          "sku": null
+        },
+        {
+          "id": "FPWBJ5HC4HSMYUZ3MZLD26LO",
+          "name": "Sport Grey, Adult L",
+          "priceMoney": {
+            "amount": 2500,
+            "currency": "USD"
+          },
+          "price": 2500,
+          "currency": "USD",
+          "sku": null
+        },
+        {
+          "id": "SQJSGXLXVDOQE6T43UW3ILVL",
+          "name": "Berry, Adult S",
+          "priceMoney": {
+            "amount": 2500,
+            "currency": "USD"
+          },
+          "price": 2500,
+          "currency": "USD",
+          "sku": null
+        },
+        {
+          "id": "QN7HNVQ6LZB2STKAAOHZZQ5N",
+          "name": "Sport Grey, Adult S",
+          "priceMoney": {
+            "amount": 2500,
+            "currency": "USD"
+          },
+          "price": 2500,
+          "currency": "USD",
+          "sku": null
+        },
+        {
+          "id": "IIJB4RF7NQN3QUSTDJ55VRAF",
+          "name": "Berry, Adult 2XL",
+          "priceMoney": {
+            "amount": 2800,
+            "currency": "USD"
+          },
+          "price": 2800,
+          "currency": "USD",
+          "sku": null
+        },
+        {
+          "id": "HTTKEIK4GISAYYMII7EYDDG3",
+          "name": "Berry, Adult M",
+          "priceMoney": {
+            "amount": 2500,
+            "currency": "USD"
+          },
+          "price": 2500,
+          "currency": "USD",
+          "sku": null
+        }
+      ],
+      "priceMoney": {
+        "amount": 2500,
+        "currency": "USD"
+      },
+      "price": 2500,
+      "currency": "USD"
+    },
+    {
+      "id": "K4NPX33MMFBH2FNP6DV4P2LO",
+      "type": "ITEM",
+      "name": "Presale — Great Gobbler Games Youth Tee",
+      "description": "Presale — pickup at the Great Gobbler Games, Nov 21–22. Pickup at the meet, St. Charles County YMCA, Nov 21–22, 2026. Presale ends Friday, Nov 13, 2026. Youth tee featuring the SCCY 2026 Gobbler Games turkey design. Colors: Burgundy, Berry, Teal, Sport Grey, Sand. Sizes: Youth XS, S, M, L, XL. $20.",
+      "imageUrl": "https://items-images-production.s3.us-west-2.amazonaws.com/files/a650e2bf2a3ade38f4057621414ef996b96ede03/original.jpeg",
+      "variations": [
+        {
+          "id": "KXAMPNXHQGXRHMGCJMGBCOHA",
+          "name": "Burgundy, Youth XS",
+          "priceMoney": {
+            "amount": 2000,
+            "currency": "USD"
+          },
+          "price": 2000,
+          "currency": "USD",
+          "sku": null
+        },
+        {
+          "id": "J374HYGIL6OX5D7QE35LXQMV",
+          "name": "Sport Grey, Youth L",
+          "priceMoney": {
+            "amount": 2000,
+            "currency": "USD"
+          },
+          "price": 2000,
+          "currency": "USD",
+          "sku": null
+        },
+        {
+          "id": "KOTZVIFYTXWJRZRJ3GAISQU3",
+          "name": "Teal, Youth XL",
+          "priceMoney": {
+            "amount": 2000,
+            "currency": "USD"
+          },
+          "price": 2000,
+          "currency": "USD",
+          "sku": null
+        },
+        {
+          "id": "7SPMYNCPYWEQTHQH4INADW34",
+          "name": "Burgundy, Youth XL",
+          "priceMoney": {
+            "amount": 2000,
+            "currency": "USD"
+          },
+          "price": 2000,
+          "currency": "USD",
+          "sku": null
+        },
+        {
+          "id": "TJCD4KJCXOXJHG3G5N5UHYT4",
+          "name": "Sport Grey, Youth S",
+          "priceMoney": {
+            "amount": 2000,
+            "currency": "USD"
+          },
+          "price": 2000,
+          "currency": "USD",
+          "sku": null
+        },
+        {
+          "id": "BTBE7QCU7NQH5HHBCRNTPDPW",
+          "name": "Sport Grey, Youth M",
+          "priceMoney": {
+            "amount": 2000,
+            "currency": "USD"
+          },
+          "price": 2000,
+          "currency": "USD",
+          "sku": null
+        },
+        {
+          "id": "46WXKGGNDORABLWMN6UBMG6P",
+          "name": "Burgundy, Youth S",
+          "priceMoney": {
+            "amount": 2000,
+            "currency": "USD"
+          },
+          "price": 2000,
+          "currency": "USD",
+          "sku": null
+        },
+        {
+          "id": "5U3YDPD6OQ5OIE4JZHHYNVF4",
+          "name": "Sport Grey, Youth XS",
+          "priceMoney": {
+            "amount": 2000,
+            "currency": "USD"
+          },
+          "price": 2000,
+          "currency": "USD",
+          "sku": null
+        },
+        {
+          "id": "LN2TQ5KMHF44VWMSIOP7AISG",
+          "name": "Sand, Youth L",
+          "priceMoney": {
+            "amount": 2000,
+            "currency": "USD"
+          },
+          "price": 2000,
+          "currency": "USD",
+          "sku": null
+        },
+        {
+          "id": "ACTWGKC775JX6MT26UV3W4KB",
+          "name": "Sand, Youth XL",
+          "priceMoney": {
+            "amount": 2000,
+            "currency": "USD"
+          },
+          "price": 2000,
+          "currency": "USD",
+          "sku": null
+        },
+        {
+          "id": "CSXBVHWKVGAT2WROPZW4Y626",
+          "name": "Sand, Youth S",
+          "priceMoney": {
+            "amount": 2000,
+            "currency": "USD"
+          },
+          "price": 2000,
+          "currency": "USD",
+          "sku": null
+        },
+        {
+          "id": "NDP2TISTOLFTK62ETCDPG2AG",
+          "name": "Berry, Youth M",
+          "priceMoney": {
+            "amount": 2000,
+            "currency": "USD"
+          },
+          "price": 2000,
+          "currency": "USD",
+          "sku": null
+        },
+        {
+          "id": "57WHRZA7B4AK2VIQBKPHQMYN",
+          "name": "Sand, Youth M",
+          "priceMoney": {
+            "amount": 2000,
+            "currency": "USD"
+          },
+          "price": 2000,
+          "currency": "USD",
+          "sku": null
+        },
+        {
+          "id": "Z2HBWHROTP5PXUS5222VQZNO",
+          "name": "Sand, Youth XS",
+          "priceMoney": {
+            "amount": 2000,
+            "currency": "USD"
+          },
+          "price": 2000,
+          "currency": "USD",
+          "sku": null
+        },
+        {
+          "id": "6FXHKBFKFQED4L4WKJASZQF4",
+          "name": "Berry, Youth L",
+          "priceMoney": {
+            "amount": 2000,
+            "currency": "USD"
+          },
+          "price": 2000,
+          "currency": "USD",
+          "sku": null
+        },
+        {
+          "id": "NNFG7LBNWVT4MKKZ62JT56FB",
+          "name": "Berry, Youth XL",
+          "priceMoney": {
+            "amount": 2000,
+            "currency": "USD"
+          },
+          "price": 2000,
+          "currency": "USD",
+          "sku": null
+        },
+        {
+          "id": "65XNKALSJ36N2PWGDPMBDYWJ",
+          "name": "Teal, Youth L",
+          "priceMoney": {
+            "amount": 2000,
+            "currency": "USD"
+          },
+          "price": 2000,
+          "currency": "USD",
+          "sku": null
+        },
+        {
+          "id": "XZHBSMWSRFOGQ7PWN7TVKB73",
+          "name": "Teal, Youth M",
+          "priceMoney": {
+            "amount": 2000,
+            "currency": "USD"
+          },
+          "price": 2000,
+          "currency": "USD",
+          "sku": null
+        },
+        {
+          "id": "OVZCJHICE2EIBH2QTLSMKE44",
+          "name": "Berry, Youth S",
+          "priceMoney": {
+            "amount": 2000,
+            "currency": "USD"
+          },
+          "price": 2000,
+          "currency": "USD",
+          "sku": null
+        },
+        {
+          "id": "MNKVSR3M46UW2KMPQNT2ONTC",
+          "name": "Burgundy, Youth M",
+          "priceMoney": {
+            "amount": 2000,
+            "currency": "USD"
+          },
+          "price": 2000,
+          "currency": "USD",
+          "sku": null
+        },
+        {
+          "id": "C6NB5S47KETXENSALMSLZRFF",
+          "name": "Burgundy, Youth L",
+          "priceMoney": {
+            "amount": 2000,
+            "currency": "USD"
+          },
+          "price": 2000,
+          "currency": "USD",
+          "sku": null
+        },
+        {
+          "id": "T3JS25FMX2V4AG77SH4Y4TOY",
+          "name": "Teal, Youth XS",
+          "priceMoney": {
+            "amount": 2000,
+            "currency": "USD"
+          },
+          "price": 2000,
+          "currency": "USD",
+          "sku": null
+        },
+        {
+          "id": "OVWDBEXYLBPIFNQO6XEKE6WN",
+          "name": "Berry, Youth XS",
+          "priceMoney": {
+            "amount": 2000,
+            "currency": "USD"
+          },
+          "price": 2000,
+          "currency": "USD",
+          "sku": null
+        },
+        {
+          "id": "74XN4LEM6KE25YMN5436S5XJ",
+          "name": "Sport Grey, Youth XL",
+          "priceMoney": {
+            "amount": 2000,
+            "currency": "USD"
+          },
+          "price": 2000,
+          "currency": "USD",
+          "sku": null
+        },
+        {
+          "id": "JASNAZDMIQSU3GCLDZ6ZVRUU",
+          "name": "Teal, Youth S",
+          "priceMoney": {
+            "amount": 2000,
+            "currency": "USD"
+          },
+          "price": 2000,
+          "currency": "USD",
+          "sku": null
+        }
+      ],
+      "priceMoney": {
+        "amount": 2000,
+        "currency": "USD"
+      },
+      "price": 2000,
+      "currency": "USD"
+    },
+    {
+      "id": "GECKAV456FVTL7GVHGZU4GJU",
+      "type": "ITEM",
+      "name": "Presale — Great Gobbler Games Adult Crewneck",
+      "description": "Presale — pickup at the Great Gobbler Games, Nov 21–22. Pickup at the meet, St. Charles County YMCA, Nov 21–22, 2026. Presale ends Friday, Nov 13, 2026. Adult crewneck featuring the SCCY 2026 Gobbler Games turkey design. Colors: Maroon, Sand, Sport Grey. Sizes: Adult S, M, L, XL, 2XL, 3XL. $38 for S–XL, $42 for 2XL–3XL.",
+      "imageUrl": "https://items-images-production.s3.us-west-2.amazonaws.com/files/a650e2bf2a3ade38f4057621414ef996b96ede03/original.jpeg",
+      "variations": [
+        {
+          "id": "K2TZSFJFVCJNCQA4KKL7IM6H",
+          "name": "Sport Grey, Adult L",
+          "priceMoney": {
+            "amount": 3800,
+            "currency": "USD"
+          },
+          "price": 3800,
+          "currency": "USD",
+          "sku": null
+        },
+        {
+          "id": "HH5CMTHCHHFS7GX4WGAQB74I",
+          "name": "Sport Grey, Adult M",
+          "priceMoney": {
+            "amount": 3800,
+            "currency": "USD"
+          },
+          "price": 3800,
+          "currency": "USD",
+          "sku": null
+        },
+        {
+          "id": "A73BF2KJFPUVUVXKICLZ2TMI",
+          "name": "Sand, Adult 2XL",
+          "priceMoney": {
+            "amount": 4200,
+            "currency": "USD"
+          },
+          "price": 4200,
+          "currency": "USD",
+          "sku": null
+        },
+        {
+          "id": "EWCABAKZ4AF2DYGKGXLHWCAU",
+          "name": "Sand, Adult S",
+          "priceMoney": {
+            "amount": 3800,
+            "currency": "USD"
+          },
+          "price": 3800,
+          "currency": "USD",
+          "sku": null
+        },
+        {
+          "id": "GM7NLJN3PPG6WATCD44NZUBT",
+          "name": "Sport Grey, Adult S",
+          "priceMoney": {
+            "amount": 3800,
+            "currency": "USD"
+          },
+          "price": 3800,
+          "currency": "USD",
+          "sku": null
+        },
+        {
+          "id": "SP43AIJJCXONDFKM72DVPIBB",
+          "name": "Maroon, Adult 3XL",
+          "priceMoney": {
+            "amount": 4200,
+            "currency": "USD"
+          },
+          "price": 4200,
+          "currency": "USD",
+          "sku": null
+        },
+        {
+          "id": "EZKJTESPSSZHZGWSXLNLCQWL",
+          "name": "Sand, Adult 3XL",
+          "priceMoney": {
+            "amount": 4200,
+            "currency": "USD"
+          },
+          "price": 4200,
+          "currency": "USD",
+          "sku": null
+        },
+        {
+          "id": "SHDI56GOKNBZMJ4DL6XE2KGW",
+          "name": "Maroon, Adult 2XL",
+          "priceMoney": {
+            "amount": 4200,
+            "currency": "USD"
+          },
+          "price": 4200,
+          "currency": "USD",
+          "sku": null
+        },
+        {
+          "id": "QV7IFPPMVVX55YD5DF5AKXZ6",
+          "name": "Maroon, Adult XL",
+          "priceMoney": {
+            "amount": 3800,
+            "currency": "USD"
+          },
+          "price": 3800,
+          "currency": "USD",
+          "sku": null
+        },
+        {
+          "id": "JXUUWYYWHGZYRITO2CPS2FIW",
+          "name": "Sport Grey, Adult XL",
+          "priceMoney": {
+            "amount": 3800,
+            "currency": "USD"
+          },
+          "price": 3800,
+          "currency": "USD",
+          "sku": null
+        },
+        {
+          "id": "HPPXMKGPQPJNO5TW2YNKOFGX",
+          "name": "Sport Grey, Adult 3XL",
+          "priceMoney": {
+            "amount": 4200,
+            "currency": "USD"
+          },
+          "price": 4200,
+          "currency": "USD",
+          "sku": null
+        },
+        {
+          "id": "OIHRHTZFGOEFQXTFT2QU64MK",
+          "name": "Sand, Adult L",
+          "priceMoney": {
+            "amount": 3800,
+            "currency": "USD"
+          },
+          "price": 3800,
+          "currency": "USD",
+          "sku": null
+        },
+        {
+          "id": "HHE3JWDLETVLKNKHIYJO6QVH",
+          "name": "Sand, Adult M",
+          "priceMoney": {
+            "amount": 3800,
+            "currency": "USD"
+          },
+          "price": 3800,
+          "currency": "USD",
+          "sku": null
+        },
+        {
+          "id": "JRSCGDQFEAPFJDK6T6WPSJHW",
+          "name": "Maroon, Adult M",
+          "priceMoney": {
+            "amount": 3800,
+            "currency": "USD"
+          },
+          "price": 3800,
+          "currency": "USD",
+          "sku": null
+        },
+        {
+          "id": "KZXFCAMZKN4JURLLRJFC2JPQ",
+          "name": "Maroon, Adult L",
+          "priceMoney": {
+            "amount": 3800,
+            "currency": "USD"
+          },
+          "price": 3800,
+          "currency": "USD",
+          "sku": null
+        },
+        {
+          "id": "WST5SDF5WIM2JZ7P26POFNAD",
+          "name": "Sport Grey, Adult 2XL",
+          "priceMoney": {
+            "amount": 4200,
+            "currency": "USD"
+          },
+          "price": 4200,
+          "currency": "USD",
+          "sku": null
+        },
+        {
+          "id": "KG26ZQDZOFI5YE5QPIRCWRG7",
+          "name": "Maroon, Adult S",
+          "priceMoney": {
+            "amount": 3800,
+            "currency": "USD"
+          },
+          "price": 3800,
+          "currency": "USD",
+          "sku": null
+        },
+        {
+          "id": "Q4VPV5MUQT2SGCJQBGSMUUQ7",
+          "name": "Sand, Adult XL",
+          "priceMoney": {
+            "amount": 3800,
+            "currency": "USD"
+          },
+          "price": 3800,
+          "currency": "USD",
+          "sku": null
+        }
+      ],
+      "priceMoney": {
+        "amount": 3800,
+        "currency": "USD"
+      },
+      "price": 3800,
+      "currency": "USD"
+    },
+    {
+      "id": "XYP3GRWJ5EEPNZ4F26Z6QOX4",
+      "type": "ITEM",
+      "name": "Presale — Great Gobbler Games Youth Crewneck",
+      "description": "Presale — pickup at the Great Gobbler Games, Nov 21–22. Pickup at the meet, St. Charles County YMCA, Nov 21–22, 2026. Presale ends Friday, Nov 13, 2026. Youth crewneck featuring the SCCY 2026 Gobbler Games turkey design. Colors: Maroon, Sport Grey. Sizes: Youth XS, S, M, L, XL. $32.",
+      "imageUrl": "https://items-images-production.s3.us-west-2.amazonaws.com/files/a650e2bf2a3ade38f4057621414ef996b96ede03/original.jpeg",
+      "variations": [
+        {
+          "id": "HDJRHXFTMCKUXWVMCXSHRSY4",
+          "name": "Sport Grey, Youth XS",
+          "priceMoney": {
+            "amount": 3200,
+            "currency": "USD"
+          },
+          "price": 3200,
+          "currency": "USD",
+          "sku": null
+        },
+        {
+          "id": "IAOLYYA5H2YHBNWRUYQWWJNC",
+          "name": "Maroon, Youth XS",
+          "priceMoney": {
+            "amount": 3200,
+            "currency": "USD"
+          },
+          "price": 3200,
+          "currency": "USD",
+          "sku": null
+        },
+        {
+          "id": "TKFXK3MRD2IULOROK6YXZTTB",
+          "name": "Sport Grey, Youth XL",
+          "priceMoney": {
+            "amount": 3200,
+            "currency": "USD"
+          },
+          "price": 3200,
+          "currency": "USD",
+          "sku": null
+        },
+        {
+          "id": "P2XAE2OQUFYASGFL2G3YRX47",
+          "name": "Maroon, Youth S",
+          "priceMoney": {
+            "amount": 3200,
+            "currency": "USD"
+          },
+          "price": 3200,
+          "currency": "USD",
+          "sku": null
+        },
+        {
+          "id": "BE4DW2CXAZG5OZRX65Q3CVOM",
+          "name": "Maroon, Youth XL",
+          "priceMoney": {
+            "amount": 3200,
+            "currency": "USD"
+          },
+          "price": 3200,
+          "currency": "USD",
+          "sku": null
+        },
+        {
+          "id": "OFATLGQI7WIOARZEJPOUML2D",
+          "name": "Sport Grey, Youth L",
+          "priceMoney": {
+            "amount": 3200,
+            "currency": "USD"
+          },
+          "price": 3200,
+          "currency": "USD",
+          "sku": null
+        },
+        {
+          "id": "L7EX6BLUP4GQL3TYZD64GNL5",
+          "name": "Sport Grey, Youth M",
+          "priceMoney": {
+            "amount": 3200,
+            "currency": "USD"
+          },
+          "price": 3200,
+          "currency": "USD",
+          "sku": null
+        },
+        {
+          "id": "VB3MJXDBBYIYLMSB4RBIFUXX",
+          "name": "Sport Grey, Youth S",
+          "priceMoney": {
+            "amount": 3200,
+            "currency": "USD"
+          },
+          "price": 3200,
+          "currency": "USD",
+          "sku": null
+        },
+        {
+          "id": "FK5KRV4YT7JNIQ6R2BTIDDEZ",
+          "name": "Maroon, Youth L",
+          "priceMoney": {
+            "amount": 3200,
+            "currency": "USD"
+          },
+          "price": 3200,
+          "currency": "USD",
+          "sku": null
+        },
+        {
+          "id": "TVLKWQY47B4J5NOCM52OMBGN",
+          "name": "Maroon, Youth M",
+          "priceMoney": {
+            "amount": 3200,
+            "currency": "USD"
+          },
+          "price": 3200,
+          "currency": "USD",
+          "sku": null
+        }
+      ],
+      "priceMoney": {
+        "amount": 3200,
+        "currency": "USD"
+      },
+      "price": 3200,
       "currency": "USD"
     }
   ]
