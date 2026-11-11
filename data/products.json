@@ -1,6 +1,6 @@
 {
-  "generatedAt": "2026-11-10T16:50:03.709Z",
-  "count": 94,
+  "generatedAt": "2026-11-11T16:56:13.694Z",
+  "count": 98,
   "items": [
     {
       "id": "EWSMEHSMA4P7NHPED72WISB4",
@@ -25000,6 +25000,1837 @@
         "currency": "USD"
       },
       "price": 3200,
+      "currency": "USD"
+    },
+    {
+      "id": "QXH4XPZXANXB55POOKUSBQCM",
+      "type": "ITEM",
+      "name": "Great Gobbler Games 2026 Tee",
+      "description": "Gobble up the competition! Our Great Gobbler Games 2026 tee features our turkey swimmer — red cap, goggles on, racing for the pie trophy. It is a fun, swim-ready keepsake from a great weekend of racing. Made to order just for you. Preorder now for pickup at the Great Gobbler Games, November 21–22 at the St. Charles County YMCA. Preorders close Saturday, November 14 at 10 a.m. Add your swimmer's name or a sleeve patch to make it theirs! Stroke patch designs and colors may vary to match the theme. Pickup is at the SCCY YMCA only — no shipping during the presale.",
+      "imageUrl": "https://items-images-production.s3.us-west-2.amazonaws.com/files/0b3374803d98bf3105c0793e59b86ffae3477584/original.jpeg",
+      "variations": [
+        {
+          "id": "2RYTTOMFWBMQ7ETXSFXXTILU",
+          "name": "Adult S, Garnet",
+          "priceMoney": {
+            "amount": 2500,
+            "currency": "USD"
+          },
+          "price": 2500,
+          "currency": "USD",
+          "sku": null
+        },
+        {
+          "id": "2GP5EG4M4XLDWI7XKSXUWCBT",
+          "name": "Adult L, Jade Blue",
+          "priceMoney": {
+            "amount": 2500,
+            "currency": "USD"
+          },
+          "price": 2500,
+          "currency": "USD",
+          "sku": null
+        },
+        {
+          "id": "O6UGQA364GBQUF2FVOXX5BPX",
+          "name": "Adult L, Graphite",
+          "priceMoney": {
+            "amount": 2500,
+            "currency": "USD"
+          },
+          "price": 2500,
+          "currency": "USD",
+          "sku": null
+        },
+        {
+          "id": "UEAEAC3LAWWOFVYAOPFVKRXX",
+          "name": "Adult 4XL, Garnet",
+          "priceMoney": {
+            "amount": 2800,
+            "currency": "USD"
+          },
+          "price": 2800,
+          "currency": "USD",
+          "sku": null
+        },
+        {
+          "id": "A4OWHEE5GK7XZ3BKNM6WEA6R",
+          "name": "Youth L, Texas Orange",
+          "priceMoney": {
+            "amount": 2500,
+            "currency": "USD"
+          },
+          "price": 2500,
+          "currency": "USD",
+          "sku": null
+        },
+        {
+          "id": "NLXDK6RQR7ZWKH7NY2F22D6F",
+          "name": "Youth S, Jade Blue",
+          "priceMoney": {
+            "amount": 2500,
+            "currency": "USD"
+          },
+          "price": 2500,
+          "currency": "USD",
+          "sku": null
+        },
+        {
+          "id": "GT7DGBDSTKZQTJOJ6JJFCSO3",
+          "name": "Adult 2XL, Texas Orange",
+          "priceMoney": {
+            "amount": 2500,
+            "currency": "USD"
+          },
+          "price": 2500,
+          "currency": "USD",
+          "sku": null
+        },
+        {
+          "id": "ZYAWRL5B6C3TN2C5E2D2KOXV",
+          "name": "Adult 3XL, Natural",
+          "priceMoney": {
+            "amount": 2800,
+            "currency": "USD"
+          },
+          "price": 2800,
+          "currency": "USD",
+          "sku": null
+        },
+        {
+          "id": "GUXR7DHYDITBELIVWBLKH2MM",
+          "name": "Adult M, Texas Orange",
+          "priceMoney": {
+            "amount": 2500,
+            "currency": "USD"
+          },
+          "price": 2500,
+          "currency": "USD",
+          "sku": null
+        },
+        {
+          "id": "X3UIZRCRHYKF5TNXVRK6YSRQ",
+          "name": "Adult S, Graphite",
+          "priceMoney": {
+            "amount": 2500,
+            "currency": "USD"
+          },
+          "price": 2500,
+          "currency": "USD",
+          "sku": null
+        },
+        {
+          "id": "JMN5M5DZA3KFEI7AYJF3UYPD",
+          "name": "Adult XL, Natural",
+          "priceMoney": {
+            "amount": 2500,
+            "currency": "USD"
+          },
+          "price": 2500,
+          "currency": "USD",
+          "sku": null
+        },
+        {
+          "id": "IM6BLRXMCFTGTTS6VD2MPKHS",
+          "name": "Youth XL, Garnet",
+          "priceMoney": {
+            "amount": 2500,
+            "currency": "USD"
+          },
+          "price": 2500,
+          "currency": "USD",
+          "sku": null
+        },
+        {
+          "id": "H5MVSROZVH2INOVXVQELOJWG",
+          "name": "Youth XL, Natural",
+          "priceMoney": {
+            "amount": 2500,
+            "currency": "USD"
+          },
+          "price": 2500,
+          "currency": "USD",
+          "sku": null
+        },
+        {
+          "id": "FONAHSHMMNWXKSTBT73IHT4C",
+          "name": "Youth XS, Texas Orange",
+          "priceMoney": {
+            "amount": 2500,
+            "currency": "USD"
+          },
+          "price": 2500,
+          "currency": "USD",
+          "sku": null
+        },
+        {
+          "id": "WBGWLURXJJVEWW367VYQRRV4",
+          "name": "Adult 2XL, Graphite",
+          "priceMoney": {
+            "amount": 2500,
+            "currency": "USD"
+          },
+          "price": 2500,
+          "currency": "USD",
+          "sku": null
+        },
+        {
+          "id": "6J4NMA4UKGSN2ECNIIWFZKB5",
+          "name": "Youth XL, Heather Coral",
+          "priceMoney": {
+            "amount": 2500,
+            "currency": "USD"
+          },
+          "price": 2500,
+          "currency": "USD",
+          "sku": null
+        },
+        {
+          "id": "SMQLNHAYWKXJLK34T7ZOU7EU",
+          "name": "Adult 2XL, Natural",
+          "priceMoney": {
+            "amount": 2500,
+            "currency": "USD"
+          },
+          "price": 2500,
+          "currency": "USD",
+          "sku": null
+        },
+        {
+          "id": "YZPLZQKKN6JEAY2X2SO6OJ7F",
+          "name": "Adult S, Texas Orange",
+          "priceMoney": {
+            "amount": 2500,
+            "currency": "USD"
+          },
+          "price": 2500,
+          "currency": "USD",
+          "sku": null
+        },
+        {
+          "id": "KKASPPEMSSIQDMBLAQDTXSA5",
+          "name": "Youth M, Jade Blue",
+          "priceMoney": {
+            "amount": 2500,
+            "currency": "USD"
+          },
+          "price": 2500,
+          "currency": "USD",
+          "sku": null
+        },
+        {
+          "id": "OWIKWR7OQR2AOQKV3KOZKEZF",
+          "name": "Youth S, Natural",
+          "priceMoney": {
+            "amount": 2500,
+            "currency": "USD"
+          },
+          "price": 2500,
+          "currency": "USD",
+          "sku": null
+        },
+        {
+          "id": "KU6JPTQ3QX342KXST4HXOI2N",
+          "name": "Adult XL, Garnet",
+          "priceMoney": {
+            "amount": 2500,
+            "currency": "USD"
+          },
+          "price": 2500,
+          "currency": "USD",
+          "sku": null
+        },
+        {
+          "id": "RZAL55CDOMUQJ3D33BE3WIJO",
+          "name": "Adult L, Natural",
+          "priceMoney": {
+            "amount": 2500,
+            "currency": "USD"
+          },
+          "price": 2500,
+          "currency": "USD",
+          "sku": null
+        },
+        {
+          "id": "NTFA54SCATANTLZPYTPIXS77",
+          "name": "Youth XS, Graphite",
+          "priceMoney": {
+            "amount": 2500,
+            "currency": "USD"
+          },
+          "price": 2500,
+          "currency": "USD",
+          "sku": null
+        },
+        {
+          "id": "G3DYVVVK72XEWCGOBCFHAADA",
+          "name": "Adult S, Natural",
+          "priceMoney": {
+            "amount": 2500,
+            "currency": "USD"
+          },
+          "price": 2500,
+          "currency": "USD",
+          "sku": null
+        },
+        {
+          "id": "RPDKMOYHITWHEU2RZIPZSN7I",
+          "name": "Youth M, Heather Coral",
+          "priceMoney": {
+            "amount": 2500,
+            "currency": "USD"
+          },
+          "price": 2500,
+          "currency": "USD",
+          "sku": null
+        },
+        {
+          "id": "EMSSUHYIK3QRY2Z7636ITMS6",
+          "name": "Adult M, Natural",
+          "priceMoney": {
+            "amount": 2500,
+            "currency": "USD"
+          },
+          "price": 2500,
+          "currency": "USD",
+          "sku": null
+        },
+        {
+          "id": "5GUKLGBP22GX73HOPMRSXYE3",
+          "name": "Youth XL, Jade Blue",
+          "priceMoney": {
+            "amount": 2500,
+            "currency": "USD"
+          },
+          "price": 2500,
+          "currency": "USD",
+          "sku": null
+        },
+        {
+          "id": "NDOQNO2TFUAAEF4QMY76XLDF",
+          "name": "Adult S, Jade Blue",
+          "priceMoney": {
+            "amount": 2500,
+            "currency": "USD"
+          },
+          "price": 2500,
+          "currency": "USD",
+          "sku": null
+        },
+        {
+          "id": "RRCAMS2LPSHDPQSSXM2WTIF6",
+          "name": "Adult XL, Texas Orange",
+          "priceMoney": {
+            "amount": 2500,
+            "currency": "USD"
+          },
+          "price": 2500,
+          "currency": "USD",
+          "sku": null
+        },
+        {
+          "id": "EKY6Q3JQEOQ2367XT6GVLDAS",
+          "name": "Youth S, Garnet",
+          "priceMoney": {
+            "amount": 2500,
+            "currency": "USD"
+          },
+          "price": 2500,
+          "currency": "USD",
+          "sku": null
+        },
+        {
+          "id": "OZVHENYL66VGVKEZBJK3W7MY",
+          "name": "Adult M, Graphite",
+          "priceMoney": {
+            "amount": 2500,
+            "currency": "USD"
+          },
+          "price": 2500,
+          "currency": "USD",
+          "sku": null
+        },
+        {
+          "id": "55LWPKMVNTRJOIHGOSK4WAEY",
+          "name": "Youth XS, Garnet",
+          "priceMoney": {
+            "amount": 2500,
+            "currency": "USD"
+          },
+          "price": 2500,
+          "currency": "USD",
+          "sku": null
+        },
+        {
+          "id": "U4R2DO53HZZE5IVBYOTFGWVL",
+          "name": "Youth L, Heather Coral",
+          "priceMoney": {
+            "amount": 2500,
+            "currency": "USD"
+          },
+          "price": 2500,
+          "currency": "USD",
+          "sku": null
+        },
+        {
+          "id": "C2BNKLL4XNP47A5CW34L732X",
+          "name": "Youth L, Garnet",
+          "priceMoney": {
+            "amount": 2500,
+            "currency": "USD"
+          },
+          "price": 2500,
+          "currency": "USD",
+          "sku": null
+        },
+        {
+          "id": "57SK5QAIWUGALRAPIT2TXQMV",
+          "name": "Adult 3XL, Graphite",
+          "priceMoney": {
+            "amount": 2800,
+            "currency": "USD"
+          },
+          "price": 2800,
+          "currency": "USD",
+          "sku": null
+        },
+        {
+          "id": "G27GZS2AHXU4OAY6TPQAAKBU",
+          "name": "Adult XL, Graphite",
+          "priceMoney": {
+            "amount": 2500,
+            "currency": "USD"
+          },
+          "price": 2500,
+          "currency": "USD",
+          "sku": null
+        },
+        {
+          "id": "TUDBQCQCPQ2UUK7LSISP5NS3",
+          "name": "Adult 3XL, Garnet",
+          "priceMoney": {
+            "amount": 2800,
+            "currency": "USD"
+          },
+          "price": 2800,
+          "currency": "USD",
+          "sku": null
+        },
+        {
+          "id": "XYIIV4KZDTK6XB7EXOZW7JPB",
+          "name": "Youth XS, Jade Blue",
+          "priceMoney": {
+            "amount": 2500,
+            "currency": "USD"
+          },
+          "price": 2500,
+          "currency": "USD",
+          "sku": null
+        },
+        {
+          "id": "E4JBYDPZIXV3RQG6YOFT7XIR",
+          "name": "Adult 4XL, Graphite",
+          "priceMoney": {
+            "amount": 2800,
+            "currency": "USD"
+          },
+          "price": 2800,
+          "currency": "USD",
+          "sku": null
+        },
+        {
+          "id": "QPIWCZOFUBPEYOW52EOKAQ2B",
+          "name": "Youth S, Graphite",
+          "priceMoney": {
+            "amount": 2500,
+            "currency": "USD"
+          },
+          "price": 2500,
+          "currency": "USD",
+          "sku": null
+        },
+        {
+          "id": "4ZWFC56ONHOMBCMTFPKJL3H3",
+          "name": "Youth S, Heather Coral",
+          "priceMoney": {
+            "amount": 2500,
+            "currency": "USD"
+          },
+          "price": 2500,
+          "currency": "USD",
+          "sku": null
+        },
+        {
+          "id": "6E5BDEEDC6JJMSD6OZUDBL6D",
+          "name": "Adult 5XL, Garnet",
+          "priceMoney": {
+            "amount": 2800,
+            "currency": "USD"
+          },
+          "price": 2800,
+          "currency": "USD",
+          "sku": null
+        },
+        {
+          "id": "XK2FQJTKK5YLMPYFWEOGG5TH",
+          "name": "Adult 2XL, Garnet",
+          "priceMoney": {
+            "amount": 2500,
+            "currency": "USD"
+          },
+          "price": 2500,
+          "currency": "USD",
+          "sku": null
+        },
+        {
+          "id": "3YBVTVJWTAJ6SIF3X5DFXIZT",
+          "name": "Youth XS, Natural",
+          "priceMoney": {
+            "amount": 2500,
+            "currency": "USD"
+          },
+          "price": 2500,
+          "currency": "USD",
+          "sku": null
+        },
+        {
+          "id": "FMMFYBBSVS3GGDXWTSIRX6CY",
+          "name": "Youth L, Natural",
+          "priceMoney": {
+            "amount": 2500,
+            "currency": "USD"
+          },
+          "price": 2500,
+          "currency": "USD",
+          "sku": null
+        },
+        {
+          "id": "Y7ACDSJG5J4UWP7GWKXENRT4",
+          "name": "Adult 5XL, Natural",
+          "priceMoney": {
+            "amount": 2800,
+            "currency": "USD"
+          },
+          "price": 2800,
+          "currency": "USD",
+          "sku": null
+        },
+        {
+          "id": "6AYB4KT3APBOPK7CV7TO2IH6",
+          "name": "Adult 5XL, Graphite",
+          "priceMoney": {
+            "amount": 2800,
+            "currency": "USD"
+          },
+          "price": 2800,
+          "currency": "USD",
+          "sku": null
+        },
+        {
+          "id": "K5UEJ7SW7IJNYBF7TG6UCHOD",
+          "name": "Youth XS, Heather Coral",
+          "priceMoney": {
+            "amount": 2500,
+            "currency": "USD"
+          },
+          "price": 2500,
+          "currency": "USD",
+          "sku": null
+        },
+        {
+          "id": "PCKOL4XFBPUNZFGKZ65LFW2X",
+          "name": "Adult XL, Jade Blue",
+          "priceMoney": {
+            "amount": 2500,
+            "currency": "USD"
+          },
+          "price": 2500,
+          "currency": "USD",
+          "sku": null
+        },
+        {
+          "id": "UOUM457HHNMNMDXNN327WNZF",
+          "name": "Adult L, Garnet",
+          "priceMoney": {
+            "amount": 2500,
+            "currency": "USD"
+          },
+          "price": 2500,
+          "currency": "USD",
+          "sku": null
+        },
+        {
+          "id": "ES3LDZIG3DFZOD7HVF3DMTQK",
+          "name": "Adult M, Garnet",
+          "priceMoney": {
+            "amount": 2500,
+            "currency": "USD"
+          },
+          "price": 2500,
+          "currency": "USD",
+          "sku": null
+        },
+        {
+          "id": "SFKD2DPPANCNI7E3FFFUFEN3",
+          "name": "Adult L, Texas Orange",
+          "priceMoney": {
+            "amount": 2500,
+            "currency": "USD"
+          },
+          "price": 2500,
+          "currency": "USD",
+          "sku": null
+        },
+        {
+          "id": "252OAN2IOMGNOVZPU2VY4A2D",
+          "name": "Adult 4XL, Natural",
+          "priceMoney": {
+            "amount": 2800,
+            "currency": "USD"
+          },
+          "price": 2800,
+          "currency": "USD",
+          "sku": null
+        },
+        {
+          "id": "F4WWNEQAZQ636VCVSVXOIZEH",
+          "name": "Youth XL, Graphite",
+          "priceMoney": {
+            "amount": 2500,
+            "currency": "USD"
+          },
+          "price": 2500,
+          "currency": "USD",
+          "sku": null
+        },
+        {
+          "id": "2UI4QLNIN6ANZGFROHHZJNVR",
+          "name": "Adult 4XL, Texas Orange",
+          "priceMoney": {
+            "amount": 2800,
+            "currency": "USD"
+          },
+          "price": 2800,
+          "currency": "USD",
+          "sku": null
+        },
+        {
+          "id": "I4VAVFVVYCM2CFRTTTAIGXAU",
+          "name": "Youth M, Garnet",
+          "priceMoney": {
+            "amount": 2500,
+            "currency": "USD"
+          },
+          "price": 2500,
+          "currency": "USD",
+          "sku": null
+        },
+        {
+          "id": "J5GBV4UHCK6STJLWW6AYFO6N",
+          "name": "Adult 2XL, Jade Blue",
+          "priceMoney": {
+            "amount": 2500,
+            "currency": "USD"
+          },
+          "price": 2500,
+          "currency": "USD",
+          "sku": null
+        },
+        {
+          "id": "RZI27PL52S6RBXQ2ISGPOEYP",
+          "name": "Adult 3XL, Texas Orange",
+          "priceMoney": {
+            "amount": 2800,
+            "currency": "USD"
+          },
+          "price": 2800,
+          "currency": "USD",
+          "sku": null
+        },
+        {
+          "id": "KIDIOBAREHTSM3HBZGNU6BJZ",
+          "name": "Youth XL, Texas Orange",
+          "priceMoney": {
+            "amount": 2500,
+            "currency": "USD"
+          },
+          "price": 2500,
+          "currency": "USD",
+          "sku": null
+        },
+        {
+          "id": "YU7MTRNR4JN7JPMOHBBV4TGI",
+          "name": "Youth L, Jade Blue",
+          "priceMoney": {
+            "amount": 2500,
+            "currency": "USD"
+          },
+          "price": 2500,
+          "currency": "USD",
+          "sku": null
+        },
+        {
+          "id": "QPB5H6JHYHCP333RFNRIXIHH",
+          "name": "Youth S, Texas Orange",
+          "priceMoney": {
+            "amount": 2500,
+            "currency": "USD"
+          },
+          "price": 2500,
+          "currency": "USD",
+          "sku": null
+        },
+        {
+          "id": "UIE6SMPHKVFA66QEBTW4H3YA",
+          "name": "Youth M, Graphite",
+          "priceMoney": {
+            "amount": 2500,
+            "currency": "USD"
+          },
+          "price": 2500,
+          "currency": "USD",
+          "sku": null
+        },
+        {
+          "id": "VVWEDTCEZN6B5A3CT5SIIY32",
+          "name": "Youth M, Texas Orange",
+          "priceMoney": {
+            "amount": 2500,
+            "currency": "USD"
+          },
+          "price": 2500,
+          "currency": "USD",
+          "sku": null
+        },
+        {
+          "id": "OZB25L76XUO7A365QY5VYYOH",
+          "name": "Youth M, Natural",
+          "priceMoney": {
+            "amount": 2500,
+            "currency": "USD"
+          },
+          "price": 2500,
+          "currency": "USD",
+          "sku": null
+        },
+        {
+          "id": "CSWJOMSCM3M25AXYPE2XOLLP",
+          "name": "Youth L, Graphite",
+          "priceMoney": {
+            "amount": 2500,
+            "currency": "USD"
+          },
+          "price": 2500,
+          "currency": "USD",
+          "sku": null
+        },
+        {
+          "id": "LIZVMSUHR5VHT4NOJU2QNFG6",
+          "name": "Adult M, Jade Blue",
+          "priceMoney": {
+            "amount": 2500,
+            "currency": "USD"
+          },
+          "price": 2500,
+          "currency": "USD",
+          "sku": null
+        },
+        {
+          "id": "UNSE6MOXHMDSJE5GYX2LYQ3R",
+          "name": "Adult 3XL, Jade Blue",
+          "priceMoney": {
+            "amount": 2800,
+            "currency": "USD"
+          },
+          "price": 2800,
+          "currency": "USD",
+          "sku": null
+        },
+        {
+          "id": "W22LQXFF4J5CCCJEG34Y7O43",
+          "name": "Adult 3XL, Berry",
+          "priceMoney": {
+            "amount": 2800,
+            "currency": "USD"
+          },
+          "price": 2800,
+          "currency": "USD",
+          "sku": null
+        },
+        {
+          "id": "GF73AQN7IOBJHGCGULSPB5H5",
+          "name": "Adult M, Berry",
+          "priceMoney": {
+            "amount": 2500,
+            "currency": "USD"
+          },
+          "price": 2500,
+          "currency": "USD",
+          "sku": null
+        },
+        {
+          "id": "FISSIUY2FYQMESC753HIUQ4J",
+          "name": "Adult S, Berry",
+          "priceMoney": {
+            "amount": 2500,
+            "currency": "USD"
+          },
+          "price": 2500,
+          "currency": "USD",
+          "sku": null
+        },
+        {
+          "id": "JRST5CDTYE6D7QE4XNMUP2QO",
+          "name": "Adult L, Berry",
+          "priceMoney": {
+            "amount": 2500,
+            "currency": "USD"
+          },
+          "price": 2500,
+          "currency": "USD",
+          "sku": null
+        },
+        {
+          "id": "73S6CQN7MMSVWJ4YURGM7FGN",
+          "name": "Adult 2XL, Berry",
+          "priceMoney": {
+            "amount": 2500,
+            "currency": "USD"
+          },
+          "price": 2500,
+          "currency": "USD",
+          "sku": null
+        },
+        {
+          "id": "T6QHUGUW2XTLO7VFG4EP6ZUM",
+          "name": "Adult XL, Berry",
+          "priceMoney": {
+            "amount": 2500,
+            "currency": "USD"
+          },
+          "price": 2500,
+          "currency": "USD",
+          "sku": null
+        }
+      ],
+      "priceMoney": {
+        "amount": 2500,
+        "currency": "USD"
+      },
+      "price": 2500,
+      "currency": "USD"
+    },
+    {
+      "id": "Y5VAG3BZVL32UT75UWPPEEUN",
+      "type": "ITEM",
+      "name": "Great Gobbler Games 2026 Crewneck",
+      "description": "The classic crewneck, Gobbler style! Our Great Gobbler Games 2026 crewneck features our turkey swimmer racing for the pie trophy — comfortable, easy to wear, and made to order just for you. Preorder now for pickup at the Great Gobbler Games, November 21–22 at the St. Charles County YMCA. Preorders close Saturday, November 14 at 10 a.m. Add your swimmer's name or a sleeve patch to make it theirs! Stroke patch designs and colors may vary to match the theme. Pickup is at the SCCY YMCA only — no shipping during the presale.",
+      "imageUrl": "https://items-images-production.s3.us-west-2.amazonaws.com/files/5de9669024c9ad5a0ec7761fb0a705db4bd2bc87/original.jpeg",
+      "variations": [
+        {
+          "id": "QBY2BA42MZBSEG6OSUXC26TG",
+          "name": "Youth M, Sport Grey (Youth Only)",
+          "priceMoney": {
+            "amount": 3200,
+            "currency": "USD"
+          },
+          "price": 3200,
+          "currency": "USD",
+          "sku": null
+        },
+        {
+          "id": "THPPXXQAAVRMWJSTP7WCGO47",
+          "name": "Adult M, Graphite",
+          "priceMoney": {
+            "amount": 3800,
+            "currency": "USD"
+          },
+          "price": 3800,
+          "currency": "USD",
+          "sku": null
+        },
+        {
+          "id": "OLSDRWVO3NS4XLIT2NYXCQKR",
+          "name": "Adult 4XL, Graphite",
+          "priceMoney": {
+            "amount": 4200,
+            "currency": "USD"
+          },
+          "price": 4200,
+          "currency": "USD",
+          "sku": null
+        },
+        {
+          "id": "MBH5HN36RT7ZBV4DIZPK5VFO",
+          "name": "Youth S, Sport Grey (Youth Only)",
+          "priceMoney": {
+            "amount": 3200,
+            "currency": "USD"
+          },
+          "price": 3200,
+          "currency": "USD",
+          "sku": null
+        },
+        {
+          "id": "6TBHAGUEQSYZN7KCV4VWY36U",
+          "name": "Adult 2XL, Graphite",
+          "priceMoney": {
+            "amount": 4200,
+            "currency": "USD"
+          },
+          "price": 4200,
+          "currency": "USD",
+          "sku": null
+        },
+        {
+          "id": "36N3XVXAZPYYJ3FUFDG6C33Z",
+          "name": "Adult S, Graphite",
+          "priceMoney": {
+            "amount": 3800,
+            "currency": "USD"
+          },
+          "price": 3800,
+          "currency": "USD",
+          "sku": null
+        },
+        {
+          "id": "ZMRZ5KHNAFBXBWKL4FSTCGJE",
+          "name": "Adult 3XL, Graphite",
+          "priceMoney": {
+            "amount": 4200,
+            "currency": "USD"
+          },
+          "price": 4200,
+          "currency": "USD",
+          "sku": null
+        },
+        {
+          "id": "UPJ4PONIXUSE6VVA4ALQDGAM",
+          "name": "Adult XL, Graphite",
+          "priceMoney": {
+            "amount": 3800,
+            "currency": "USD"
+          },
+          "price": 3800,
+          "currency": "USD",
+          "sku": null
+        },
+        {
+          "id": "C3VZP6EYLBBOTVRI2KOHSD2B",
+          "name": "Youth L, Sport Grey (Youth Only)",
+          "priceMoney": {
+            "amount": 3200,
+            "currency": "USD"
+          },
+          "price": 3200,
+          "currency": "USD",
+          "sku": null
+        },
+        {
+          "id": "VTCBWCJODQELOF7KKOETP24K",
+          "name": "Youth XL, Sport Grey (Youth Only)",
+          "priceMoney": {
+            "amount": 3200,
+            "currency": "USD"
+          },
+          "price": 3200,
+          "currency": "USD",
+          "sku": null
+        },
+        {
+          "id": "TGU2QPUMUNEMXNC6ZTFE4NKD",
+          "name": "Adult L, Graphite",
+          "priceMoney": {
+            "amount": 3800,
+            "currency": "USD"
+          },
+          "price": 3800,
+          "currency": "USD",
+          "sku": null
+        },
+        {
+          "id": "BQFCWJQB4W2SWD6PF2EJJLV7",
+          "name": "Adult XL, Maroon",
+          "priceMoney": {
+            "amount": 3800,
+            "currency": "USD"
+          },
+          "price": 3800,
+          "currency": "USD",
+          "sku": null
+        },
+        {
+          "id": "LIMN74XXKPVBFLLMDQ2RHZ6L",
+          "name": "Adult 2XL, Maroon",
+          "priceMoney": {
+            "amount": 4200,
+            "currency": "USD"
+          },
+          "price": 4200,
+          "currency": "USD",
+          "sku": null
+        },
+        {
+          "id": "XTRIC32F2IPZ5JUDINPSFIS4",
+          "name": "Adult L, Maroon",
+          "priceMoney": {
+            "amount": 3800,
+            "currency": "USD"
+          },
+          "price": 3800,
+          "currency": "USD",
+          "sku": null
+        },
+        {
+          "id": "P4QWIFVVBBD3JMD5WW25LH2P",
+          "name": "Adult 3XL, Maroon",
+          "priceMoney": {
+            "amount": 4200,
+            "currency": "USD"
+          },
+          "price": 4200,
+          "currency": "USD",
+          "sku": null
+        },
+        {
+          "id": "XWYW4Y5H7EG5DYFLY6WPH2BW",
+          "name": "Adult S, Maroon",
+          "priceMoney": {
+            "amount": 3800,
+            "currency": "USD"
+          },
+          "price": 3800,
+          "currency": "USD",
+          "sku": null
+        },
+        {
+          "id": "RTDYCBHLMZPWX7HZPMI2OUFF",
+          "name": "Adult M, Maroon",
+          "priceMoney": {
+            "amount": 3800,
+            "currency": "USD"
+          },
+          "price": 3800,
+          "currency": "USD",
+          "sku": null
+        },
+        {
+          "id": "EXTD3FJ6RXRYRRBEJJCWE6JW",
+          "name": "Adult 4XL, Maroon",
+          "priceMoney": {
+            "amount": 4200,
+            "currency": "USD"
+          },
+          "price": 4200,
+          "currency": "USD",
+          "sku": null
+        }
+      ],
+      "priceMoney": {
+        "amount": 3200,
+        "currency": "USD"
+      },
+      "price": 3200,
+      "currency": "USD"
+    },
+    {
+      "id": "GLB2CK4OAJX3OHIFS5EKMORP",
+      "type": "ITEM",
+      "name": "Great Gobbler Games 2026 Adult Hoodie",
+      "description": "Stay warm and show your Gobbler spirit! Our Great Gobbler Games 2026 adult hoodie features our turkey swimmer racing for the pie trophy — the perfect cozy layer for meet weekend and all season long. Made to order just for you. Preorder now for pickup at the Great Gobbler Games, November 21–22 at the St. Charles County YMCA. Preorders close Saturday, November 14 at 10 a.m. Add your swimmer's name or a sleeve patch to make it theirs! Stroke patch designs and colors may vary to match the theme. Pickup is at the SCCY YMCA only — no shipping during the presale.",
+      "imageUrl": "https://items-images-production.s3.us-west-2.amazonaws.com/files/b999408feade67ccfda407f597bf072a55e42b08/original.jpeg",
+      "variations": [
+        {
+          "id": "X3JPH2VJ4QYBI4ROC5JLOG7I",
+          "name": "Adult 4XL, Grey",
+          "priceMoney": {
+            "amount": 3500,
+            "currency": "USD"
+          },
+          "price": 3500,
+          "currency": "USD",
+          "sku": null
+        },
+        {
+          "id": "UVWNXTRGH5MXY4KPEIANKM7T",
+          "name": "Adult 3XL, Navy",
+          "priceMoney": {
+            "amount": 3500,
+            "currency": "USD"
+          },
+          "price": 3500,
+          "currency": "USD",
+          "sku": null
+        },
+        {
+          "id": "DDBSB2BE3LBJQ6PNOIVCFTGD",
+          "name": "Adult 2XL, Texas Orange",
+          "priceMoney": {
+            "amount": 3500,
+            "currency": "USD"
+          },
+          "price": 3500,
+          "currency": "USD",
+          "sku": null
+        },
+        {
+          "id": "AOS3WO56QR2BKPRZFWRROGMC",
+          "name": "Adult S, Navy",
+          "priceMoney": {
+            "amount": 3500,
+            "currency": "USD"
+          },
+          "price": 3500,
+          "currency": "USD",
+          "sku": null
+        },
+        {
+          "id": "PJCAVL4VC4XL63M6SO6SG7IL",
+          "name": "Adult M, Sapphire",
+          "priceMoney": {
+            "amount": 3500,
+            "currency": "USD"
+          },
+          "price": 3500,
+          "currency": "USD",
+          "sku": null
+        },
+        {
+          "id": "O23JSFVUBH4K7FS5KWRWIGS7",
+          "name": "Adult S, Grey",
+          "priceMoney": {
+            "amount": 3500,
+            "currency": "USD"
+          },
+          "price": 3500,
+          "currency": "USD",
+          "sku": null
+        },
+        {
+          "id": "PGBYCRG6MOEK5SMD5YGGF7T3",
+          "name": "Adult XL, Texas Orange",
+          "priceMoney": {
+            "amount": 3500,
+            "currency": "USD"
+          },
+          "price": 3500,
+          "currency": "USD",
+          "sku": null
+        },
+        {
+          "id": "6AHPTJNCZQXQOB65KR22RJAF",
+          "name": "Adult 3XL, Texas Orange",
+          "priceMoney": {
+            "amount": 3500,
+            "currency": "USD"
+          },
+          "price": 3500,
+          "currency": "USD",
+          "sku": null
+        },
+        {
+          "id": "SQMRM7GJZ6NIU4QQIAH2M4IK",
+          "name": "Adult 3XL, Sapphire",
+          "priceMoney": {
+            "amount": 3500,
+            "currency": "USD"
+          },
+          "price": 3500,
+          "currency": "USD",
+          "sku": null
+        },
+        {
+          "id": "6QERD7BACSGOOEG2ALCKXID3",
+          "name": "Adult XL, Navy",
+          "priceMoney": {
+            "amount": 3500,
+            "currency": "USD"
+          },
+          "price": 3500,
+          "currency": "USD",
+          "sku": null
+        },
+        {
+          "id": "IRFX3CCKVOO34PSYTWDXPMOL",
+          "name": "Adult L, Navy",
+          "priceMoney": {
+            "amount": 3500,
+            "currency": "USD"
+          },
+          "price": 3500,
+          "currency": "USD",
+          "sku": null
+        },
+        {
+          "id": "56RJ3P2D7R6KML7ZFJYM22B7",
+          "name": "Adult 3XL, Grey",
+          "priceMoney": {
+            "amount": 3500,
+            "currency": "USD"
+          },
+          "price": 3500,
+          "currency": "USD",
+          "sku": null
+        },
+        {
+          "id": "FU5AZHWB7BHVUWZDO63MRE3S",
+          "name": "Adult L, Texas Orange",
+          "priceMoney": {
+            "amount": 3500,
+            "currency": "USD"
+          },
+          "price": 3500,
+          "currency": "USD",
+          "sku": null
+        },
+        {
+          "id": "EOSC2DTHWR7DZ4EMP3WHHHH4",
+          "name": "Adult 4XL, Navy",
+          "priceMoney": {
+            "amount": 3500,
+            "currency": "USD"
+          },
+          "price": 3500,
+          "currency": "USD",
+          "sku": null
+        },
+        {
+          "id": "ER2VF2X4XNELPGNCKKCMNCUE",
+          "name": "Adult 2XL, Grey",
+          "priceMoney": {
+            "amount": 3500,
+            "currency": "USD"
+          },
+          "price": 3500,
+          "currency": "USD",
+          "sku": null
+        },
+        {
+          "id": "EQQ55RKPVXCTSZEJ3D7GIRSH",
+          "name": "Adult 4XL, Sapphire",
+          "priceMoney": {
+            "amount": 3500,
+            "currency": "USD"
+          },
+          "price": 3500,
+          "currency": "USD",
+          "sku": null
+        },
+        {
+          "id": "6HQFVYMSYHJBQJ5SG3AUGGOJ",
+          "name": "Adult XL, Grey",
+          "priceMoney": {
+            "amount": 3500,
+            "currency": "USD"
+          },
+          "price": 3500,
+          "currency": "USD",
+          "sku": null
+        },
+        {
+          "id": "7REMNNVFLP72FRZKCPC6VH64",
+          "name": "Adult XL, Sapphire",
+          "priceMoney": {
+            "amount": 3500,
+            "currency": "USD"
+          },
+          "price": 3500,
+          "currency": "USD",
+          "sku": null
+        },
+        {
+          "id": "CWJMTS23VAWRL4SRBXMYZFZJ",
+          "name": "Adult 2XL, Sapphire",
+          "priceMoney": {
+            "amount": 3500,
+            "currency": "USD"
+          },
+          "price": 3500,
+          "currency": "USD",
+          "sku": null
+        },
+        {
+          "id": "OIWYZ5SWLBKM64MEMV6BPCHE",
+          "name": "Adult M, Grey",
+          "priceMoney": {
+            "amount": 3500,
+            "currency": "USD"
+          },
+          "price": 3500,
+          "currency": "USD",
+          "sku": null
+        },
+        {
+          "id": "OQ37YBMM3XYPZEOYUCISQRMX",
+          "name": "Adult S, Texas Orange",
+          "priceMoney": {
+            "amount": 3500,
+            "currency": "USD"
+          },
+          "price": 3500,
+          "currency": "USD",
+          "sku": null
+        },
+        {
+          "id": "2FF7Y5RV3OAV624LQ2OKLZVN",
+          "name": "Adult 2XL, Navy",
+          "priceMoney": {
+            "amount": 3500,
+            "currency": "USD"
+          },
+          "price": 3500,
+          "currency": "USD",
+          "sku": null
+        },
+        {
+          "id": "FSUY5FGLEC372W3RUADSUSI5",
+          "name": "Adult S, Sapphire",
+          "priceMoney": {
+            "amount": 3500,
+            "currency": "USD"
+          },
+          "price": 3500,
+          "currency": "USD",
+          "sku": null
+        },
+        {
+          "id": "CXQYKRYPJ5Q2KYFJPCUNJWN3",
+          "name": "Adult M, Navy",
+          "priceMoney": {
+            "amount": 3500,
+            "currency": "USD"
+          },
+          "price": 3500,
+          "currency": "USD",
+          "sku": null
+        },
+        {
+          "id": "G2TAXMCCMORIODD5FVZUOKDB",
+          "name": "Adult 4XL, Texas Orange",
+          "priceMoney": {
+            "amount": 3500,
+            "currency": "USD"
+          },
+          "price": 3500,
+          "currency": "USD",
+          "sku": null
+        },
+        {
+          "id": "B7PEHNA34QZEQLCQY5POZO2T",
+          "name": "Adult M, Texas Orange",
+          "priceMoney": {
+            "amount": 3500,
+            "currency": "USD"
+          },
+          "price": 3500,
+          "currency": "USD",
+          "sku": null
+        },
+        {
+          "id": "HJQGHCLDYLV2ZZUDXL44RHLN",
+          "name": "Adult L, Grey",
+          "priceMoney": {
+            "amount": 3500,
+            "currency": "USD"
+          },
+          "price": 3500,
+          "currency": "USD",
+          "sku": null
+        },
+        {
+          "id": "36N4CA3YQPV7ZLGVBPMDXLWR",
+          "name": "Adult L, Sapphire",
+          "priceMoney": {
+            "amount": 3500,
+            "currency": "USD"
+          },
+          "price": 3500,
+          "currency": "USD",
+          "sku": null
+        },
+        {
+          "id": "7QQPBWQZUMCAW6ZQA74XR3UR",
+          "name": "Adult 4XL, Heather Red",
+          "priceMoney": {
+            "amount": 3500,
+            "currency": "USD"
+          },
+          "price": 3500,
+          "currency": "USD",
+          "sku": null
+        },
+        {
+          "id": "4XLPSAXKF3W7ZAEMW4JASHUB",
+          "name": "Adult M, Maroon",
+          "priceMoney": {
+            "amount": 3500,
+            "currency": "USD"
+          },
+          "price": 3500,
+          "currency": "USD",
+          "sku": null
+        },
+        {
+          "id": "P5YDOOTAPRIUS77CJFA6STEH",
+          "name": "Adult 3XL, Maroon",
+          "priceMoney": {
+            "amount": 3500,
+            "currency": "USD"
+          },
+          "price": 3500,
+          "currency": "USD",
+          "sku": null
+        },
+        {
+          "id": "FAJ2KFLQR3RXN35AM34F5G6Z",
+          "name": "Adult L, Heather Red",
+          "priceMoney": {
+            "amount": 3500,
+            "currency": "USD"
+          },
+          "price": 3500,
+          "currency": "USD",
+          "sku": null
+        },
+        {
+          "id": "B5HKE4XRXHMKT4PLOF7FN32T",
+          "name": "Adult 2XL, Maroon",
+          "priceMoney": {
+            "amount": 3500,
+            "currency": "USD"
+          },
+          "price": 3500,
+          "currency": "USD",
+          "sku": null
+        },
+        {
+          "id": "K7453AFQSL5ZXG5OHWTHN4J6",
+          "name": "Adult XL, Heather Red",
+          "priceMoney": {
+            "amount": 3500,
+            "currency": "USD"
+          },
+          "price": 3500,
+          "currency": "USD",
+          "sku": null
+        },
+        {
+          "id": "Y7P24EI6SIRSUYYTQQ7KGJXN",
+          "name": "Adult XL, Maroon",
+          "priceMoney": {
+            "amount": 3500,
+            "currency": "USD"
+          },
+          "price": 3500,
+          "currency": "USD",
+          "sku": null
+        },
+        {
+          "id": "AX57HCBQJ42NV2OEOMEQGK5U",
+          "name": "Adult 2XL, Heather Red",
+          "priceMoney": {
+            "amount": 3500,
+            "currency": "USD"
+          },
+          "price": 3500,
+          "currency": "USD",
+          "sku": null
+        },
+        {
+          "id": "CMXJMXEIIBXZ3T74TR7LTEMH",
+          "name": "Adult S, Heather Red",
+          "priceMoney": {
+            "amount": 3500,
+            "currency": "USD"
+          },
+          "price": 3500,
+          "currency": "USD",
+          "sku": null
+        },
+        {
+          "id": "Q3KDIOE6IZ6ZAELUSXCQBLPX",
+          "name": "Adult 4XL, Maroon",
+          "priceMoney": {
+            "amount": 3500,
+            "currency": "USD"
+          },
+          "price": 3500,
+          "currency": "USD",
+          "sku": null
+        },
+        {
+          "id": "Q6GOUYVLQ4SITRQIATBE3JVH",
+          "name": "Adult S, Maroon",
+          "priceMoney": {
+            "amount": 3500,
+            "currency": "USD"
+          },
+          "price": 3500,
+          "currency": "USD",
+          "sku": null
+        },
+        {
+          "id": "BDQBCP52KMXPHBYVUNXCRSAS",
+          "name": "Adult L, Maroon",
+          "priceMoney": {
+            "amount": 3500,
+            "currency": "USD"
+          },
+          "price": 3500,
+          "currency": "USD",
+          "sku": null
+        },
+        {
+          "id": "7AVUF6UFFXMHWTYHYG4PHYRM",
+          "name": "Adult 3XL, Heather Red",
+          "priceMoney": {
+            "amount": 3500,
+            "currency": "USD"
+          },
+          "price": 3500,
+          "currency": "USD",
+          "sku": null
+        },
+        {
+          "id": "NI4PPOT4BQDTWMTLSVBGS46K",
+          "name": "Adult M, Heather Red",
+          "priceMoney": {
+            "amount": 3500,
+            "currency": "USD"
+          },
+          "price": 3500,
+          "currency": "USD",
+          "sku": null
+        }
+      ],
+      "priceMoney": {
+        "amount": 3500,
+        "currency": "USD"
+      },
+      "price": 3500,
+      "currency": "USD"
+    },
+    {
+      "id": "MRQ22L4RGII3VF4OQ3O4UIKK",
+      "type": "ITEM",
+      "name": "Great Gobbler Games 2026 Youth Hoodie",
+      "description": "A cozy favorite for our youngest Gobbler fans! Our Great Gobbler Games 2026 youth hoodie features our turkey swimmer racing for the pie trophy — soft, warm, and ready for meet weekend. Made to order just for you. Preorder now for pickup at the Great Gobbler Games, November 21–22 at the St. Charles County YMCA. Preorders close Saturday, November 14 at 10 a.m. Add your swimmer's name or a sleeve patch to make it theirs! Stroke patch designs and colors may vary to match the theme. Pickup is at the SCCY YMCA only — no shipping during the presale.",
+      "imageUrl": "https://items-images-production.s3.us-west-2.amazonaws.com/files/09e78c4bd6e9e87fa899133e43fe789570b0a078/original.jpeg",
+      "variations": [
+        {
+          "id": "CLMOMJQQITFRBLBJWR2B3DIQ",
+          "name": "Youth S, Grey",
+          "priceMoney": {
+            "amount": 3500,
+            "currency": "USD"
+          },
+          "price": 3500,
+          "currency": "USD",
+          "sku": null
+        },
+        {
+          "id": "AHZPPZOOA3IDHN527FJA66SD",
+          "name": "Youth L, Teal",
+          "priceMoney": {
+            "amount": 3500,
+            "currency": "USD"
+          },
+          "price": 3500,
+          "currency": "USD",
+          "sku": null
+        },
+        {
+          "id": "QFWXISU5FYYFRCN27AR6L5NV",
+          "name": "Youth S, Maroon",
+          "priceMoney": {
+            "amount": 3500,
+            "currency": "USD"
+          },
+          "price": 3500,
+          "currency": "USD",
+          "sku": null
+        },
+        {
+          "id": "IZWFPOFUM2MKGFNJBPK2SMED",
+          "name": "Youth L, Maroon",
+          "priceMoney": {
+            "amount": 3500,
+            "currency": "USD"
+          },
+          "price": 3500,
+          "currency": "USD",
+          "sku": null
+        },
+        {
+          "id": "WH6PB3IUQFACXOAPARWDTHVB",
+          "name": "Youth XL, Teal",
+          "priceMoney": {
+            "amount": 3500,
+            "currency": "USD"
+          },
+          "price": 3500,
+          "currency": "USD",
+          "sku": null
+        },
+        {
+          "id": "JP56WG5O2UOKUCRG2TO2T3ME",
+          "name": "Youth XL, Natural",
+          "priceMoney": {
+            "amount": 3500,
+            "currency": "USD"
+          },
+          "price": 3500,
+          "currency": "USD",
+          "sku": null
+        },
+        {
+          "id": "3F32J2RY2KKTVYU2EFULLT7F",
+          "name": "Youth M, Natural",
+          "priceMoney": {
+            "amount": 3500,
+            "currency": "USD"
+          },
+          "price": 3500,
+          "currency": "USD",
+          "sku": null
+        },
+        {
+          "id": "3PSVWXOTGKYCRBVLIKRAQQ5Q",
+          "name": "Youth M, Grey",
+          "priceMoney": {
+            "amount": 3500,
+            "currency": "USD"
+          },
+          "price": 3500,
+          "currency": "USD",
+          "sku": null
+        },
+        {
+          "id": "SXR2V4VLINM32RRRXLVD2BS2",
+          "name": "Youth S, Teal",
+          "priceMoney": {
+            "amount": 3500,
+            "currency": "USD"
+          },
+          "price": 3500,
+          "currency": "USD",
+          "sku": null
+        },
+        {
+          "id": "EC4PMYUCMLL2PVTQ3XST3AXD",
+          "name": "Youth M, Teal",
+          "priceMoney": {
+            "amount": 3500,
+            "currency": "USD"
+          },
+          "price": 3500,
+          "currency": "USD",
+          "sku": null
+        },
+        {
+          "id": "35MJJZC4L4UTXK3QJEHQG3IM",
+          "name": "Youth S, Natural",
+          "priceMoney": {
+            "amount": 3500,
+            "currency": "USD"
+          },
+          "price": 3500,
+          "currency": "USD",
+          "sku": null
+        },
+        {
+          "id": "54HGOODOJ2U3MUJTMVRLIPIJ",
+          "name": "Youth XL, Grey",
+          "priceMoney": {
+            "amount": 3500,
+            "currency": "USD"
+          },
+          "price": 3500,
+          "currency": "USD",
+          "sku": null
+        },
+        {
+          "id": "MBWRONFPLNTVUX23FKIQ2BYJ",
+          "name": "Youth L, Natural",
+          "priceMoney": {
+            "amount": 3500,
+            "currency": "USD"
+          },
+          "price": 3500,
+          "currency": "USD",
+          "sku": null
+        },
+        {
+          "id": "LUAAZDLY3GXO2TGN7ZNBRGPR",
+          "name": "Youth L, Grey",
+          "priceMoney": {
+            "amount": 3500,
+            "currency": "USD"
+          },
+          "price": 3500,
+          "currency": "USD",
+          "sku": null
+        },
+        {
+          "id": "6E3VO22DW4A5SSZHZHXVLDHM",
+          "name": "Youth XL, Maroon",
+          "priceMoney": {
+            "amount": 3500,
+            "currency": "USD"
+          },
+          "price": 3500,
+          "currency": "USD",
+          "sku": null
+        },
+        {
+          "id": "3WQI36LFJPSYJFVBV6TZF6OC",
+          "name": "Youth M, Maroon",
+          "priceMoney": {
+            "amount": 3500,
+            "currency": "USD"
+          },
+          "price": 3500,
+          "currency": "USD",
+          "sku": null
+        },
+        {
+          "id": "XE7AK6MTTQ6WAYZEE6HKNMFQ",
+          "name": "Youth XL, Pink",
+          "priceMoney": {
+            "amount": 3500,
+            "currency": "USD"
+          },
+          "price": 3500,
+          "currency": "USD",
+          "sku": null
+        },
+        {
+          "id": "4TZX2GDAZGKYPTXCHJSANHJC",
+          "name": "Youth XL, Navy",
+          "priceMoney": {
+            "amount": 3500,
+            "currency": "USD"
+          },
+          "price": 3500,
+          "currency": "USD",
+          "sku": null
+        },
+        {
+          "id": "B2DOLZ7ZIGMDTZRLV323QGJ6",
+          "name": "Youth L, Navy",
+          "priceMoney": {
+            "amount": 3500,
+            "currency": "USD"
+          },
+          "price": 3500,
+          "currency": "USD",
+          "sku": null
+        },
+        {
+          "id": "754CNWP7HAOUQXSDKM7YACMY",
+          "name": "Youth L, Heather Red",
+          "priceMoney": {
+            "amount": 3500,
+            "currency": "USD"
+          },
+          "price": 3500,
+          "currency": "USD",
+          "sku": null
+        },
+        {
+          "id": "APX6FSXM3FMBNVZ2U3CQ3YRJ",
+          "name": "Youth XL, Heather Red",
+          "priceMoney": {
+            "amount": 3500,
+            "currency": "USD"
+          },
+          "price": 3500,
+          "currency": "USD",
+          "sku": null
+        },
+        {
+          "id": "JEJM6DRY77WBP3S6URDPYG3Z",
+          "name": "Youth S, Heather Red",
+          "priceMoney": {
+            "amount": 3500,
+            "currency": "USD"
+          },
+          "price": 3500,
+          "currency": "USD",
+          "sku": null
+        },
+        {
+          "id": "U2QFBHLNPU4OQVHDB6DOCQDM",
+          "name": "Youth M, Navy",
+          "priceMoney": {
+            "amount": 3500,
+            "currency": "USD"
+          },
+          "price": 3500,
+          "currency": "USD",
+          "sku": null
+        },
+        {
+          "id": "CW7JPG3NLVT7MUHSOCMPUUGT",
+          "name": "Youth S, Pink",
+          "priceMoney": {
+            "amount": 3500,
+            "currency": "USD"
+          },
+          "price": 3500,
+          "currency": "USD",
+          "sku": null
+        },
+        {
+          "id": "7UDQ6A45VMEO2YLWW7VVVZUS",
+          "name": "Youth M, Heather Red",
+          "priceMoney": {
+            "amount": 3500,
+            "currency": "USD"
+          },
+          "price": 3500,
+          "currency": "USD",
+          "sku": null
+        },
+        {
+          "id": "NVLPKPPMPDKOHYSPSXOKXT7U",
+          "name": "Youth M, Pink",
+          "priceMoney": {
+            "amount": 3500,
+            "currency": "USD"
+          },
+          "price": 3500,
+          "currency": "USD",
+          "sku": null
+        },
+        {
+          "id": "TYR6M6XYFFGIMHE3UHMFGFP2",
+          "name": "Youth L, Pink",
+          "priceMoney": {
+            "amount": 3500,
+            "currency": "USD"
+          },
+          "price": 3500,
+          "currency": "USD",
+          "sku": null
+        },
+        {
+          "id": "YD6IHHNH7SPNMY7BDZE4IAXM",
+          "name": "Youth S, Navy",
+          "priceMoney": {
+            "amount": 3500,
+            "currency": "USD"
+          },
+          "price": 3500,
+          "currency": "USD",
+          "sku": null
+        }
+      ],
+      "priceMoney": {
+        "amount": 3500,
+        "currency": "USD"
+      },
+      "price": 3500,
       "currency": "USD"
     }
   ]
