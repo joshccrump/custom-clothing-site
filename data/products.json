@@ -1,6 +1,6 @@
 {
-  "generatedAt": "2026-11-12T17:24:04.277Z",
-  "count": 99,
+  "generatedAt": "2026-11-13T16:58:47.838Z",
+  "count": 100,
   "items": [
     {
       "id": "EWSMEHSMA4P7NHPED72WISB4",
@@ -27178,6 +27178,362 @@
             "currency": "USD"
           },
           "price": 1800,
+          "currency": "USD",
+          "sku": null
+        }
+      ],
+      "priceMoney": {
+        "amount": 3000,
+        "currency": "USD"
+      },
+      "price": 3000,
+      "currency": "USD"
+    },
+    {
+      "id": "CFBKBNBRHDEHKWH4HXZP22F2",
+      "type": "ITEM",
+      "name": "2026-2027 Makos Team Shirt",
+      "description": "Royal Blue Makos Team Shirt featuring the current Makos team design on the front in white — MAKOS letters with swimmers and \"OUR CITY. OUR TEAM. OUR LEGACY. O'FALLON PARK REC COMPLEX\". The white Makos shark-shield logo on the sleeve comes standard on every option. Pickup only: Pick up at the YMCA, 4343 W Florissant Ave, St. Louis, MO.",
+      "imageUrl": "https://items-images-production.s3.us-west-2.amazonaws.com/files/ecee27c734b0debc9bee4780a59e8cb116fff097/original.jpeg",
+      "variations": [
+        {
+          "id": "BKTJQJJ6NCJ2N4HVFMYO4CSQ",
+          "name": "Adult S, Hoodie",
+          "priceMoney": {
+            "amount": 3000,
+            "currency": "USD"
+          },
+          "price": 3000,
+          "currency": "USD",
+          "sku": null
+        },
+        {
+          "id": "MY4EFVSCZLY4QVBZSE2VQJH3",
+          "name": "Adult 2XL, Tee",
+          "priceMoney": {
+            "amount": 1800,
+            "currency": "USD"
+          },
+          "price": 1800,
+          "currency": "USD",
+          "sku": null
+        },
+        {
+          "id": "OXQQSNAG2OVVNY5OAQDTGBW4",
+          "name": "Youth XS, Tee",
+          "priceMoney": {
+            "amount": 1800,
+            "currency": "USD"
+          },
+          "price": 1800,
+          "currency": "USD",
+          "sku": null
+        },
+        {
+          "id": "B44UUNEAXLHZN2M7PPYFV3PF",
+          "name": "Youth M, Hoodie",
+          "priceMoney": {
+            "amount": 3000,
+            "currency": "USD"
+          },
+          "price": 3000,
+          "currency": "USD",
+          "sku": null
+        },
+        {
+          "id": "YCJYFFHLTRRNIQCYKWYQTBL4",
+          "name": "Adult 2XL, Crewneck",
+          "priceMoney": {
+            "amount": 2500,
+            "currency": "USD"
+          },
+          "price": 2500,
+          "currency": "USD",
+          "sku": null
+        },
+        {
+          "id": "RMSTRM67OKPCM7DRSI4MUGQG",
+          "name": "Adult 3XL, Crewneck",
+          "priceMoney": {
+            "amount": 2500,
+            "currency": "USD"
+          },
+          "price": 2500,
+          "currency": "USD",
+          "sku": null
+        },
+        {
+          "id": "XU2MD5LGLRSNQGX3PU555JP5",
+          "name": "Adult S, Crewneck",
+          "priceMoney": {
+            "amount": 2500,
+            "currency": "USD"
+          },
+          "price": 2500,
+          "currency": "USD",
+          "sku": null
+        },
+        {
+          "id": "BWOZXBX3Q2RRJUUX65ENDQBL",
+          "name": "Adult 3XL, Hoodie",
+          "priceMoney": {
+            "amount": 3000,
+            "currency": "USD"
+          },
+          "price": 3000,
+          "currency": "USD",
+          "sku": null
+        },
+        {
+          "id": "CBY2INKGQSQLRH5ZWOWWINEC",
+          "name": "Adult M, Tee",
+          "priceMoney": {
+            "amount": 1800,
+            "currency": "USD"
+          },
+          "price": 1800,
+          "currency": "USD",
+          "sku": null
+        },
+        {
+          "id": "SXMBIXECPEIRXUT2ATJ5Q2GT",
+          "name": "Adult XL, Tee",
+          "priceMoney": {
+            "amount": 1800,
+            "currency": "USD"
+          },
+          "price": 1800,
+          "currency": "USD",
+          "sku": null
+        },
+        {
+          "id": "GEARC5WLRAP5PNZZNBPX4OSF",
+          "name": "Adult 4XL, Crewneck",
+          "priceMoney": {
+            "amount": 2500,
+            "currency": "USD"
+          },
+          "price": 2500,
+          "currency": "USD",
+          "sku": null
+        },
+        {
+          "id": "OYEZPVYLI77TS4ETB4A3SHXC",
+          "name": "Youth M, Tee",
+          "priceMoney": {
+            "amount": 1800,
+            "currency": "USD"
+          },
+          "price": 1800,
+          "currency": "USD",
+          "sku": null
+        },
+        {
+          "id": "ATB6RZ4RDXDY6F73H6XI5NBE",
+          "name": "Adult S, Tee",
+          "priceMoney": {
+            "amount": 1800,
+            "currency": "USD"
+          },
+          "price": 1800,
+          "currency": "USD",
+          "sku": null
+        },
+        {
+          "id": "7ETYM4IYCFJGZ3FHHC6N3Y4I",
+          "name": "Adult 4XL, Tee",
+          "priceMoney": {
+            "amount": 1800,
+            "currency": "USD"
+          },
+          "price": 1800,
+          "currency": "USD",
+          "sku": null
+        },
+        {
+          "id": "TMPVU5BTTLVTE73S5RGHNCVT",
+          "name": "Adult M, Hoodie",
+          "priceMoney": {
+            "amount": 3000,
+            "currency": "USD"
+          },
+          "price": 3000,
+          "currency": "USD",
+          "sku": null
+        },
+        {
+          "id": "POEWMDKZXVVZDQY6P4SH5F7V",
+          "name": "Adult 2XL, Hoodie",
+          "priceMoney": {
+            "amount": 3000,
+            "currency": "USD"
+          },
+          "price": 3000,
+          "currency": "USD",
+          "sku": null
+        },
+        {
+          "id": "O6SRDUHKNGP3JZDNZ3CKL4HQ",
+          "name": "Adult 4XL, Hoodie",
+          "priceMoney": {
+            "amount": 3000,
+            "currency": "USD"
+          },
+          "price": 3000,
+          "currency": "USD",
+          "sku": null
+        },
+        {
+          "id": "KARDF73AD6VV67ONU2QSRTFC",
+          "name": "Youth S, Hoodie",
+          "priceMoney": {
+            "amount": 3000,
+            "currency": "USD"
+          },
+          "price": 3000,
+          "currency": "USD",
+          "sku": null
+        },
+        {
+          "id": "YNEYOKWDOHU5DGNMGKODB6C6",
+          "name": "Adult 5XL, Tee",
+          "priceMoney": {
+            "amount": 1800,
+            "currency": "USD"
+          },
+          "price": 1800,
+          "currency": "USD",
+          "sku": null
+        },
+        {
+          "id": "G4YIZFGSF5CTBQELCBL4NE3I",
+          "name": "Adult L, Hoodie",
+          "priceMoney": {
+            "amount": 3000,
+            "currency": "USD"
+          },
+          "price": 3000,
+          "currency": "USD",
+          "sku": null
+        },
+        {
+          "id": "6Q6GS3FB4IVJFGWL45BHLZGJ",
+          "name": "Youth L, Hoodie",
+          "priceMoney": {
+            "amount": 3000,
+            "currency": "USD"
+          },
+          "price": 3000,
+          "currency": "USD",
+          "sku": null
+        },
+        {
+          "id": "5CMVLHXA2D6O3RWQZRKQDATB",
+          "name": "Youth XL, Hoodie",
+          "priceMoney": {
+            "amount": 3000,
+            "currency": "USD"
+          },
+          "price": 3000,
+          "currency": "USD",
+          "sku": null
+        },
+        {
+          "id": "3KUF7CM6NMNQRFOSVHY57YNA",
+          "name": "Adult XL, Crewneck",
+          "priceMoney": {
+            "amount": 2500,
+            "currency": "USD"
+          },
+          "price": 2500,
+          "currency": "USD",
+          "sku": null
+        },
+        {
+          "id": "ON2D4WJVYLUO2G72SGIPBFJJ",
+          "name": "Adult M, Crewneck",
+          "priceMoney": {
+            "amount": 2500,
+            "currency": "USD"
+          },
+          "price": 2500,
+          "currency": "USD",
+          "sku": null
+        },
+        {
+          "id": "MFSGK6FYULTVEECTRNY5OEVU",
+          "name": "Youth L, Tee",
+          "priceMoney": {
+            "amount": 1800,
+            "currency": "USD"
+          },
+          "price": 1800,
+          "currency": "USD",
+          "sku": null
+        },
+        {
+          "id": "SSIOM6XNHMCV6DLCRU4ASX3N",
+          "name": "Youth XL, Tee",
+          "priceMoney": {
+            "amount": 1800,
+            "currency": "USD"
+          },
+          "price": 1800,
+          "currency": "USD",
+          "sku": null
+        },
+        {
+          "id": "UYWFV3ZTHNPLN5QUD6SS2TKY",
+          "name": "Youth S, Tee",
+          "priceMoney": {
+            "amount": 1800,
+            "currency": "USD"
+          },
+          "price": 1800,
+          "currency": "USD",
+          "sku": null
+        },
+        {
+          "id": "BHJMV76XJTZ7TITNRITUHP6H",
+          "name": "Adult 3XL, Tee",
+          "priceMoney": {
+            "amount": 1800,
+            "currency": "USD"
+          },
+          "price": 1800,
+          "currency": "USD",
+          "sku": null
+        },
+        {
+          "id": "WQ2YW4STHSHMPAUNZ5YK3DGT",
+          "name": "Adult L, Crewneck",
+          "priceMoney": {
+            "amount": 2500,
+            "currency": "USD"
+          },
+          "price": 2500,
+          "currency": "USD",
+          "sku": null
+        },
+        {
+          "id": "GBUNSN5K54DMPHZPOTWADDX5",
+          "name": "Adult L, Tee",
+          "priceMoney": {
+            "amount": 1800,
+            "currency": "USD"
+          },
+          "price": 1800,
+          "currency": "USD",
+          "sku": null
+        },
+        {
+          "id": "ILSSXABPQN6WNG4ZPT75IAOL",
+          "name": "Adult XL, Hoodie",
+          "priceMoney": {
+            "amount": 3000,
+            "currency": "USD"
+          },
+          "price": 3000,
           "currency": "USD",
           "sku": null
         }
